@@ -79,20 +79,72 @@ https://yoursite.com/?guest=Rahul
 
 Shows: *"Dear Rahul, you are cordially invited"*
 
+## Your public URL
+
+You want guests to see **warmwelcome** instead of **demonsclarohit**.  
+Note: `https://warmwelcome/rohit-preksha-wedding` is not a valid web address — you need one of these:
+
+### Option A — Free: GitHub organization (recommended)
+
+Create a GitHub org named **`warmwelcome`** and move your repo there.
+
+**Your link becomes:**  
+**https://warmwelcome.github.io/rohit-preksha-wedding/**
+
+Steps:
+
+1. Log into GitHub → click your profile → **Your organizations** → **New organization**
+2. Name it **`warmwelcome`** (free plan is fine)
+3. Open your repo **Settings → General** → **Transfer ownership** → transfer to `warmwelcome`
+4. Re-enable Pages on the transferred repo: **Settings → Pages** → branch `gh-pages` → `/ (root)`
+5. Share: `https://warmwelcome.github.io/rohit-preksha-wedding/?guest=Name`
+
+No code changes needed — the URL updates automatically after transfer.
+
+### Option B — Custom domain: warmwelcome.com
+
+Buy the domain **warmwelcome.com** (GoDaddy, Namecheap, Google Domains, etc. ~₹800/year).
+
+**Your link becomes:**  
+**https://warmwelcome.com**
+
+Steps:
+
+1. Buy **warmwelcome.com**
+2. In your domain DNS, add these records (GitHub Pages):
+   - `A` → `185.199.108.153`
+   - `A` → `185.199.109.153`
+   - `A` → `185.199.110.153`
+   - `A` → `185.199.111.153`
+   - `CNAME` for `www` → `warmwelcome.github.io` (optional)
+3. In GitHub repo → **Settings → Secrets and variables → Actions → Variables**
+4. Add variable: `CUSTOM_DOMAIN` = `warmwelcome.com`
+5. In **Settings → Pages** → Custom domain → enter `warmwelcome.com` → Save
+6. Push code — workflow rebuilds with the custom domain
+
+Update `src/config/site.ts` → set `publicUrl: "https://warmwelcome.com"`
+
 ## Deploy to GitHub Pages (free)
 
-Your site will be live at:
+Default URL after org transfer:
 
-**https://demonsclarohit.github.io/rohit-preksha-wedding/**
+**https://warmwelcome.github.io/rohit-preksha-wedding/**
 
-### One-time setup on GitHub (required)
+### ⚠️ Repo must be Public
 
-The deploy will fail with **404 Not Found** until you do this:
+GitHub Pages is **free only for public repositories**. If your repo is private, you will always see a 404 until you either:
 
-1. Open [Settings → Pages](https://github.com/demonsclarohit/rohit-preksha-wedding/settings/pages)
-2. Under **Build and deployment**, set **Source** to **GitHub Actions** (not “Deploy from a branch”)
-3. Save — you do not need to pick a branch
-4. Push the latest code (if you haven’t already):
+- **Option A (recommended):** Make the repo public — fine for a wedding invite meant to be shared
+- **Option B:** Use [Vercel](https://vercel.com) instead (free, works with private repos)
+
+To make the repo public:
+
+1. [Settings → General](https://github.com/warmwelcome/rohit-preksha-wedding/settings) → scroll to **Danger Zone**
+2. **Change repository visibility** → **Public**
+
+### One-time Pages setup
+
+1. Push the latest code and wait for **Actions** to finish (green check):
 
 ```bash
 git add .
@@ -100,15 +152,30 @@ git commit -m "Fix GitHub Pages deployment"
 git push origin main
 ```
 
-5. Go to **Actions** → open the failed run → **Re-run all jobs**
-6. When it shows a green check, your site is live
+2. Confirm a `gh-pages` branch exists: **Code** tab → branch dropdown → look for `gh-pages`
+
+3. Open [Settings → Pages](https://github.com/warmwelcome/rohit-preksha-wedding/settings/pages)
+4. **Source:** Deploy from a branch
+5. **Branch:** `gh-pages` → folder **`/ (root)`** → **Save**
+
+6. Wait 1–3 minutes, then open:  
+   **https://warmwelcome.github.io/rohit-preksha-wedding/**
+
+### Still 404?
+
+| Check | Fix |
+|---|---|
+| Repo is private | Make it public (see above) |
+| No `gh-pages` branch | Re-run failed workflow in **Actions** |
+| Pages source wrong | Must be `gh-pages` branch, not `main` |
+| Wrong URL | Use full URL with repo name (not just `github.io`) |
 
 Every push to `main` redeploys the site automatically.
 
 ### Personalized invitation links on GitHub Pages
 
 ```
-https://demonsclarohit.github.io/rohit-preksha-wedding/?guest=Rahul
+https://warmwelcome.github.io/rohit-preksha-wedding/?guest=Rahul
 ```
 
 ## Deploy to Vercel (alternative)
