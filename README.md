@@ -79,7 +79,37 @@ https://yoursite.com/?guest=Rahul
 
 Shows: *"Dear Rahul, you are cordially invited"*
 
-## Deploy to Vercel
+## Deploy to GitHub Pages (free)
+
+Your site will be live at:
+
+**https://demonsclarohit.github.io/rohit-preksha-wedding/**
+
+### One-time setup on GitHub
+
+1. Open your repo: [github.com/demonsclarohit/rohit-preksha-wedding](https://github.com/demonsclarohit/rohit-preksha-wedding)
+2. Go to **Settings → Pages**
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**
+4. Push your latest code to `main`:
+
+```bash
+git add .
+git commit -m "Add GitHub Pages deployment"
+git push origin main
+```
+
+5. Go to **Actions** tab — the workflow will build and deploy automatically
+6. When it finishes (green check), your site is live
+
+Every push to `main` redeploys the site automatically.
+
+### Personalized invitation links on GitHub Pages
+
+```
+https://demonsclarohit.github.io/rohit-preksha-wedding/?guest=Rahul
+```
+
+## Deploy to Vercel (alternative)
 
 ```bash
 npm run build

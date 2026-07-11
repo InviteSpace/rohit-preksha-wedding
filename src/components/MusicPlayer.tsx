@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import { assetPath } from "@/lib/asset";
 
 interface MusicPlayerProps {
   autoPrompt?: boolean;
@@ -32,7 +33,7 @@ export default function MusicPlayer({ autoPrompt = false }: MusicPlayerProps) {
 
   return (
     <>
-      <audio ref={audioRef} src={WEDDING_CONFIG.music.src} loop preload="auto" />
+      <audio ref={audioRef} src={assetPath(WEDDING_CONFIG.music.src)} loop preload="auto" />
 
       {showPrompt && (
         <button
