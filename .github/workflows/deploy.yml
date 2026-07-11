@@ -35,7 +35,11 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
 
       - name: Verify build output
-        run: test -f out/index.html && echo "Build OK — $(ls out | wc -l) files ready"
+        run: |
+          test -f out/index.html
+          test -f out/images/couple-animated.png
+          test -f out/images/Generated_image.png
+          echo "Build OK — $(ls out/images | wc -l) images in out/images/"
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4

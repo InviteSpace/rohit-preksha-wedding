@@ -31,8 +31,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
   return (
     <html lang="en" className={`${playfair.variable} ${cormorant.variable} scroll-smooth`}>
+      <head>
+        {basePath ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__BASE_PATH__=${JSON.stringify(basePath)};`,
+            }}
+          />
+        ) : null}
+      </head>
       <body className="font-body antialiased">{children}</body>
     </html>
   );

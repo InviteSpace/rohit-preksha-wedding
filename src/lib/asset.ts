@@ -1,20 +1,34 @@
 const REPO_NAME = "rohit-preksha-wedding";
 
-/** GitHub project pages live at username.github.io/repo-name/ */
+declare global {
+  interface Window {
+    __BASE_PATH__?: string;
+  }
+}
+
 function getBasePath(): string {
   if (typeof window !== "undefined") {
-    if (window.location.hostname.endsWith("github.io")) {
-      const firstSegment = window.location.pathname.split("/").filter(Boolean)[0];
-      if (firstSegment === REPO_NAME) return `/${REPO_NAME}`;
+    if (window.__BASE_PATH__) return window.__BASE_PATH__;
+
+    const { hostname, pathname } = window.location;
+    if (hostname.endsWith("github.io")) {
+      const segment = pathname.split("/").filter(Boolean)[0];
+      if (segment && !segment.includes(".")) return `/${segment}`;
     }
+
     return "";
   }
 
-  if (process.env.GITHUB_PAGES === "true") return `/${REPO_NAME}`;
+  if (process.env.GITHUB_PAGES === "true") {
+    return process.env.NEXT_PUBLIC_BASE_PATH || `/${REPO_NAME}`;
+  }
+
   return process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 }
 
 export function assetPath(path: string): string {
   if (!path.startsWith("/")) return path;
-  return `${getBasePath()}${path}`;
+  const base = getBasePath();
+  if (base && path.startsWith(`${base}/`)) return path;
+  return `${base}${path}`;
 }
