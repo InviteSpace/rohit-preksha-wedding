@@ -85,21 +85,23 @@ Your site will be live at:
 
 **https://demonsclarohit.github.io/rohit-preksha-wedding/**
 
-### One-time setup on GitHub
+### One-time setup on GitHub (required)
 
-1. Open your repo: [github.com/demonsclarohit/rohit-preksha-wedding](https://github.com/demonsclarohit/rohit-preksha-wedding)
-2. Go to **Settings → Pages**
-3. Under **Build and deployment**, set **Source** to **GitHub Actions**
-4. Push your latest code to `main`:
+The deploy will fail with **404 Not Found** until you do this:
+
+1. Open [Settings → Pages](https://github.com/demonsclarohit/rohit-preksha-wedding/settings/pages)
+2. Under **Build and deployment**, set **Source** to **GitHub Actions** (not “Deploy from a branch”)
+3. Save — you do not need to pick a branch
+4. Push the latest code (if you haven’t already):
 
 ```bash
 git add .
-git commit -m "Add GitHub Pages deployment"
+git commit -m "Fix GitHub Pages deployment"
 git push origin main
 ```
 
-5. Go to **Actions** tab — the workflow will build and deploy automatically
-6. When it finishes (green check), your site is live
+5. Go to **Actions** → open the failed run → **Re-run all jobs**
+6. When it shows a green check, your site is live
 
 Every push to `main` redeploys the site automatically.
 
