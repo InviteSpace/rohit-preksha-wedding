@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import PublicImage from "@/components/PublicImage";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
 
@@ -102,12 +102,11 @@ export default function CoupleIntro() {
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         className="mx-auto mt-10 w-full max-w-[240px] md:max-w-[280px]"
       >
-        <Image
+        <PublicImage
           src={illustration}
           alt={`${groom.name} and ${bride.name}`}
           width={853}
           height={1024}
-          unoptimized
           className="mx-auto h-auto w-full max-w-[240px] object-contain drop-shadow-md md:max-w-[280px]"
           sizes="(max-width: 768px) 60vw, 280px"
         />

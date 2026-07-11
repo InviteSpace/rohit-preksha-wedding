@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import PublicImage from "@/components/PublicImage";
 import { WEDDING_CONFIG } from "@/config/wedding";
 
 const PETALS = Array.from({ length: 10 }, (_, i) => ({
@@ -20,7 +20,7 @@ export default function AnimatedHeroBackground() {
         animate={{ scale: [1, 1.04] }}
         transition={{ duration: 24, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
       >
-        <Image
+        <PublicImage
           src={WEDDING_CONFIG.hero.background}
           alt=""
           fill

@@ -32,10 +32,16 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
+          NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
+
+      - name: Verify build output
+        run: test -f out/index.html && echo "Build OK — $(ls out | wc -l) files ready"
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
+          publish_branch: gh-pages
           force_orphan: true
+          commit_message: "Deploy wedding site"

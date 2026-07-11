@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import PublicImage from "@/components/PublicImage";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import { fadeUp, scaleIn } from "@/lib/motion";
@@ -60,7 +60,7 @@ export default function Gallery() {
             onClick={() => setLightboxIndex(index)}
             className="group relative aspect-square overflow-hidden rounded-sm border border-gold/30 cursor-pointer shadow-sm"
           >
-            <Image
+            <PublicImage
               src={photo}
               alt={`Gallery photo ${index + 1}`}
               fill
@@ -109,7 +109,7 @@ export default function Gallery() {
               className="relative h-[70vh] w-full max-w-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
+              <PublicImage
                 src={photos[lightboxIndex]}
                 alt={`Gallery photo ${lightboxIndex + 1}`}
                 fill

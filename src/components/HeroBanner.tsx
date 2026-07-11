@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import Image from "next/image";
+import PublicImage from "@/components/PublicImage";
 import AnimatedHeroBackground from "@/components/AnimatedHeroBackground";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import { fadeUp } from "@/lib/motion";
@@ -53,13 +53,12 @@ export default function HeroBanner() {
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Image
+            <PublicImage
               src={WEDDING_CONFIG.hero.couple}
               alt={`${groom.name} and ${bride.name}`}
               width={853}
               height={1024}
               priority
-              unoptimized
               className="h-auto w-full object-contain drop-shadow-[0_12px_28px_rgba(61,43,43,0.2)]"
               sizes="(max-width: 768px) 72vw, 300px"
             />

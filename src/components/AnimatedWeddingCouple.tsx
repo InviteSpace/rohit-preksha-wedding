@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import PublicImage from "@/components/PublicImage";
 import { WEDDING_CONFIG } from "@/config/wedding";
 
 export default function AnimatedWeddingCouple() {
@@ -20,13 +20,12 @@ export default function AnimatedWeddingCouple() {
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         className="relative w-full"
       >
-        <Image
+        <PublicImage
           src={src}
           alt={`${groom.name} and ${bride.name}`}
           width={853}
           height={1024}
           priority
-          unoptimized
           className="h-auto w-full object-contain drop-shadow-[0_8px_24px_rgba(61,43,43,0.15)]"
           sizes="(max-width: 768px) 90vw, 360px"
         />
