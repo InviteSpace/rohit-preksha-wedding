@@ -191,7 +191,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
       >
         <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm">
           <iframe
-            src={getMapEmbedUrl(event.mapUrl)}
+            src={getMapEmbedUrl(event.mapUrl, `${event.venue}, ${event.address}`)}
             width="100%"
             height="220"
             style={{ border: 0 }}
