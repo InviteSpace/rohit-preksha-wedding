@@ -24,7 +24,7 @@ export default function ClosingSection() {
           {closing.signature}
         </p>
 
-        <p className="mt-4 font-heading text-sm font-semibold tracking-widest text-navy/70">
+        <p className="mt-4 break-all font-heading text-sm font-semibold tracking-wide text-navy/70 sm:tracking-widest">
           {hashtag}
         </p>
 

@@ -38,7 +38,7 @@ export default function MusicPlayer({ autoPrompt = false }: MusicPlayerProps) {
       {showPrompt && (
         <button
           onClick={toggle}
-          className="fixed bottom-24 right-4 z-50 animate-pulse rounded-full bg-sage px-4 py-2 font-heading text-xs tracking-wider text-white shadow-lg md:bottom-8 cursor-pointer"
+          className="fixed right-4 bottom-24 z-50 max-w-[calc(100vw-5.5rem)] animate-pulse rounded-full bg-sage px-3 py-2 font-heading text-[11px] tracking-wide text-white shadow-lg sm:px-4 sm:text-xs sm:tracking-wider md:bottom-8 cursor-pointer"
         >
           Tap for music ♪
         </button>
@@ -47,7 +47,7 @@ export default function MusicPlayer({ autoPrompt = false }: MusicPlayerProps) {
       <button
         onClick={toggle}
         aria-label={playing ? "Pause music" : "Play music"}
-        className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold bg-white/95 text-sage shadow-lg backdrop-blur-sm transition-transform hover:scale-110 cursor-pointer"
+        className="fixed right-4 bottom-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold bg-white/95 text-sage shadow-lg backdrop-blur-sm transition-transform hover:scale-110 cursor-pointer"
       >
         {playing ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

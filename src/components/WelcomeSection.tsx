@@ -13,7 +13,7 @@ interface WelcomeSectionProps {
 
 function LabelPill({ children }: { children: string }) {
   return (
-    <span className="inline-block rounded-full border border-royal-gold/35 bg-royal-gold/10 px-3 py-1 font-heading text-[9px] font-semibold tracking-[0.22em] text-royal-gold uppercase md:text-[10px]">
+    <span className="inline-block rounded-full border border-royal-gold/35 bg-royal-gold/10 px-2.5 py-1 font-heading text-[9px] font-semibold tracking-[0.14em] text-royal-gold uppercase sm:px-3 sm:tracking-[0.22em] md:text-[10px]">
       {children}
     </span>
   );
@@ -78,7 +78,7 @@ function FamilyPanel({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      className={`rounded-3xl border px-5 py-6 text-center shadow-[0_12px_40px_rgba(17,41,77,0.06)] backdrop-blur-sm md:px-6 md:py-7 ${shell}`}
+      className={`rounded-3xl border px-4 py-5 text-center shadow-[0_12px_40px_rgba(17,41,77,0.06)] backdrop-blur-sm sm:px-5 sm:py-6 md:px-6 md:py-7 ${shell}`}
     >
       <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-navy/55 uppercase">
         {fromLabel}
@@ -161,7 +161,7 @@ export default function WelcomeSection({
 
   return (
     <SectionWrapper id="welcome">
-      <div className="relative overflow-hidden rounded-[2rem] border border-navy/10 bg-white/75 px-5 py-8 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl sm:px-8 sm:py-10 md:px-12 md:py-12">
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-navy/10 bg-white/75 px-4 py-7 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:px-8 sm:py-10 md:px-12 md:py-12">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-royal-gold/10 blur-3xl"

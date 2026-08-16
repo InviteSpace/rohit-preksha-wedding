@@ -53,14 +53,16 @@ export default function FloatingNav() {
           exit={{ y: -80, opacity: 0 }}
           className="fixed top-0 left-0 right-0 z-50 border-b border-gold/20 bg-ivory/95 backdrop-blur-sm shadow-sm"
         >
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-            <span className="font-heading text-sm text-rose md:text-base">R · P</span>
-            <div className="flex gap-1 overflow-x-auto md:gap-2">
+          <div className="mx-auto flex max-w-5xl items-center gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+            <span className="hidden shrink-0 font-heading text-sm text-rose sm:inline md:text-base">
+              R · P
+            </span>
+            <div className="flex min-w-0 flex-1 justify-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:justify-end md:gap-2">
               {NAV_ITEMS.map(({ id, label }) => (
                 <button
                   key={id}
                   onClick={() => scrollTo(id)}
-                  className={`relative shrink-0 rounded-sm px-2 py-1 font-heading text-[10px] tracking-wider uppercase transition-colors md:px-3 md:text-xs cursor-pointer ${
+                  className={`relative min-h-10 shrink-0 rounded-sm px-3 py-2 font-heading text-[11px] tracking-wide uppercase transition-colors md:px-3 md:text-xs cursor-pointer ${
                     activeId === id ? "text-sage" : "text-maroon/90 hover:text-rose"
                   }`}
                 >
@@ -68,7 +70,7 @@ export default function FloatingNav() {
                   {activeId === id && (
                     <motion.span
                       layoutId="nav-underline"
-                      className="absolute bottom-0 left-2 right-2 h-0.5 bg-sage md:left-3 md:right-3"
+                      className="absolute bottom-1 left-3 right-3 h-0.5 bg-sage"
                     />
                   )}
                 </button>

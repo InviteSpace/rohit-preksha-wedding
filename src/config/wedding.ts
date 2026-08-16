@@ -192,10 +192,10 @@ export const WEDDING_CONFIG = {
       title: "Mehndi Ceremony",
       date: "2026-11-20",
       time: "Time to be announced",
-      venue: "Sakhi Beauty Parlour",
-      address: "Sakhi Beauty Parlour, Lucknow",
-      mapUrl:
-        "https://www.google.com/maps/search/?api=1&query=Sakhi+Beauty+Parlour,+Lucknow",
+      venue: "Shivaji Puram",
+      address:
+        "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
+      mapUrl: "https://maps.app.goo.gl/j5a5qCPN25irAZwy5",
       description: "A joyous celebration of henna, music, colours, and togetherness.",
       dressCode: "Traditional / Festive wear",
     },
@@ -204,10 +204,10 @@ export const WEDDING_CONFIG = {
       title: "Haldi Ceremony",
       date: "2026-11-20",
       time: "Time to be announced",
-      venue: "Sakhi Beauty Parlour",
-      address: "Sakhi Beauty Parlour, Lucknow",
-      mapUrl:
-        "https://www.google.com/maps/search/?api=1&query=Sakhi+Beauty+Parlour,+Lucknow",
+      venue: "Shivaji Puram",
+      address:
+        "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
+      mapUrl: "https://maps.app.goo.gl/j5a5qCPN25irAZwy5",
       description: "A morning of turmeric blessings, laughter, and joyful rituals.",
       dressCode: "Yellow / Light festive colors",
     },
