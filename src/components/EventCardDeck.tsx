@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
+import EventIcon from "@/components/EventIcon";
 import QrShareDownload from "@/components/QrShareDownload";
 import { WEDDING_CONFIG, type WeddingEvent } from "@/config/wedding";
 import { filterEvents } from "@/lib/inviteConfig";
@@ -87,23 +88,26 @@ function PlayingCardFace({
       whileHover={!isSelected ? { y: transform.y - 12, scale: transform.scale + 0.04 } : { y: -38 }}
       whileTap={{ scale: transform.scale * 0.97 }}
       transition={gentleSpring}
-      className={`absolute left-1/2 top-1/2 h-[220px] w-[155px] -translate-x-1/2 -translate-y-1/2 cursor-pointer overflow-hidden rounded-2xl border border-navy/10 md:h-[260px] md:w-[185px] ${
-        isSelected ? "shadow-2xl shadow-navy/20" : "shadow-lg shadow-navy/10"
+      className={`absolute left-1/2 top-[46%] h-[220px] w-[155px] -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-2xl md:h-[260px] md:w-[185px] ${
+        isSelected ? "shadow-[0_18px_40px_rgba(17,41,77,0.22)]" : "shadow-[0_12px_28px_rgba(17,41,77,0.14)]"
       }`}
-      style={{ transformOrigin: "center bottom" }}
+      style={{ transformOrigin: "center center" }}
       aria-pressed={isSelected}
       aria-label={`${event.title} — ${formatShortDate(event.date)}`}
     >
       <div
-        className={`relative flex h-full w-full flex-col bg-linear-to-br ${
+        className={`relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-navy/10 bg-linear-to-br ${
           CARD_ACCENTS[event.id] ?? "from-white to-[#f5f2ec]"
         } p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
       >
         <div className="pointer-events-none absolute inset-3 rounded-xl border border-royal-gold/25" />
 
         <div className="relative z-10 flex items-start justify-between">
-          <span className="text-xl md:text-2xl">{event.icon}</span>
-          <span className="rotate-180 text-xl md:text-2xl">{event.icon}</span>
+          <EventIcon eventId={event.id} className="size-5 text-royal-gold md:size-6" />
+          <EventIcon
+            eventId={event.id}
+            className="size-5 rotate-180 text-royal-gold md:size-6"
+          />
         </div>
 
         <div className="relative z-10 mt-auto flex flex-col items-center text-center">
@@ -151,9 +155,9 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
           initial={{ rotate: -8, scale: 0.8 }}
           animate={{ rotate: 0, scale: 1 }}
           transition={gentleSpring}
-          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-navy text-2xl text-white"
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-navy text-white"
         >
-          {event.icon}
+          <EventIcon eventId={event.id} className="size-7" />
         </motion.span>
         <div className="min-w-[200px] flex-1">
           <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase">

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import EventIcon from "@/components/EventIcon";
 import QrShareDownload from "@/components/QrShareDownload";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
@@ -68,7 +69,7 @@ export default function LocationSection() {
             className="invite-border overflow-hidden bg-white/90 p-6 md:p-8"
           >
             <div className="flex flex-wrap items-start gap-4">
-              <span className="text-3xl">{event.icon}</span>
+              <EventIcon eventId={event.id} className="mt-1 size-8 text-gold" />
               <div className="flex-1 min-w-[200px]">
                 <h3 className="font-heading text-xl text-maroon-dark md:text-2xl">
                   {event.title}

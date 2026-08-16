@@ -8,7 +8,6 @@ export interface WeddingEvent {
   mapUrl: string;
   description: string;
   dressCode?: string;
-  icon: string;
 }
 
 export const WEDDING_CONFIG = {
@@ -199,7 +198,6 @@ export const WEDDING_CONFIG = {
         "https://www.google.com/maps/search/?api=1&query=Sakhi+Beauty+Parlour,+Lucknow",
       description: "A joyous celebration of henna, music, colours, and togetherness.",
       dressCode: "Traditional / Festive wear",
-      icon: "🌿",
     },
     {
       id: "haldi",
@@ -212,7 +210,6 @@ export const WEDDING_CONFIG = {
         "https://www.google.com/maps/search/?api=1&query=Sakhi+Beauty+Parlour,+Lucknow",
       description: "A morning of turmeric blessings, laughter, and joyful rituals.",
       dressCode: "Yellow / Light festive colors",
-      icon: "☀️",
     },
     // {
     //   id: "cocktail",
@@ -224,7 +221,6 @@ export const WEDDING_CONFIG = {
     //   mapUrl: "https://maps.google.com/?q=India",
     //   description: "An evening filled with music, laughter, dance, and celebration.",
     //   dressCode: "Festive / Evening wear",
-    //   icon: "🎶",
     // },
     {
       id: "wedding",
@@ -238,7 +234,6 @@ export const WEDDING_CONFIG = {
         "https://www.google.com/maps/search/?api=1&query=Raj+Estate,+Allambagh+Para,+Tedhi+Pulia+Ring+Road,+Devpur,+Rajajipuram,+Hardoi,+Lucknow,+Uttar+Pradesh+226017",
       description: "The sacred union of Rohit and Preksha — witness our vows and blessings.",
       dressCode: "Traditional / Formal ethnic wear",
-      icon: "💒",
     },
     {
       id: "reception",
@@ -253,7 +248,6 @@ export const WEDDING_CONFIG = {
       description:
         "Join us as we celebrate the beginning of Rohit and Preksha's new journey together.",
       dressCode: "Formal / Evening wear",
-      icon: "🎉",
     },
   ] satisfies WeddingEvent[],
 
