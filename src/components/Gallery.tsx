@@ -38,7 +38,7 @@ export default function Gallery() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-body text-lg text-maroon/70"
+          className="font-body text-lg text-maroon/85"
         >
           Moments from our journey —{" "}
           <a href="#share-photos" className="text-sage underline-offset-2 hover:text-rose hover:underline">

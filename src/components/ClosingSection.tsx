@@ -35,7 +35,7 @@ export default function ClosingSection() {
         viewport={{ once: true }}
         className="mx-auto max-w-2xl"
       >
-        <p className="font-body text-lg leading-relaxed text-maroon/80 md:text-xl">
+        <p className="font-body text-lg leading-relaxed text-maroon/90 md:text-xl">
           {closing.message}
         </p>
 
@@ -58,7 +58,7 @@ export default function ClosingSection() {
           </Button>
         </div>
 
-        <p className="mt-12 font-body text-sm text-maroon/50">
+        <p className="mt-12 font-body text-sm text-maroon/90">
           {couple.groom.name} & {couple.bride.name} · {new Date().getFullYear()}
         </p>
       </motion.div>

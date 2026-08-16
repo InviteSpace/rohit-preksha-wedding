@@ -33,6 +33,8 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
+          NEXT_PUBLIC_ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH }}
+          NEXT_PUBLIC_INVITE_SECRET: ${{ secrets.INVITE_SECRET }}
 
       - name: Verify build output
         run: |

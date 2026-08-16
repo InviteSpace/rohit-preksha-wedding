@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { QRCodeSVG } from "qrcode.react";
 import Button from "@/components/ui/Button";
+import QrShareDownload from "@/components/QrShareDownload";
 import { WEDDING_CONFIG, type WeddingEvent } from "@/config/wedding";
+import { filterEvents } from "@/lib/inviteConfig";
 import { getMapEmbedUrl } from "@/lib/qr";
 import { fadeUp, gentleSpring, snappySpring } from "@/lib/motion";
-
-const EVENTS = WEDDING_CONFIG.events;
 
 const CARD_ACCENTS: Record<string, string> = {
   mehndi: "from-[#eef4ef] via-ivory to-[#dce8dd]",
@@ -116,7 +115,7 @@ function PlayingCardFace({
             {event.title}
           </h3>
           <p className="mt-2 font-body text-sm text-gold">{formatShortDate(event.date)}</p>
-          <p className="font-body text-xs text-maroon/65">{event.time}</p>
+          <p className="font-body text-xs text-maroon/85">{event.time}</p>
         </div>
 
         <div className="relative z-10 mt-3 flex justify-center">
@@ -157,10 +156,10 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
           <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">Event Details</p>
           <h3 className="mt-1 font-heading text-2xl text-maroon-dark md:text-3xl">{event.title}</h3>
           <p className="mt-2 font-body text-sm text-gold">{formatDate(event.date)}</p>
-          <p className="font-body text-sm text-maroon/70">{event.time}</p>
+          <p className="font-body text-sm text-maroon/85">{event.time}</p>
           <p className="mt-4 font-body text-base leading-relaxed text-maroon/85">{event.description}</p>
           {event.dressCode && (
-            <p className="mt-3 font-body text-sm italic text-maroon/60">
+            <p className="mt-3 font-body text-sm italic text-maroon/90">
               Dress Code: {event.dressCode}
             </p>
           )}
@@ -175,7 +174,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
       >
         <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">Venue & Location</p>
         <p className="mt-2 font-heading text-xl text-maroon">{event.venue}</p>
-        <p className="mt-1 font-body text-sm text-maroon/75">{event.address}</p>
+        <p className="mt-1 font-body text-sm text-maroon/90">{event.address}</p>
         <div className="mt-4">
           <a href={event.mapUrl} target="_blank" rel="noopener noreferrer">
             <Button variant="primary">Get Directions</Button>
@@ -187,13 +186,12 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 0.5 }}
-        className="mt-6 grid gap-6 md:grid-cols-2"
+        className="mt-6 grid items-stretch gap-6 md:grid-cols-2"
       >
-        <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm">
+        <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm min-h-[280px] h-full">
           <iframe
             src={getMapEmbedUrl(event.mapUrl, `${event.venue}, ${event.address}`)}
-            width="100%"
-            height="220"
+            className="h-full min-h-[280px] w-full"
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
@@ -202,25 +200,25 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
           />
         </div>
 
-        <div className="flex flex-col items-center justify-center rounded-sm border border-gold/30 bg-ivory p-6">
-          <p className="mb-4 font-heading text-xs tracking-wider text-sage uppercase">
-            Scan for Directions
-          </p>
-          <QRCodeSVG
-            value={event.mapUrl}
-            size={150}
-            bgColor="#FFFBF7"
-            fgColor="#3D2B2B"
-            level="M"
-          />
-        </div>
+        <QrShareDownload
+          value={event.mapUrl}
+          title={`${event.title} — ${event.venue}`}
+          filename={`${event.id}-directions-qr`}
+        />
       </motion.div>
     </motion.div>
   );
 }
 
-export default function EventCardDeck() {
-  const [selectedIndex, setSelectedIndex] = useState(2);
+export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
+  const events = filterEvents(WEDDING_CONFIG.events, eventIds);
+  const weddingIndex = Math.max(
+    0,
+    events.findIndex((e) => e.id === "wedding"),
+  );
+  const [selectedIndex, setSelectedIndex] = useState(
+    weddingIndex >= 0 ? weddingIndex : 0,
+  );
   const [userPicked, setUserPicked] = useState(false);
   const [spread, setSpread] = useState<DeckSpread>({ xGap: 92, rotate: 16, yArc: 16 });
 
@@ -232,14 +230,20 @@ export default function EventCardDeck() {
   }, []);
 
   useEffect(() => {
-    if (userPicked) return;
+    setSelectedIndex((prev) =>
+      events.length === 0 ? 0 : Math.min(prev, events.length - 1),
+    );
+  }, [events.length]);
+
+  useEffect(() => {
+    if (userPicked || events.length === 0) return;
 
     const interval = setInterval(() => {
-      setSelectedIndex((prev) => (prev + 1) % EVENTS.length);
+      setSelectedIndex((prev) => (prev + 1) % events.length);
     }, 3200);
 
     return () => clearInterval(interval);
-  }, [userPicked]);
+  }, [userPicked, events.length]);
 
   const selectCard = (index: number) => {
     setUserPicked(true);
@@ -247,16 +251,26 @@ export default function EventCardDeck() {
   };
 
   const goPrev = () => {
+    if (events.length === 0) return;
     setUserPicked(true);
-    setSelectedIndex((prev) => (prev - 1 + EVENTS.length) % EVENTS.length);
+    setSelectedIndex((prev) => (prev - 1 + events.length) % events.length);
   };
 
   const goNext = () => {
+    if (events.length === 0) return;
     setUserPicked(true);
-    setSelectedIndex((prev) => (prev + 1) % EVENTS.length);
+    setSelectedIndex((prev) => (prev + 1) % events.length);
   };
 
-  const selectedEvent = EVENTS[selectedIndex];
+  const selectedEvent = events[selectedIndex];
+
+  if (events.length === 0 || !selectedEvent) {
+    return (
+      <p className="mt-12 text-center font-body text-maroon/90">
+        No events are included in this invitation.
+      </p>
+    );
+  }
 
   return (
     <div className="mt-12">
@@ -265,7 +279,7 @@ export default function EventCardDeck() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="text-center font-body text-sm text-maroon/60 md:text-base"
+        className="text-center font-body text-sm text-maroon/90 md:text-base"
       >
         Tap a card to reveal venue, map &amp; directions
       </motion.p>
@@ -276,7 +290,7 @@ export default function EventCardDeck() {
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           className="card-deck-perspective relative mx-auto h-[320px] w-full overflow-visible md:h-[400px]"
         >
-          {EVENTS.map((event, index) => (
+          {events.map((event, index) => (
             <PlayingCardFace
               key={event.id}
               event={event}
@@ -299,7 +313,7 @@ export default function EventCardDeck() {
           </button>
 
           <div className="flex gap-2">
-            {EVENTS.map((event, index) => (
+            {events.map((event, index) => (
               <button
                 key={event.id}
                 type="button"

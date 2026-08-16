@@ -51,7 +51,7 @@ function PersonEntrance({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.9 }}
-        className="mt-2 max-w-xs font-body text-base italic text-maroon/70 md:text-lg"
+        className="mt-2 max-w-xs font-body text-base italic text-maroon/85 md:text-lg"
       >
         &ldquo;{tagline}&rdquo;
       </motion.p>
@@ -89,7 +89,7 @@ export default function CoupleIntro() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="font-body text-lg text-maroon/70"
+          className="font-body text-lg text-maroon/85"
         >
           Watch their story unfold
         </motion.p>
@@ -167,7 +167,7 @@ export default function CoupleIntro() {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="mt-14 text-center"
       >
-        <p className="mx-auto max-w-xl font-body text-lg leading-relaxed text-maroon/80 md:text-xl">
+        <p className="mx-auto max-w-xl font-body text-lg leading-relaxed text-maroon/90 md:text-xl">
           From a chance meeting to a lifetime of promises — their journey has been
           filled with laughter, love, and countless beautiful moments.
         </p>

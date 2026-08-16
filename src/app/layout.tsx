@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { Playfair_Display, Cormorant_Garamond, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -12,6 +13,13 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -34,7 +42,7 @@ export default function RootLayout({
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   return (
-    <html lang="en" className={`${playfair.variable} ${cormorant.variable} scroll-smooth`}>
+    <html lang="en" className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} scroll-smooth`}>
       <head>
         {basePath ? (
           <script
@@ -44,7 +52,7 @@ export default function RootLayout({
           />
         ) : null}
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body font-medium antialiased">{children}</body>
     </html>
   );
 }

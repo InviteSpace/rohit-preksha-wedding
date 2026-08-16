@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { QRCodeSVG } from "qrcode.react";
 import Button from "@/components/ui/Button";
+import QrShareDownload from "@/components/QrShareDownload";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import { getMapEmbedUrl } from "@/lib/qr";
@@ -45,7 +45,7 @@ export default function LocationSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-body text-lg text-maroon/70"
+          className="font-body text-lg text-maroon/85"
         >
           Maps and QR codes for every celebration
         </motion.p>
@@ -74,9 +74,9 @@ export default function LocationSection() {
                   {event.title}
                 </h3>
                 <p className="mt-1 font-body text-sm text-gold">{formatDate(event.date)}</p>
-                <p className="font-body text-sm text-maroon/70">{event.time}</p>
+                <p className="font-body text-sm text-maroon/85">{event.time}</p>
                 <p className="mt-3 font-heading text-lg text-maroon">{event.venue}</p>
-                <p className="mt-1 font-body text-sm text-maroon/70">{event.address}</p>
+                <p className="mt-1 font-body text-sm text-maroon/85">{event.address}</p>
                 <div className="mt-4">
                   <a href={event.mapUrl} target="_blank" rel="noopener noreferrer">
                     <Button variant="primary">Get Directions</Button>
@@ -85,12 +85,11 @@ export default function LocationSection() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm">
+            <div className="mt-6 grid items-stretch gap-6 md:grid-cols-2">
+              <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm min-h-[280px] h-full">
                 <iframe
                   src={getMapEmbedUrl(event.mapUrl, `${event.venue}, ${event.address}`)}
-                  width="100%"
-                  height="220"
+                  className="h-full min-h-[280px] w-full"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
@@ -99,19 +98,11 @@ export default function LocationSection() {
                 />
               </div>
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="flex flex-col items-center justify-center rounded-sm border border-gold/30 bg-ivory p-6"
-              >
-                <p className="mb-4 font-heading text-xs tracking-wider text-sage uppercase">
-                  Scan for Directions
-                </p>
-                <QRCodeSVG
+              <motion.div whileHover={{ scale: 1.02 }}>
+                <QrShareDownload
                   value={event.mapUrl}
-                  size={150}
-                  bgColor="#FFFBF7"
-                  fgColor="#3D2B2B"
-                  level="M"
+                  title={`${event.title} — ${event.venue}`}
+                  filename={`${event.id}-directions-qr`}
                 />
               </motion.div>
             </div>

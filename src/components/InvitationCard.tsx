@@ -84,7 +84,7 @@ export default function InvitationCard({
 
         <Item
           {...itemProps}
-          className={`font-body italic text-maroon/70 ${
+          className={`font-body italic text-maroon/85 ${
             expanded ? "text-base md:text-lg" : compact ? "text-[10px] md:text-xs" : "text-xs md:text-sm"
           }`}
         >

@@ -62,7 +62,7 @@ export default function FloatingNav() {
                   key={id}
                   onClick={() => scrollTo(id)}
                   className={`relative shrink-0 rounded-sm px-2 py-1 font-heading text-[10px] tracking-wider uppercase transition-colors md:px-3 md:text-xs cursor-pointer ${
-                    activeId === id ? "text-sage" : "text-maroon/60 hover:text-rose"
+                    activeId === id ? "text-sage" : "text-maroon/90 hover:text-rose"
                   }`}
                 >
                   {label}

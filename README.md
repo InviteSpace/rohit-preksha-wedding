@@ -79,6 +79,26 @@ https://yoursite.com/?guest=Rahul
 
 Shows: *"Dear Rahul, you are cordially invited"*
 
+### Admin page & signed invitation URLs
+
+Open **`/admin`** (not linked from the public site) to log in and generate signed links.
+
+1. Create a password hash:
+   ```bash
+   npm run hash-admin-password -- "your-strong-password"
+   ```
+2. Put values in `.env.local` (see [`.env.example`](.env.example)):
+   - `NEXT_PUBLIC_ADMIN_PASSWORD_HASH` — the hex hash from step 1  
+   - `NEXT_PUBLIC_INVITE_SECRET` — a long random string (HMAC key for invite tokens)
+3. For GitHub Pages deploy, add repository secrets with the **same** values:
+   - `ADMIN_PASSWORD_HASH`
+   - `INVITE_SECRET`  
+   The workflow passes them into the static build.
+
+In admin you can set default language, groom/bride side, Wedding and/or Reception events, optional guest name, then **Generate signed URL** and copy it. Guests open `/?i=…`; if the token is tampered with, the site falls back to safe defaults.
+
+**Note:** This is a static GitHub Pages site — the hash and HMAC secret are baked into client JS. That stops casual URL editing; it is not as strong as a real server login.
+
 ## Your public URL
 
 You want guests to see **warmwelcome** instead of **demonsclarohit**.  

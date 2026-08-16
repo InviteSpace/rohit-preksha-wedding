@@ -4,14 +4,56 @@ import { motion } from "framer-motion";
 import GoldBorder from "@/components/ui/GoldBorder";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import type { InvitationSide } from "@/lib/invitationSide";
 import { fadeUp, slideFromLeft, slideFromRight } from "@/lib/motion";
 
 interface WelcomeSectionProps {
   guestName?: string;
+  side?: InvitationSide;
 }
 
-export default function WelcomeSection({ guestName }: WelcomeSectionProps) {
+export default function WelcomeSection({
+  guestName,
+  side = "groom",
+}: WelcomeSectionProps) {
   const { blessing, families, invitation } = WEDDING_CONFIG;
+  const invitingIsGroom = side === "groom";
+
+  const inviting = invitingIsGroom
+    ? {
+        surname: families.groom.surname,
+        eldersLabel: "Grandparents of the groom",
+        elders: invitation.groomElders,
+        parentsLabel: "Parents of the groom",
+        parents: invitation.groomParents,
+        fromLabel: "From the family of",
+      }
+    : {
+        surname: families.bride.surname,
+        eldersLabel: "Grandparents of the bride",
+        elders: invitation.brideGrandparents,
+        parentsLabel: "Parents of the bride",
+        parents: invitation.brideParents,
+        fromLabel: "From the family of",
+      };
+
+  const partner = invitingIsGroom
+    ? {
+        surname: families.bride.surname,
+        eldersLabel: "Grandparents of the bride",
+        elders: invitation.brideGrandparents,
+        parentsLabel: "Parents of the bride",
+        parents: invitation.brideParents,
+        fromLabel: "& the family of",
+      }
+    : {
+        surname: families.groom.surname,
+        eldersLabel: "Grandparents of the groom",
+        elders: invitation.groomElders,
+        parentsLabel: "Parents of the groom",
+        parents: invitation.groomParents,
+        fromLabel: "& the family of",
+      };
 
   return (
     <SectionWrapper id="welcome">
@@ -20,7 +62,7 @@ export default function WelcomeSection({ guestName }: WelcomeSectionProps) {
           <motion.p
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 text-center font-body text-lg text-maroon/80"
+            className="mb-6 text-center font-body text-lg text-maroon/90"
           >
             Dear <span className="font-semibold text-rose">{guestName}</span>, you are
             cordially invited
@@ -45,7 +87,7 @@ export default function WelcomeSection({ guestName }: WelcomeSectionProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mx-auto max-w-2xl font-body text-lg leading-relaxed text-maroon/80 md:text-xl"
+            className="mx-auto max-w-2xl font-body text-lg leading-relaxed text-maroon/90 md:text-xl"
           >
             {blessing.english}
           </motion.p>
@@ -59,26 +101,26 @@ export default function WelcomeSection({ guestName }: WelcomeSectionProps) {
               className="text-center"
             >
               <p className="font-heading text-xs tracking-[0.3em] text-sage uppercase">
-                From the family of
+                {inviting.fromLabel}
               </p>
               <h3 className="mt-2 font-heading text-2xl text-maroon-dark">
-                {families.groom.surname}
+                {inviting.surname}
               </h3>
               <p className="mt-3 font-heading text-xs tracking-wider text-gold uppercase">
-                Grandparents of the groom
+                {inviting.eldersLabel}
               </p>
-              <div className="mt-1 font-body text-sm leading-relaxed text-maroon/65">
-                {invitation.groomElders.map((name) => (
+              <div className="mt-1 font-body text-sm leading-relaxed text-maroon/85">
+                {inviting.elders.map((name) => (
                   <p key={name}>{name}</p>
                 ))}
               </div>
               <p className="mt-3 font-heading text-xs tracking-wider text-gold uppercase">
-                Parents of the groom
+                {inviting.parentsLabel}
               </p>
-              <div className="mt-1 font-body leading-relaxed text-maroon/70">
-                <p>{invitation.groomParents[0]}</p>
+              <div className="mt-1 font-body leading-relaxed text-maroon/85">
+                <p>{inviting.parents[0]}</p>
                 <p className="text-gold">&</p>
-                <p>{invitation.groomParents[1]}</p>
+                <p>{inviting.parents[1]}</p>
               </div>
             </motion.div>
 
@@ -90,26 +132,26 @@ export default function WelcomeSection({ guestName }: WelcomeSectionProps) {
               className="text-center"
             >
               <p className="font-heading text-xs tracking-[0.3em] text-sage uppercase">
-                & the family of
+                {partner.fromLabel}
               </p>
               <h3 className="mt-2 font-heading text-2xl text-maroon-dark">
-                {families.bride.surname}
+                {partner.surname}
               </h3>
               <p className="mt-3 font-heading text-xs tracking-wider text-gold uppercase">
-                Parents of the bride
+                {partner.parentsLabel}
               </p>
-              <div className="mt-1 font-body leading-relaxed text-maroon/70">
-                <p>{invitation.brideParents[0]}</p>
+              <div className="mt-1 font-body leading-relaxed text-maroon/85">
+                <p>{partner.parents[0]}</p>
                 <p className="text-gold">&</p>
-                <p>{invitation.brideParents[1]}</p>
+                <p>{partner.parents[1]}</p>
               </div>
               <p className="mt-3 font-heading text-xs tracking-wider text-gold uppercase">
-                Grandparents of the bride
+                {partner.eldersLabel}
               </p>
-              <div className="mt-1 font-body text-sm leading-relaxed text-maroon/65">
-                <p>{invitation.brideGrandparents[0]}</p>
-                <p className="text-gold">&</p>
-                <p>{invitation.brideGrandparents[1]}</p>
+              <div className="mt-1 font-body text-sm leading-relaxed text-maroon/85">
+                {partner.elders.map((name) => (
+                  <p key={name}>{name}</p>
+                ))}
               </div>
             </motion.div>
           </div>

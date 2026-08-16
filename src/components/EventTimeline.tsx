@@ -5,7 +5,7 @@ import SectionWrapper from "@/components/ui/SectionWrapper";
 import EventCardDeck from "@/components/EventCardDeck";
 import { fadeUp } from "@/lib/motion";
 
-export default function EventTimeline() {
+export default function EventTimeline({ eventIds }: { eventIds?: string[] }) {
   return (
     <SectionWrapper id="events">
       <div className="text-center">
@@ -33,13 +33,13 @@ export default function EventTimeline() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-body text-lg text-maroon/70"
+          className="font-body text-lg text-maroon/85"
         >
           Pick a celebration card to reveal every detail
         </motion.p>
       </div>
 
-      <EventCardDeck />
+      <EventCardDeck eventIds={eventIds} />
     </SectionWrapper>
   );
 }

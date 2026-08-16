@@ -55,7 +55,7 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-body text-lg text-maroon/70"
+          className="font-body text-lg text-maroon/85"
         >
           {sharedAlbum.description}
         </motion.p>
@@ -81,7 +81,7 @@ export default function SharePhotosSection() {
                 Google Photos Album
               </p>
               <h3 className="mt-1 font-heading text-2xl text-maroon-dark">{sharedAlbum.title}</h3>
-              <p className="mt-3 font-body text-base leading-relaxed text-maroon/80">
+              <p className="mt-3 font-body text-base leading-relaxed text-maroon/90">
                 Everyone is welcome to upload photos from our wedding celebrations. Please add
                 your memories — and kindly do not remove photos shared by others.
               </p>
@@ -101,7 +101,7 @@ export default function SharePhotosSection() {
                 <span className="font-heading text-sm text-gold">{step.number}</span>
                 <div>
                   <p className="font-heading text-base text-maroon-dark">{step.title}</p>
-                  <p className="mt-1 font-body text-sm text-maroon/70">{step.detail}</p>
+                  <p className="mt-1 font-body text-sm text-maroon/85">{step.detail}</p>
                 </div>
               </motion.li>
             ))}
@@ -116,7 +116,7 @@ export default function SharePhotosSection() {
             </a>
           </div>
 
-          <p className="mt-5 font-body text-sm italic text-maroon/55">
+          <p className="mt-5 font-body text-sm italic text-maroon/90">
             Use {hashtag} when posting on social media so we can find your posts too.
           </p>
         </motion.div>
@@ -128,7 +128,7 @@ export default function SharePhotosSection() {
           <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">
             Scan to Upload
           </p>
-          <p className="mt-2 text-center font-body text-sm text-maroon/70">
+          <p className="mt-2 text-center font-body text-sm text-maroon/85">
             Opens our shared Google Photos album on your phone
           </p>
 
@@ -145,7 +145,7 @@ export default function SharePhotosSection() {
             />
           </motion.div>
 
-          <p className="mt-5 text-center font-body text-xs text-maroon/55">
+          <p className="mt-5 text-center font-body text-xs text-maroon/90">
             Uploads go directly to Google Photos — add only, please keep everyone&apos;s
             memories safe.
           </p>
