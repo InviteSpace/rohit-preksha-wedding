@@ -52,15 +52,15 @@ export default function EventCard({ event, index }: EventCardProps) {
                 {event.title}
               </h3>
               <p className="mt-1 font-body text-sm text-gold">{formatDate(event.date)}</p>
-              <p className="font-body text-sm text-maroon/70">{event.time}</p>
-              <p className="mt-2 font-body text-base text-maroon/80">{event.description}</p>
+              <p className="font-body text-sm text-maroon/85">{event.time}</p>
+              <p className="mt-2 font-body text-base text-maroon/90">{event.description}</p>
               {event.dressCode && (
-                <p className="mt-2 font-body text-sm italic text-maroon/60">
+                <p className="mt-2 font-body text-sm italic text-maroon/90">
                   Dress Code: {event.dressCode}
                 </p>
               )}
               <p className="mt-3 font-heading text-base text-maroon">{event.venue}</p>
-              <p className="font-body text-sm text-maroon/70">{event.address}</p>
+              <p className="font-body text-sm text-maroon/85">{event.address}</p>
               <button
                 type="button"
                 onClick={() => scrollToLocation(event.id)}

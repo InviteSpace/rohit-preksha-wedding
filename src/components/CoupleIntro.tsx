@@ -29,9 +29,9 @@ function PersonEntrance({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.3 }}
-        className="mb-4 rounded-full border border-gold/40 bg-blush px-5 py-1.5"
+        className="mb-4 rounded-full border border-navy/15 bg-navy/5 px-5 py-1.5"
       >
-        <span className="font-heading text-[10px] tracking-[0.35em] text-sage uppercase md:text-xs">
+        <span className="font-heading text-[10px] font-semibold tracking-[0.35em] text-navy uppercase md:text-xs">
           {role}
         </span>
       </motion.div>
@@ -41,7 +41,7 @@ function PersonEntrance({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.6 }}
-        className="mt-5 font-heading text-3xl text-maroon-dark md:text-4xl"
+        className="mt-5 font-heading text-3xl !font-medium text-navy-deep md:text-4xl"
       >
         {name}
       </motion.h3>
@@ -51,7 +51,7 @@ function PersonEntrance({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.9 }}
-        className="mt-2 max-w-xs font-body text-base italic text-maroon/70 md:text-lg"
+        className="mt-2 max-w-xs font-heading text-base font-medium italic text-navy/80 md:text-lg"
       >
         &ldquo;{tagline}&rdquo;
       </motion.p>
@@ -70,7 +70,7 @@ export default function CoupleIntro() {
           whileInView={{ opacity: 1, letterSpacing: "0.4em" }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="font-heading text-xs text-sage uppercase"
+          className="font-heading text-xs font-semibold text-royal-gold uppercase"
         >
           The Couple
         </motion.p>
@@ -79,7 +79,7 @@ export default function CoupleIntro() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="mt-2 font-heading text-3xl text-maroon-dark md:text-4xl"
+          className="mt-2 font-heading text-3xl !font-medium text-navy-deep md:text-4xl"
         >
           Two Hearts, One Journey
         </motion.h2>
@@ -89,7 +89,7 @@ export default function CoupleIntro() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="font-body text-lg text-maroon/70"
+          className="font-heading text-lg font-medium text-navy/80"
         >
           Watch their story unfold
         </motion.p>
@@ -130,7 +130,7 @@ export default function CoupleIntro() {
           <motion.span
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="font-heading text-5xl text-rose md:text-6xl"
+            className="font-heading text-5xl !font-medium text-royal-gold md:text-6xl"
           >
             &
           </motion.span>
@@ -139,14 +139,14 @@ export default function CoupleIntro() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8, duration: 0.6 }}
-            className="mt-3 h-px w-20 origin-center bg-gold"
+            className="mt-3 h-px w-20 origin-center bg-royal-gold"
           />
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 1 }}
-            className="mt-3 font-body text-sm italic text-sage"
+            className="mt-3 font-heading text-sm font-medium italic text-navy/75"
           >
             united in love
           </motion.p>
@@ -167,7 +167,7 @@ export default function CoupleIntro() {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="mt-14 text-center"
       >
-        <p className="mx-auto max-w-xl font-body text-lg leading-relaxed text-maroon/80 md:text-xl">
+        <p className="mx-auto max-w-xl font-heading text-lg font-medium leading-relaxed text-navy/90 md:text-xl">
           From a chance meeting to a lifetime of promises — their journey has been
           filled with laughter, love, and countless beautiful moments.
         </p>

@@ -10,16 +10,52 @@ import WelcomeSection from "@/components/WelcomeSection";
 import CoupleIntro from "@/components/CoupleIntro";
 import Countdown from "@/components/Countdown";
 import EventTimeline from "@/components/EventTimeline";
-import Gallery from "@/components/Gallery";
 import SharePhotosSection from "@/components/SharePhotosSection";
 import ClosingSection from "@/components/ClosingSection";
 import MusicPlayer from "@/components/MusicPlayer";
 import ParticleEffects from "@/components/ParticleEffects";
+import {
+  DEFAULT_INVITE,
+  KNOWN_EVENT_IDS,
+  sanitizeGuestName,
+  type ResolvedInvite,
+} from "@/lib/inviteConfig";
+import { verifyInviteToken } from "@/lib/inviteToken";
+import { parseInvitationSide } from "@/lib/invitationSide";
 
 function HomeContent() {
   const searchParams = useSearchParams();
-  const guestName = searchParams.get("guest") ?? undefined;
+  const [invite, setInvite] = useState<ResolvedInvite | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function resolveInvite() {
+      const token = searchParams.get("i");
+      if (token) {
+        const verified = await verifyInviteToken(token);
+        if (!cancelled) {
+          setInvite(verified ?? { ...DEFAULT_INVITE });
+        }
+        return;
+      }
+
+      if (!cancelled) {
+        setInvite({
+          side: parseInvitationSide(searchParams.get("side")),
+          lang: "en",
+          eventIds: [...KNOWN_EVENT_IDS],
+          guest: sanitizeGuestName(searchParams.get("guest")),
+        });
+      }
+    }
+
+    void resolveInvite();
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
@@ -48,8 +84,22 @@ function HomeContent() {
     });
   }, []);
 
+  if (!invite) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-blush text-sage">
+        Loading...
+      </div>
+    );
+  }
+
   if (!introComplete) {
-    return <CinematicInvitationIntro onComplete={finishIntro} />;
+    return (
+      <CinematicInvitationIntro
+        onComplete={finishIntro}
+        side={invite.side}
+        initialLanguage={invite.lang}
+      />
+    );
   }
 
   return (
@@ -65,11 +115,10 @@ function HomeContent() {
         className="relative z-2"
       >
         <HeroBanner />
-        <WelcomeSection guestName={guestName} />
+        <WelcomeSection guestName={invite.guest} side={invite.side} />
         <CoupleIntro />
         <Countdown />
-        <EventTimeline />
-        <Gallery />
+        <EventTimeline eventIds={invite.eventIds} />
         <SharePhotosSection />
         <ClosingSection />
       </motion.main>
@@ -79,7 +128,13 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-blush text-sage">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-blush text-sage">
+          Loading...
+        </div>
+      }
+    >
       <HomeContent />
     </Suspense>
   );

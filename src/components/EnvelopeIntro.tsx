@@ -30,19 +30,21 @@ function MainInvitation() {
       <InvitationFlorals className="absolute -bottom-4 -right-4 w-[46%] rotate-180" />
       <div className="absolute inset-3 border border-[#d6ad63]/45" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-8">
-        <p className="font-heading text-[7px] tracking-[0.34em] uppercase sm:text-[9px]">
+        <p className="font-invite text-[8px] font-semibold tracking-[0.34em] text-white uppercase sm:text-[10px]">
           Save the date
         </p>
         <div className="my-2 h-px w-10 bg-[#d6ad63]/80" />
-        <h2 className="font-heading text-[clamp(14px,2.5vw,28px)] italic leading-tight">
+        <h2 className="font-invite text-[clamp(16px,2.8vw,30px)] font-semibold italic leading-tight text-white">
           {groom.name}
-          <span className="mx-2 text-[#d6ad63]">&</span>
+          <span className="mx-2 text-[#e3bd72]">&</span>
           {bride.name}
         </h2>
-        <p className="mt-2 font-body text-[7px] tracking-[0.15em] text-[#d6ad63] uppercase sm:text-[9px]">
+        <p className="mt-2 font-invite text-[8px] font-semibold tracking-[0.15em] text-[#e3bd72] uppercase sm:text-[10px]">
           {date}
         </p>
-        <p className="mt-1 font-body text-[7px] sm:text-[9px]">Together with their families</p>
+        <p className="mt-1 font-invite text-[8px] font-medium text-white/90 sm:text-[10px]">
+          Together with their families
+        </p>
       </div>
     </div>
   );
@@ -54,11 +56,11 @@ function ThankYouCard() {
       <InvitationFlorals className="absolute -bottom-4 -left-4 w-[48%]" />
       <div className="absolute inset-3 border border-[#d6ad63]/35" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center">
-        <p className="font-heading text-[clamp(15px,2.2vw,25px)] italic">Thank you</p>
-        <p className="mt-2 max-w-[80%] font-body text-[7px] leading-relaxed text-white/75 sm:text-[9px]">
+        <p className="font-invite text-[clamp(15px,2.2vw,25px)] font-semibold italic">Thank you</p>
+        <p className="mt-2 max-w-[80%] font-invite text-[9px] font-medium leading-relaxed text-white sm:text-[11px]">
           Your love and blessings make our celebration complete.
         </p>
-        <p className="mt-3 font-heading text-[9px] italic text-[#d6ad63] sm:text-xs">
+        <p className="mt-3 font-invite text-[10px] font-semibold italic text-[#e3bd72] sm:text-xs">
           Rohit and Preksha
         </p>
       </div>

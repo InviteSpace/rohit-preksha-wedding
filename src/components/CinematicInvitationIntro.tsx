@@ -3,7 +3,11 @@
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import InvitationFlorals from "@/components/InvitationFlorals";
-import { WEDDING_CONFIG } from "@/config/wedding";
+import {
+  getInvitationContent,
+  type InvitationLanguage,
+  type InvitationSide,
+} from "@/lib/invitationSide";
 
 type Stage =
   | "closed"
@@ -16,6 +20,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 interface CinematicInvitationIntroProps {
   onComplete: () => void;
+  side?: InvitationSide;
+  initialLanguage?: InvitationLanguage;
 }
 
 function WaxSeal({ compact = false }: { compact?: boolean }) {
@@ -149,203 +155,136 @@ function EnvelopePocketOverlay() {
   );
 }
 
-type InvitationLanguage = "en" | "hi";
-
-function InvitationFace({ language }: { language: InvitationLanguage }) {
-  const { groom, bride } = WEDDING_CONFIG.couple;
-  const invitation = WEDDING_CONFIG.invitation;
-  const weekday = WEDDING_CONFIG.weddingDate.toLocaleDateString("en-IN", {
-    weekday: "long",
-  });
-  const date = WEDDING_CONFIG.weddingDate.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-  const hindi = invitation.hindi;
-  const content =
-    language === "hi"
-      ? {
-          invocation: hindi.invocation,
-          title: hindi.title,
-          blessing: hindi.blessing,
-          groomElders: hindi.groomElders,
-          groomParents: hindi.groomParents,
-          invitationLine: hindi.invitationLine,
-          groomName: hindi.groomName,
-          unionLine: hindi.unionLine,
-          brideName: hindi.brideName,
-          brideConnector: hindi.brideConnector,
-          brideIntroduction: hindi.brideIntroduction,
-          brideParents: hindi.brideParents,
-          brideGrandparentsIntroduction: hindi.brideGrandparentsIntroduction,
-          brideGrandparents: hindi.brideGrandparents,
-          weekday: hindi.weekday,
-          date: hindi.date,
-          venue: hindi.venue,
-          closing: hindi.closing,
-        }
-      : {
-          invocation: invitation.invocation,
-          title: invitation.title,
-          blessing: invitation.blessing,
-          groomElders: invitation.groomElders,
-          groomParents: invitation.groomParents,
-          invitationLine: invitation.invitationLine,
-          groomName: groom.fullName,
-          unionLine: "weds",
-          brideName: bride.fullName,
-          brideConnector: "",
-          brideIntroduction: invitation.brideIntroduction,
-          brideParents: invitation.brideParents,
-          brideGrandparentsIntroduction: invitation.brideGrandparentsIntroduction,
-          brideGrandparents: invitation.brideGrandparents,
-          weekday,
-          date,
-          venue: invitation.venue,
-          closing: invitation.closing,
-        };
+/** Front: couple names + inviting-side family (groom or bride). */
+function InvitationFrontFace({
+  language,
+  side,
+}: {
+  language: InvitationLanguage;
+  side: InvitationSide;
+}) {
+  const content = getInvitationContent(side, language);
 
   return (
-    <div className="absolute inset-0 overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] backface-hidden">
-      <InvitationFlorals className="absolute -left-5 -top-4 w-[44%]" />
-      <InvitationFlorals className="absolute -bottom-5 -right-5 w-[46%] rotate-180" />
-      <div className="absolute inset-3 border border-[#d6ad63]/45 sm:inset-4" />
+    <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] backface-hidden">
+      <InvitationFlorals className="pointer-events-none absolute -left-7 -top-8 z-0 w-[30%] opacity-80 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[28%]" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-8 -right-7 z-0 w-[32%] opacity-80 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[30%]" />
+      <div className="pointer-events-none absolute inset-3 z-0 border border-[#d6ad63]/45 sm:inset-4" />
 
-      {/* Portrait mobile invitation */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 py-5 text-center sm:hidden">
-        <h2 className="font-heading text-[clamp(12px,4vw,16px)] tracking-[0.08em] uppercase">
-          {content.groomName}
-        </h2>
-        <p className="my-1 font-heading text-[7px] italic text-[#d6ad63]">{content.unionLine}</p>
-        <h2 className="font-heading text-[clamp(12px,4vw,16px)] tracking-[0.08em] uppercase">
-          {content.brideName}
-        </h2>
-        {content.brideConnector && (
-          <p className="font-body text-[5.5px] text-white/65">{content.brideConnector}</p>
-        )}
+      <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 py-6 text-center [transform:translateZ(1px)] sm:px-16 sm:py-10 md:px-20">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-0 sm:gap-x-4 md:gap-x-5">
+          <h2
+            className={
+              language === "en"
+                ? "font-script text-[clamp(30px,6.2vw,58px)] leading-none tracking-normal text-white normal-case"
+                : "font-invite text-[clamp(22px,4.8vw,42px)] italic leading-none tracking-normal text-white"
+            }
+          >
+            {content.primaryName}
+          </h2>
+          <p
+            className={
+              language === "en"
+                ? "font-script text-[clamp(20px,3.2vw,30px)] leading-none tracking-normal text-[#e3bd72] normal-case"
+                : "font-invite text-[clamp(15px,2.6vw,24px)] italic leading-none tracking-normal text-[#e3bd72]"
+            }
+          >
+            {content.unionLine}
+          </p>
+          <h2
+            className={
+              language === "en"
+                ? "font-script text-[clamp(30px,6.2vw,58px)] leading-none tracking-normal text-white normal-case"
+                : "font-invite text-[clamp(22px,4.8vw,42px)] italic leading-none tracking-normal text-white"
+            }
+          >
+            {content.secondaryName}
+          </h2>
+          {content.partnerConnector && (
+            <p className="basis-full font-invite text-[11px] font-semibold text-white/90 sm:basis-auto sm:text-sm">
+              {content.partnerConnector}
+            </p>
+          )}
+        </div>
 
-        <div className="my-3 h-px w-12 bg-[#d6ad63]/65" />
-        <p className="font-body text-[6px] text-white/65">{content.brideIntroduction}</p>
-        <p className="font-body text-[6.5px] leading-tight">
-          {content.brideParents[0]} <span className="text-[#d6ad63]">&</span>{" "}
-          {content.brideParents[1]}
-        </p>
-        <p className="mt-2 font-body text-[6px] text-white/65">
-          {content.brideGrandparentsIntroduction}
-        </p>
-        <p className="font-body text-[6.5px] leading-tight">
-          {content.brideGrandparents[0]} <span className="text-[#d6ad63]">&</span>{" "}
-          {content.brideGrandparents[1]}
-        </p>
+        <div className="my-2.5 h-px w-14 bg-[#d6ad63]/65 sm:my-3.5" />
+        <div className="grid w-full max-w-[92%] grid-cols-2 gap-x-3 gap-y-1 sm:max-w-[88%] sm:gap-x-8">
+          <div className="text-center">
+            <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+              {content.familyIntroduction}
+            </p>
+            <p className="mt-1 font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              {content.parents[0]}
+            </p>
+            <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">&</p>
+            <p className="font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              {content.parents[1]}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+              {content.grandparentsIntroduction}
+            </p>
+            <p className="mt-1 font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              {content.grandparents[0]}
+            </p>
+            <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">&</p>
+            <p className="font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              {content.grandparents[1]}
+            </p>
+          </div>
+        </div>
 
-        <div className="my-3 h-px w-12 bg-[#d6ad63]/65" />
-        <p className="font-heading text-[7px] tracking-[0.16em] uppercase">{content.weekday}</p>
-        <p className="font-heading text-[10px] text-[#d6ad63]">{content.date}</p>
-        <p className="mt-1 font-heading text-[9px]">{content.venue}</p>
-        <p className="mt-2 max-w-[82%] font-body text-[6px] leading-tight text-white/65">
+        <div className="my-2.5 h-px w-14 bg-[#d6ad63]/65 sm:my-3.5" />
+        <p className="font-invite text-[11px] font-semibold tracking-[0.16em] text-white uppercase sm:text-sm lg:text-base">
+          {content.weekday}
+        </p>
+        <p className="font-invite text-sm font-semibold text-[#e3bd72] sm:text-base lg:text-lg">
+          {content.date}
+        </p>
+        <p className="mt-0.5 font-invite text-xs font-semibold text-white sm:text-sm lg:text-base">
+          {content.venue}
+        </p>
+        <p className="mt-2.5 max-w-[78%] font-invite text-[10px] font-medium leading-snug text-white/90 sm:max-w-[72%] sm:text-xs lg:text-sm">
           {content.closing}
         </p>
-      </div>
 
-      {/* Main invitation details on the landscape front */}
-      <div className="relative z-10 hidden h-full flex-col items-center justify-center px-14 py-10 text-center sm:flex">
-          <h2 className="font-heading text-xl tracking-wide uppercase md:text-2xl lg:text-3xl xl:text-4xl">{content.groomName}</h2>
-          <p className="my-1 font-heading text-[9px] italic text-[#d6ad63] md:text-[10px] lg:text-xs xl:text-sm">{content.unionLine}</p>
-          <h2 className="font-heading text-xl tracking-wide uppercase md:text-2xl lg:text-3xl xl:text-4xl">{content.brideName}</h2>
-          {content.brideConnector && (
-            <p className="font-body text-[8px] text-white/65 md:text-[10px] lg:text-xs">{content.brideConnector}</p>
-          )}
-          <p className="mt-2 font-body text-[8px] text-white/65 md:text-[10px] lg:text-xs">{content.brideIntroduction}</p>
-          <p className="font-body text-[8px] md:text-[10px] lg:text-xs">
-            {content.brideParents[0]} <span className="text-[#d6ad63]">&</span>{" "}
-            {content.brideParents[1]}
-          </p>
-          <p className="mt-1 font-body text-[8px] text-white/65 md:text-[10px] lg:text-xs">
-            {content.brideGrandparentsIntroduction}
-          </p>
-          <p className="font-body text-[8px] md:text-[10px] lg:text-xs">
-            {content.brideGrandparents[0]} <span className="text-[#d6ad63]">&</span>{" "}
-            {content.brideGrandparents[1]}
-          </p>
-          <div className="my-2 h-px w-12 bg-[#d6ad63]/65" />
-          <p className="font-heading text-[9px] tracking-[0.18em] uppercase md:text-[11px] lg:text-sm">{content.weekday}</p>
-          <p className="font-heading text-xs text-[#d6ad63] md:text-sm lg:text-base">{content.date}</p>
-          <p className="font-heading text-[10px] md:text-xs lg:text-sm">{content.venue}</p>
-          <p className="mt-2 max-w-[80%] font-body text-[8px] leading-snug text-white/65 md:text-[10px] lg:text-xs">
-            {content.closing}
-          </p>
+        <p className="absolute bottom-3 left-1/2 z-20 -translate-x-1/2 font-invite text-[8px] font-medium tracking-[0.22em] text-white/70 uppercase sm:bottom-4 sm:text-[9px]">
+          Tap to turn over
+        </p>
       </div>
-
-      <p className="absolute bottom-4 left-1/2 z-20 hidden -translate-x-1/2 font-heading text-[7px] tracking-[0.22em] text-white/45 uppercase sm:block">
-        Tap to turn over
-      </p>
     </div>
   );
 }
 
-function ThankYouFace({ language }: { language: InvitationLanguage }) {
-  const isHindi = language === "hi";
-  const invitation = WEDDING_CONFIG.invitation;
-  const family = isHindi
-    ? {
-        invocation: invitation.hindi.invocation,
-        title: invitation.hindi.title,
-        blessing: invitation.hindi.blessing,
-        elders: invitation.hindi.groomElders,
-        parents: invitation.hindi.groomParents,
-        invitationLine: invitation.hindi.invitationLine,
-      }
-    : {
-        invocation: invitation.invocation,
-        title: invitation.title,
-        blessing: invitation.blessing,
-        elders: invitation.groomElders,
-        parents: invitation.groomParents,
-        invitationLine: invitation.invitationLine,
-      };
+/** Back: short warm invite to the wedding day & reception. */
+function WarmInviteBackFace({
+  language,
+  side,
+}: {
+  language: InvitationLanguage;
+  side: InvitationSide;
+}) {
+  const content = getInvitationContent(side, language);
 
   return (
-    <div className="absolute inset-0 overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] transform-[rotateY(180deg)] backface-hidden">
-      {/* Match the front: flowers stay in opposite corners, clear of the message */}
-      <InvitationFlorals className="absolute -left-5 -top-4 w-[38%] sm:w-[42%]" />
-      <InvitationFlorals className="absolute -bottom-5 -right-5 w-[40%] rotate-180 sm:w-[44%]" />
-      <div className="absolute inset-3 border border-[#d6ad63]/45 sm:inset-4" />
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 py-5">
-        <p className="font-heading text-[7px] text-[#d6ad63] sm:text-[9px] md:text-[11px] lg:text-sm">{family.invocation}</p>
-        <p className="mt-1 font-heading text-[9px] tracking-[0.22em] uppercase sm:text-xs md:text-sm lg:text-base">
-          {family.title}
+    <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] transform-[rotateY(180deg)] backface-hidden">
+      <InvitationFlorals className="pointer-events-none absolute -left-7 -top-8 z-0 w-[28%] opacity-80 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[26%]" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-8 -right-7 z-0 w-[30%] opacity-80 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[28%]" />
+      <div className="pointer-events-none absolute inset-3 z-0 border border-[#d6ad63]/45 sm:inset-4" />
+      <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 py-6 [transform:translateZ(1px)] sm:px-16">
+        <p className="font-invite text-[clamp(24px,4.8vw,44px)] font-semibold italic text-[#e3bd72]">
+          {content.warmTitle}
         </p>
-        <p className="mt-1 max-w-[78%] font-body text-[6px] leading-tight text-white/75 sm:text-[9px] md:text-[11px] lg:text-sm">
-          {family.blessing}
+        <div className="my-3.5 h-px w-14 bg-[#d6ad63]/65 sm:my-5" />
+        <p className="max-w-[82%] font-invite text-xs font-medium leading-relaxed text-white sm:max-w-[78%] sm:text-sm md:text-base lg:text-lg">
+          {content.warmMessage}
         </p>
-        <div className="my-1.5 h-px w-10 bg-[#d6ad63]/65 sm:my-2" />
-        <div className="font-body text-[5.5px] leading-tight text-white/70 sm:text-[8px] md:text-[10px] lg:text-xs">
-          {family.elders.map((name) => (
-            <p key={name}>{name}</p>
-          ))}
-        </div>
-        <div className="mt-1 font-body text-[6px] leading-tight sm:text-[9px] md:text-[11px] lg:text-sm">
-          <p>{family.parents[0]}</p>
-          <p className="text-[#d6ad63]">&</p>
-          <p>{family.parents[1]}</p>
-        </div>
-        <p className="mt-1 max-w-[78%] font-body text-[5.5px] leading-tight text-white/70 sm:mt-2 sm:text-[8px] md:text-[10px] lg:text-xs">
-          {family.invitationLine}
+        <p className="mt-3.5 max-w-[82%] font-invite text-[11px] font-medium leading-relaxed text-white/90 sm:mt-5 sm:max-w-[78%] sm:text-sm md:text-base">
+          {content.warmReceptionLine}
         </p>
-
-        {/* Thank-you section follows the moved family column */}
-        <div className="my-2 h-px w-14 bg-[#d6ad63]/65" />
-        <p className="font-heading text-[clamp(14px,3vw,34px)] italic">
-          {isHindi ? "धन्यवाद" : "Thank you"}
-        </p>
-        <p className="mt-1 max-w-[64%] font-body text-[6px] leading-tight text-white/75 sm:max-w-[70%] sm:text-[9px] md:text-[11px] lg:text-sm">
-          {isHindi
-            ? WEDDING_CONFIG.invitation.hindi.closing
-            : "Your presence, love and blessings will make our wedding celebration truly complete."}
-        </p>
-        <p className="mt-2 font-heading text-[7px] italic text-[#d6ad63] sm:text-[10px] md:text-xs lg:text-sm">
-          {isHindi ? "सप्रेम, रोहित एवं प्रेक्षा" : "With love, Rohit & Preksha"}
+        <p className="mt-5 font-invite text-sm font-semibold italic text-[#e3bd72] sm:mt-7 sm:text-base">
+          {content.signature}
         </p>
       </div>
     </div>
@@ -356,10 +295,12 @@ function DoubleSidedCard({
   flipped,
   onFlip,
   language,
+  side,
 }: {
   flipped: boolean;
   onFlip: () => void;
   language: InvitationLanguage;
+  side: InvitationSide;
 }) {
   return (
     <motion.button
@@ -368,15 +309,15 @@ function DoubleSidedCard({
       className="relative h-full w-full cursor-pointer perspective-[1400px]"
       whileHover={{ scale: 1.015 }}
       whileTap={{ scale: 0.985 }}
-      aria-label={flipped ? "Show invitation" : "Show thank-you message"}
+      aria-label={flipped ? "Show invitation front" : "Show warm invitation message"}
     >
       <motion.div
         className="relative h-full w-full transform-3d will-change-transform"
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.85, ease }}
       >
-        <InvitationFace language={language} />
-        <ThankYouFace language={language} />
+        <InvitationFrontFace language={language} side={side} />
+        <WarmInviteBackFace language={language} side={side} />
       </motion.div>
     </motion.button>
   );
@@ -384,9 +325,12 @@ function DoubleSidedCard({
 
 export default function CinematicInvitationIntro({
   onComplete,
+  side = "groom",
+  initialLanguage = "en",
 }: CinematicInvitationIntroProps) {
   const [stage, setStage] = useState<Stage>("closed");
-  const [language, setLanguage] = useState<InvitationLanguage>("en");
+  const [language, setLanguage] = useState<InvitationLanguage>(initialLanguage);
+  const sideLabel = getInvitationContent(side, language).sideLabel;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasOpened = useRef(false);
 
@@ -441,11 +385,11 @@ export default function CinematicInvitationIntro({
             className="absolute top-8 z-50 px-4 text-center font-heading text-[9px] tracking-[0.32em] text-[#11294d]/70 uppercase sm:top-11 sm:text-xs"
           >
             {stage === "closed"
-              ? "Tap, swipe, or wait a moment"
+              ? `${sideLabel} · Tap, swipe, or wait`
               : focused
                 ? stage === "card-front"
                   ? "Tap the invitation to turn it over"
-                  : "A note from our hearts"
+                  : "A warm note for our celebration"
                 : "Unwrapping your invitation"}
           </motion.p>
 
@@ -547,6 +491,7 @@ export default function CinematicInvitationIntro({
                     flipped={stage === "card-back"}
                     onFlip={flipCard}
                     language={language}
+                    side={side}
                   />
                 </motion.div>
               )}
