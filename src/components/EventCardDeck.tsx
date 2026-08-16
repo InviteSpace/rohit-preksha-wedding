@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import EventIcon from "@/components/EventIcon";
@@ -17,6 +17,8 @@ const CARD_ACCENTS: Record<string, string> = {
   wedding: "from-[#f3f0f6] via-white to-[#e8e4ef]",
   reception: "from-[#f7f3ea] via-white to-[#efe6d4]",
 };
+
+const SHUFFLE_MS = 10000;
 
 function formatDate(dateStr: string) {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
@@ -55,6 +57,48 @@ function getCardTransform(index: number, selectedIndex: number, spread: DeckSpre
     zIndex: isSelected ? 30 : 20 - distance,
     opacity: 1,
   };
+}
+
+function EventTabs({
+  events,
+  selectedIndex,
+  onSelect,
+}: {
+  events: WeddingEvent[];
+  selectedIndex: number;
+  onSelect: (index: number) => void;
+}) {
+  return (
+    <div
+      role="tablist"
+      aria-label="Wedding events"
+      className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-2"
+    >
+      {events.map((event, index) => {
+        const active = index === selectedIndex;
+        return (
+          <button
+            key={event.id}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            onClick={() => onSelect(index)}
+            className={`inline-flex cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 font-heading text-xs font-semibold tracking-wide transition-colors md:text-sm ${
+              active
+                ? "border-navy bg-navy text-white shadow-sm"
+                : "border-navy/12 bg-white/80 text-navy/75 hover:border-navy/30 hover:text-navy"
+            }`}
+          >
+            <EventIcon
+              eventId={event.id}
+              className={`size-3.5 md:size-4 ${active ? "text-royal-gold" : "text-royal-gold/80"}`}
+            />
+            <span>{event.title.replace(" Ceremony", "")}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 function PlayingCardFace({
@@ -236,8 +280,10 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
   const [selectedIndex, setSelectedIndex] = useState(
     weddingIndex >= 0 ? weddingIndex : 0,
   );
-  const [userPicked, setUserPicked] = useState(false);
+  const [deckInView, setDeckInView] = useState(true);
   const [spread, setSpread] = useState<DeckSpread>({ xGap: 92, rotate: 16, yArc: 16 });
+  const deckRef = useRef<HTMLDivElement | null>(null);
+  const detailRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const updateSpread = () => setSpread(getDeckSpread(window.innerWidth));
@@ -253,29 +299,53 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
   }, [events.length]);
 
   useEffect(() => {
-    if (userPicked || events.length === 0) return;
+    const deck = deckRef.current;
+    const detail = detailRef.current;
+    if (!deck || !detail) return;
+
+    const updateViewMode = () => {
+      const deckRect = deck.getBoundingClientRect();
+      const detailRect = detail.getBoundingClientRect();
+      const viewportH = window.innerHeight;
+
+      const deckVisible =
+        deckRect.top < viewportH * 0.7 && deckRect.bottom > viewportH * 0.2;
+      const detailDominant =
+        detailRect.top < viewportH * 0.45 && detailRect.bottom > viewportH * 0.35;
+
+      setDeckInView(deckVisible && !detailDominant);
+    };
+
+    updateViewMode();
+    window.addEventListener("scroll", updateViewMode, { passive: true });
+    window.addEventListener("resize", updateViewMode);
+    return () => {
+      window.removeEventListener("scroll", updateViewMode);
+      window.removeEventListener("resize", updateViewMode);
+    };
+  }, [selectedIndex, events.length]);
+
+  useEffect(() => {
+    if (!deckInView || events.length === 0) return;
 
     const interval = setInterval(() => {
       setSelectedIndex((prev) => (prev + 1) % events.length);
-    }, 10000);
+    }, SHUFFLE_MS);
 
     return () => clearInterval(interval);
-  }, [userPicked, events.length]);
+  }, [deckInView, events.length]);
 
   const selectCard = (index: number) => {
-    setUserPicked(true);
     setSelectedIndex(index);
   };
 
   const goPrev = () => {
     if (events.length === 0) return;
-    setUserPicked(true);
     setSelectedIndex((prev) => (prev - 1 + events.length) % events.length);
   };
 
   const goNext = () => {
     if (events.length === 0) return;
-    setUserPicked(true);
     setSelectedIndex((prev) => (prev + 1) % events.length);
   };
 
@@ -291,6 +361,16 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
 
   return (
     <div className="mt-12">
+      <div className="sticky top-16 z-40 mb-8 md:top-[4.5rem]">
+        <div className="rounded-2xl border border-navy/10 bg-ivory/90 px-3 py-3 shadow-[0_10px_30px_rgba(17,41,77,0.08)] backdrop-blur-md md:px-4">
+          <EventTabs
+            events={events}
+            selectedIndex={selectedIndex}
+            onSelect={selectCard}
+          />
+        </div>
+      </div>
+
       <motion.p
         variants={fadeUp}
         initial="hidden"
@@ -301,7 +381,10 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
         Tap a card to reveal venue, map &amp; directions
       </motion.p>
 
-      <div className="relative mx-auto mt-8 max-w-6xl overflow-visible px-2 pb-8">
+      <div
+        ref={deckRef}
+        className="relative mx-auto mt-8 max-w-6xl overflow-visible px-2 pb-8"
+      >
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -356,9 +439,11 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <EventDetailReveal key={selectedEvent.id} event={selectedEvent} />
-      </AnimatePresence>
+      <div ref={detailRef}>
+        <AnimatePresence mode="wait">
+          <EventDetailReveal key={selectedEvent.id} event={selectedEvent} />
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
