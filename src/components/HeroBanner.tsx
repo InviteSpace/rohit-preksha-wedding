@@ -33,7 +33,7 @@ export default function HeroBanner() {
         initial="hidden"
         animate="visible"
         style={{ opacity: contentOpacity }}
-        className="relative z-10 rounded-full bg-ivory/35 px-5 py-2 font-heading text-xs font-bold tracking-[0.5em] text-navy uppercase shadow-[0_4px_24px_rgba(17,41,77,0.06)] backdrop-blur-md md:text-sm"
+        className="relative z-10 rounded-full bg-ivory/35 px-4 py-2 font-heading text-[10px] font-bold tracking-[0.28em] text-navy uppercase shadow-[0_4px_24px_rgba(17,41,77,0.06)] backdrop-blur-md sm:px-5 sm:text-xs sm:tracking-[0.5em] md:text-sm"
       >
         Save the Date
       </motion.p>
@@ -65,7 +65,7 @@ export default function HeroBanner() {
           </motion.div>
         </motion.div>
 
-        <div className="relative mt-[20px] w-[min(92%,22rem)] rounded-xl border border-navy/10 bg-ivory/35 px-4 py-3 shadow-[0_6px_28px_rgba(17,41,77,0.08)] backdrop-blur-xl md:w-[min(92%,26rem)] md:px-6 md:py-3.5">
+        <div className="relative mt-[20px] w-[min(92%,22rem)] rounded-xl border border-navy/10 bg-ivory/35 px-4 py-3.5 shadow-[0_6px_28px_rgba(17,41,77,0.08)] backdrop-blur-xl md:w-[min(92%,26rem)] md:px-6 md:py-3.5">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 rounded-xl bg-linear-to-b from-white/15 to-ivory/5"
@@ -79,7 +79,7 @@ export default function HeroBanner() {
               className="mb-2 h-px w-20 origin-center bg-linear-to-r from-transparent via-royal-gold to-transparent md:w-28"
             />
 
-            <div className="flex flex-col items-center gap-0 md:flex-row md:items-baseline md:gap-2.5 lg:gap-3">
+            <div className="flex flex-row flex-wrap items-baseline justify-center gap-x-2 gap-y-0 md:gap-x-2.5 lg:gap-x-3">
               <motion.h1
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -122,7 +122,7 @@ export default function HeroBanner() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.6 }}
-              className="mt-0.5 font-heading text-xs font-bold tracking-wide text-royal-gold md:text-sm"
+              className="mt-0.5 px-1 text-center font-heading text-xs font-bold leading-snug tracking-wide text-royal-gold md:text-sm"
             >
               {weddingDate}
             </motion.p>

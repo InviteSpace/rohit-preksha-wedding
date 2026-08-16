@@ -20,7 +20,7 @@ export default function SectionWrapper({
   return (
     <section
       id={id}
-      className={`relative overflow-visible py-20 px-4 md:px-8 floral-bg ${
+      className={`relative overflow-visible px-4 py-12 sm:py-16 md:px-8 md:py-20 floral-bg ${
         blush ? "bg-blush text-foreground" : "bg-ivory text-foreground"
       } ${className}`}
     >

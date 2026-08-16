@@ -18,7 +18,7 @@ function PersonEntrance({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: fromLeft ? -120 : 120, scale: 0.9 }}
+      initial={{ opacity: 0, x: fromLeft ? -48 : 48, scale: 0.94 }}
       whileInView={{ opacity: 1, x: 0, scale: 1 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -29,9 +29,9 @@ function PersonEntrance({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: 0.3 }}
-        className="mb-4 rounded-full border border-navy/15 bg-navy/5 px-5 py-1.5"
+        className="mb-4 rounded-full border border-navy/15 bg-navy/5 px-4 py-1.5 sm:px-5"
       >
-        <span className="font-heading text-[10px] font-semibold tracking-[0.35em] text-navy uppercase md:text-xs">
+        <span className="font-heading text-[10px] font-semibold tracking-[0.22em] text-navy uppercase sm:tracking-[0.35em] md:text-xs">
           {role}
         </span>
       </motion.div>

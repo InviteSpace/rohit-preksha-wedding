@@ -167,91 +167,98 @@ function InvitationFrontFace({
 
   return (
     <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] backface-hidden">
-      <InvitationFlorals className="pointer-events-none absolute -left-7 -top-8 z-0 w-[30%] opacity-80 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[28%]" />
-      <InvitationFlorals className="pointer-events-none absolute -bottom-8 -right-7 z-0 w-[32%] opacity-80 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[30%]" />
-      <div className="pointer-events-none absolute inset-3 z-0 border border-[#d6ad63]/45 sm:inset-4" />
+      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[26%] opacity-70 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[28%] sm:opacity-80" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[28%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[30%] sm:opacity-80" />
+      <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
 
-      <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 py-6 text-center [transform:translateZ(1px)] sm:px-16 sm:py-10 md:px-20">
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-0 sm:gap-x-4 md:gap-x-5">
-          <h2
-            className={
-              language === "en"
-                ? "font-script text-[clamp(30px,6.2vw,58px)] leading-none tracking-normal text-white normal-case"
-                : "font-invite text-[clamp(22px,4.8vw,42px)] italic leading-none tracking-normal text-white"
-            }
-          >
-            {content.primaryName}
-          </h2>
-          <p
-            className={
-              language === "en"
-                ? "font-script text-[clamp(20px,3.2vw,30px)] leading-none tracking-normal text-[#e3bd72] normal-case"
-                : "font-invite text-[clamp(15px,2.6vw,24px)] italic leading-none tracking-normal text-[#e3bd72]"
-            }
-          >
-            {content.unionLine}
+      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 text-center [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-10 md:px-20">
+        <div className="flex w-full flex-col items-center">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0 sm:gap-x-4 md:gap-x-5">
+            <h2
+              className={
+                language === "en"
+                  ? "font-script text-[clamp(26px,8vw,58px)] leading-none tracking-normal text-white normal-case"
+                  : "font-invite text-[clamp(18px,5.5vw,42px)] italic leading-none tracking-normal text-white"
+              }
+            >
+              {content.primaryName}
+            </h2>
+            <p
+              className={
+                language === "en"
+                  ? "font-script text-[clamp(18px,5vw,30px)] leading-none tracking-normal text-[#e3bd72] normal-case"
+                  : "font-invite text-[clamp(14px,3.5vw,24px)] italic leading-none tracking-normal text-[#e3bd72]"
+              }
+            >
+              {content.unionLine}
+            </p>
+            <h2
+              className={
+                language === "en"
+                  ? "font-script text-[clamp(26px,8vw,58px)] leading-none tracking-normal text-white normal-case"
+                  : "font-invite text-[clamp(18px,5.5vw,42px)] italic leading-none tracking-normal text-white"
+              }
+            >
+              {content.secondaryName}
+            </h2>
+            {content.partnerConnector && (
+              <p className="basis-full font-invite text-[10px] font-semibold text-white/90 sm:basis-auto sm:text-sm">
+                {content.partnerConnector}
+              </p>
+            )}
+          </div>
+
+          <div className="my-3 h-px w-12 bg-[#d6ad63]/65 sm:my-3.5 sm:w-14" />
+          <div className="grid w-full max-w-[94%] grid-cols-1 gap-3.5 sm:max-w-[88%] sm:grid-cols-2 sm:gap-x-8 sm:gap-y-1">
+            <div className="text-center">
+              <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+                {content.familyIntroduction}
+              </p>
+              <p className="mt-1 font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+                {content.parents[0]}
+              </p>
+              <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">
+                &
+              </p>
+              <p className="font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+                {content.parents[1]}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+                {content.grandparentsIntroduction}
+              </p>
+              <p className="mt-1 font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+                {content.grandparents[0]}
+              </p>
+              <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">
+                &
+              </p>
+              <p className="font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+                {content.grandparents[1]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-1 flex w-full flex-col items-center sm:mt-0">
+          <div className="mb-3 h-px w-12 bg-[#d6ad63]/65 sm:my-3.5 sm:mb-0 sm:w-14" />
+          <p className="font-invite text-[10px] font-semibold tracking-[0.16em] text-white uppercase sm:text-sm lg:text-base">
+            {content.weekday}
           </p>
-          <h2
-            className={
-              language === "en"
-                ? "font-script text-[clamp(30px,6.2vw,58px)] leading-none tracking-normal text-white normal-case"
-                : "font-invite text-[clamp(22px,4.8vw,42px)] italic leading-none tracking-normal text-white"
-            }
-          >
-            {content.secondaryName}
-          </h2>
-          {content.partnerConnector && (
-            <p className="basis-full font-invite text-[11px] font-semibold text-white/90 sm:basis-auto sm:text-sm">
-              {content.partnerConnector}
-            </p>
-          )}
+          <p className="font-invite text-sm font-semibold text-[#e3bd72] sm:text-base lg:text-lg">
+            {content.date}
+          </p>
+          <p className="mt-1 font-invite text-xs font-semibold text-white sm:text-sm lg:text-base">
+            {content.venue}
+          </p>
+          <p className="mt-3 max-w-[90%] font-invite text-[10px] font-medium leading-relaxed text-white/90 sm:mt-2.5 sm:max-w-[72%] sm:text-xs lg:text-sm">
+            {content.closing}
+          </p>
+          <p className="mt-3 font-invite text-[8px] font-medium tracking-[0.22em] text-white/70 uppercase sm:mt-3 sm:text-[9px]">
+            Tap to turn over
+          </p>
         </div>
-
-        <div className="my-2.5 h-px w-14 bg-[#d6ad63]/65 sm:my-3.5" />
-        <div className="grid w-full max-w-[92%] grid-cols-2 gap-x-3 gap-y-1 sm:max-w-[88%] sm:gap-x-8">
-          <div className="text-center">
-            <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
-              {content.familyIntroduction}
-            </p>
-            <p className="mt-1 font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
-              {content.parents[0]}
-            </p>
-            <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">&</p>
-            <p className="font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
-              {content.parents[1]}
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
-              {content.grandparentsIntroduction}
-            </p>
-            <p className="mt-1 font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
-              {content.grandparents[0]}
-            </p>
-            <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">&</p>
-            <p className="font-invite text-[10px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
-              {content.grandparents[1]}
-            </p>
-          </div>
-        </div>
-
-        <div className="my-2.5 h-px w-14 bg-[#d6ad63]/65 sm:my-3.5" />
-        <p className="font-invite text-[11px] font-semibold tracking-[0.16em] text-white uppercase sm:text-sm lg:text-base">
-          {content.weekday}
-        </p>
-        <p className="font-invite text-sm font-semibold text-[#e3bd72] sm:text-base lg:text-lg">
-          {content.date}
-        </p>
-        <p className="mt-0.5 font-invite text-xs font-semibold text-white sm:text-sm lg:text-base">
-          {content.venue}
-        </p>
-        <p className="mt-2.5 max-w-[78%] font-invite text-[10px] font-medium leading-snug text-white/90 sm:max-w-[72%] sm:text-xs lg:text-sm">
-          {content.closing}
-        </p>
-
-        <p className="absolute bottom-3 left-1/2 z-20 -translate-x-1/2 font-invite text-[8px] font-medium tracking-[0.22em] text-white/70 uppercase sm:bottom-4 sm:text-[9px]">
-          Tap to turn over
-        </p>
       </div>
     </div>
   );
@@ -269,21 +276,21 @@ function WarmInviteBackFace({
 
   return (
     <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] transform-[rotateY(180deg)] backface-hidden">
-      <InvitationFlorals className="pointer-events-none absolute -left-7 -top-8 z-0 w-[28%] opacity-80 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[26%]" />
-      <InvitationFlorals className="pointer-events-none absolute -bottom-8 -right-7 z-0 w-[30%] opacity-80 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[28%]" />
-      <div className="pointer-events-none absolute inset-3 z-0 border border-[#d6ad63]/45 sm:inset-4" />
-      <div className="relative z-20 flex h-full flex-col items-center justify-center px-10 py-6 [transform:translateZ(1px)] sm:px-16">
-        <p className="font-invite text-[clamp(24px,4.8vw,44px)] font-semibold italic text-[#e3bd72]">
+      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[24%] opacity-70 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[26%] sm:opacity-80" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[26%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[28%] sm:opacity-80" />
+      <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
+      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-8">
+        <p className="shrink-0 font-invite text-[clamp(22px,7vw,44px)] font-semibold italic leading-tight text-[#e3bd72]">
           {content.warmTitle}
         </p>
-        <div className="my-3.5 h-px w-14 bg-[#d6ad63]/65 sm:my-5" />
-        <p className="max-w-[82%] font-invite text-xs font-medium leading-relaxed text-white sm:max-w-[78%] sm:text-sm md:text-base lg:text-lg">
+        <div className="my-2 h-px w-12 shrink-0 bg-[#d6ad63]/65 sm:my-5 sm:w-14" />
+        <p className="max-w-[90%] font-invite text-[11px] font-medium leading-relaxed text-white sm:max-w-[78%] sm:text-sm md:text-base lg:text-lg">
           {content.warmMessage}
         </p>
-        <p className="mt-3.5 max-w-[82%] font-invite text-[11px] font-medium leading-relaxed text-white/90 sm:mt-5 sm:max-w-[78%] sm:text-sm md:text-base">
+        <p className="mt-3 max-w-[90%] font-invite text-[10px] font-medium leading-relaxed text-white/90 sm:mt-5 sm:max-w-[78%] sm:text-sm md:text-base">
           {content.warmReceptionLine}
         </p>
-        <p className="mt-5 font-invite text-sm font-semibold italic text-[#e3bd72] sm:mt-7 sm:text-base">
+        <p className="mt-4 shrink-0 font-invite text-sm font-semibold italic text-[#e3bd72] sm:mt-7 sm:text-base">
           {content.signature}
         </p>
       </div>
@@ -330,7 +337,6 @@ export default function CinematicInvitationIntro({
 }: CinematicInvitationIntroProps) {
   const [stage, setStage] = useState<Stage>("closed");
   const [language, setLanguage] = useState<InvitationLanguage>(initialLanguage);
-  const sideLabel = getInvitationContent(side, language).sideLabel;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasOpened = useRef(false);
 
@@ -375,17 +381,17 @@ export default function CinematicInvitationIntro({
         <motion.div
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-100 flex items-center justify-center overflow-hidden bg-[#efede9] p-4"
+          className="fixed inset-0 z-100 flex items-center justify-center overflow-hidden bg-[#efede9] px-5 py-6 sm:p-8"
         >
-          <div className="absolute inset-4 rounded-4xl bg-white/70 shadow-inner sm:inset-8" />
+          <div className="absolute inset-5 rounded-4xl bg-white/70 shadow-inner sm:inset-8" />
 
           <motion.p
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-8 z-50 px-4 text-center font-heading text-[9px] tracking-[0.32em] text-[#11294d]/70 uppercase sm:top-11 sm:text-xs"
+            className="absolute top-8 z-50 px-6 text-center font-heading text-[9px] tracking-[0.32em] text-[#11294d]/70 uppercase sm:top-11 sm:text-xs"
           >
             {stage === "closed"
-              ? `${sideLabel} · Tap, swipe, or wait`
+              ? "Tap, swipe, or wait"
               : focused
                 ? stage === "card-front"
                   ? "Tap the invitation to turn it over"
@@ -416,7 +422,13 @@ export default function CinematicInvitationIntro({
             </button>
           </div>
 
-          <div className="relative aspect-[1.08/1] w-[min(92vw,620px)] sm:aspect-[1.3/1] sm:w-[min(94vw,1040px,calc(78vh*1.3))]">
+          <div
+            className={`relative ${
+              focused
+                ? "mt-2 h-[calc(100dvh-14rem)] w-[min(84vw,380px)] max-h-[520px] sm:mt-0 sm:aspect-[1.3/1] sm:h-auto sm:max-h-none sm:w-[min(94vw,1040px,calc(78vh*1.3))]"
+                : "aspect-[1.08/1] w-[min(92vw,620px)] sm:aspect-[1.3/1] sm:w-[min(94vw,1040px,calc(78vh*1.3))]"
+            }`}
+          >
             <AnimatePresence>
               {envelopeVisible && (
                 <motion.div
@@ -448,10 +460,14 @@ export default function CinematicInvitationIntro({
             <AnimatePresence>
               {cardVisible && (
                 <motion.div
-                  className="absolute left-[19%] top-[8%] z-10 aspect-4/5 w-[62%] [--card-rise-y:-52%] [--card-tuck-x:0%] [--card-tuck-y:0%] will-change-transform sm:left-[10%] sm:top-[23%] sm:aspect-[1.55/1] sm:w-[80%] sm:[--card-rise-y:-48%]"
+                  className={`absolute z-10 will-change-transform ${
+                    focused
+                      ? "inset-0 aspect-auto h-full w-full sm:left-[10%] sm:top-[23%] sm:right-auto sm:bottom-auto sm:aspect-[1.55/1] sm:h-auto sm:w-[80%]"
+                      : "left-[19%] top-[8%] aspect-4/5 w-[62%] [--card-rise-y:-52%] [--card-tuck-x:0%] [--card-tuck-y:0%] sm:left-[10%] sm:top-[23%] sm:aspect-[1.55/1] sm:w-[80%] sm:[--card-rise-y:-48%]"
+                  }`}
                   initial={{
-                    x: "var(--card-tuck-x)",
-                    y: "var(--card-tuck-y)",
+                    x: "var(--card-tuck-x, 0%)",
+                    y: "var(--card-tuck-y, 0%)",
                     opacity: 0,
                     scale: 0.55,
                   }}
@@ -530,7 +546,7 @@ export default function CinematicInvitationIntro({
                   y: { delay: 1.55, duration: 2.2, repeat: Infinity, ease: "easeInOut" },
                 }}
                 onClick={enterWebsite}
-                className="absolute bottom-7 z-50 cursor-pointer border border-[#d6ad63] bg-[#11294d] px-6 py-3 font-heading text-[10px] tracking-[0.24em] text-white uppercase shadow-[0_10px_28px_rgba(17,41,77,0.3)] hover:bg-[#1d3b68] sm:bottom-10 sm:text-xs"
+                className="absolute bottom-7 z-50 cursor-pointer border border-[#d6ad63] bg-[#11294d] px-5 py-2.5 font-heading text-[10px] tracking-[0.24em] text-white uppercase shadow-[0_10px_28px_rgba(17,41,77,0.3)] hover:bg-[#1d3b68] sm:bottom-10 sm:px-6 sm:py-3 sm:text-xs"
               >
                 Enter the celebration
               </motion.button>

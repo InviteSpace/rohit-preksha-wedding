@@ -19,15 +19,15 @@ function calculateTimeLeft(target: Date): TimeLeft {
   return {
     days: Math.floor(diff / (1000 * 60 * 60 * 24)),
     hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    minutes: Math.floor((diff / 1000 / 60) % 60),
     seconds: Math.floor((diff / 1000) % 60),
   };
 }
 
 function TimeUnit({ value, label }: { value: number; label: string }) {
   return (
-    <div className="flex min-w-[4.25rem] flex-col items-center md:min-w-[5.5rem]">
-      <div className="relative flex h-16 w-full items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md md:h-20">
+    <div className="flex min-w-0 flex-1 flex-col items-center">
+      <div className="relative flex aspect-square w-full max-w-[4.5rem] items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md sm:rounded-2xl md:max-w-[5.5rem]">
         <AnimatePresence mode="popLayout">
           <motion.span
             key={value}
@@ -35,13 +35,13 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.22 }}
-            className="font-heading text-2xl !font-medium tabular-nums text-white md:text-3xl"
+            className="font-heading text-xl !font-medium tabular-nums text-white sm:text-2xl md:text-3xl"
           >
             {String(value).padStart(2, "0")}
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="mt-2.5 font-heading text-[9px] font-semibold tracking-[0.22em] text-royal-gold-bright uppercase md:text-[10px]">
+      <span className="mt-2 font-heading text-[8px] font-semibold tracking-[0.14em] text-royal-gold-bright uppercase sm:mt-2.5 sm:text-[9px] sm:tracking-[0.22em] md:text-[10px]">
         {label}
       </span>
     </div>
@@ -52,7 +52,7 @@ function Colon() {
   return (
     <span
       aria-hidden
-      className="mb-6 self-center font-heading text-xl font-medium text-royal-gold-bright/80 md:mb-7 md:text-2xl"
+      className="mb-5 shrink-0 self-center font-heading text-lg font-medium text-royal-gold-bright/80 sm:mb-6 sm:text-xl md:mb-7 md:text-2xl"
     >
       :
     </span>
@@ -72,7 +72,7 @@ export default function Countdown() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-navy px-4 py-14">
+    <section className="relative overflow-hidden bg-navy px-4 py-10 sm:py-14">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(166,124,45,0.18),transparent_55%)]"
@@ -92,7 +92,7 @@ export default function Countdown() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-heading text-xs font-semibold tracking-[0.4em] text-royal-gold-bright uppercase"
+          className="px-2 font-heading text-[10px] font-semibold tracking-[0.2em] text-royal-gold-bright uppercase sm:text-xs sm:tracking-[0.4em]"
         >
           Counting Down To Our Big Day
         </motion.p>
@@ -102,7 +102,7 @@ export default function Countdown() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="mx-auto mt-8 flex max-w-xl items-end justify-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-4 py-5 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl md:gap-3 md:px-6 md:py-6"
+          className="mx-auto mt-6 flex w-full max-w-xl items-end justify-center gap-1 rounded-2xl border border-white/10 bg-white/5 px-3 py-4 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:mt-8 sm:gap-2 sm:rounded-3xl sm:px-4 sm:py-5 md:gap-3 md:px-6 md:py-6"
         >
           <TimeUnit value={timeLeft.days} label="Days" />
           <Colon />

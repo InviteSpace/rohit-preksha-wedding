@@ -36,7 +36,7 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-heading text-xs font-semibold tracking-[0.4em] text-royal-gold uppercase"
+          className="px-2 font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:text-xs sm:tracking-[0.4em]"
         >
           Capture the Moment
         </motion.p>
@@ -55,7 +55,7 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mx-auto max-w-2xl font-heading text-lg font-medium text-navy/80"
+          className="mx-auto max-w-2xl px-1 font-heading text-base font-medium text-navy/80 sm:text-lg"
         >
           {sharedAlbum.description}
         </motion.p>
@@ -72,21 +72,21 @@ export default function SharePhotosSection() {
           variants={staggerItem}
           className="overflow-hidden rounded-[1.75rem] border border-navy/10 bg-white/80 p-6 shadow-[0_20px_50px_rgba(17,41,77,0.08)] backdrop-blur-xl md:p-8"
         >
-          <div className="flex items-start gap-4">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
             <span
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy text-lg text-white"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-navy text-base text-white sm:h-12 sm:w-12 sm:text-lg"
               aria-hidden
             >
               📸
             </span>
-            <div>
-              <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase">
+            <div className="min-w-0">
+              <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:tracking-[0.35em]">
                 Google Photos Album
               </p>
-              <h3 className="mt-1 font-heading text-2xl !font-medium text-navy-deep">
+              <h3 className="mt-1 font-heading text-xl !font-medium text-navy-deep sm:text-2xl">
                 {sharedAlbum.title}
               </h3>
-              <p className="mt-3 font-heading text-base font-medium leading-relaxed text-navy/80">
+              <p className="mt-3 font-heading text-sm font-medium leading-relaxed text-navy/80 sm:text-base">
                 Everyone is welcome to upload photos from our wedding celebrations. Please add
                 your memories — and kindly do not remove photos shared by others.
               </p>
@@ -115,11 +115,11 @@ export default function SharePhotosSection() {
             ))}
           </motion.ol>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer">
+          <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
               <Button variant="primary">Add Photos to Album</Button>
             </a>
-            <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer">
+            <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
               <Button variant="outline">View Shared Album</Button>
             </a>
           </div>
@@ -142,14 +142,15 @@ export default function SharePhotosSection() {
 
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="mt-6 rounded-2xl border border-white/15 bg-white p-4 shadow-lg"
+            className="mt-6 rounded-2xl border border-white/15 bg-white p-3 shadow-lg sm:p-4"
           >
             <QRCodeSVG
               value={sharedAlbum.url}
-              size={180}
+              size={160}
               bgColor="#FFFFFF"
               fgColor="#11294d"
               level="M"
+              className="h-auto w-[min(160px,60vw)]"
             />
           </motion.div>
 
