@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import EventIcon from "@/components/EventIcon";
 import { WeddingEvent } from "@/config/wedding";
 import { fadeUp } from "@/lib/motion";
 
@@ -46,7 +47,7 @@ export default function EventCard({ event, index }: EventCardProps) {
       >
         <div className="invite-border bg-white/90 p-6 transition-shadow hover:shadow-lg hover:shadow-gold/10">
           <div className="flex items-start gap-4">
-            <span className="text-3xl">{event.icon}</span>
+            <EventIcon eventId={event.id} className="mt-1 size-8 text-gold" />
             <div className="flex-1">
               <h3 className="font-heading text-xl text-maroon-dark md:text-2xl">
                 {event.title}
