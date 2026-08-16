@@ -19,7 +19,7 @@ function LabelPill({ children }: { children: string }) {
   );
 }
 
-function NameBlock({ names }: { names: string[] }) {
+function NameBlock({ names }: { names: readonly string[] }) {
   if (names.length >= 2) {
     return (
       <div className="mt-2 space-y-0.5">
@@ -61,9 +61,9 @@ function FamilyPanel({
   fromLabel: string;
   surname: string;
   parentsLabel: string;
-  parents: string[];
+  parents: readonly string[];
   eldersLabel: string;
-  elders: string[];
+  elders: readonly string[];
   accent: "groom" | "bride";
   variants: typeof slideFromLeft;
 }) {
