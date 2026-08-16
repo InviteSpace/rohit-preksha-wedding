@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import Button from "@/components/ui/Button";
+import { isAdminSession } from "@/lib/adminAuth";
 
 interface QrShareDownloadProps {
   value: string;
@@ -19,6 +20,11 @@ export default function QrShareDownload({
 }: QrShareDownloadProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(isAdminSession());
+  }, []);
 
   const canvasToBlob = useCallback(async () => {
     const canvas = canvasRef.current;
@@ -80,32 +86,36 @@ export default function QrShareDownload({
   }, [canvasToBlob, filename, title, value]);
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-sm border border-gold/30 bg-ivory p-6">
-      <p className="mb-4 font-heading text-xs tracking-wider text-sage uppercase">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-navy/10 bg-navy/[0.03] p-6">
+      <p className="mb-4 font-heading text-[10px] font-semibold tracking-wider text-royal-gold uppercase">
         Scan for Directions
       </p>
 
-      <QRCodeCanvas
-        ref={canvasRef}
-        value={value}
-        size={size}
-        bgColor="#FFFBF7"
-        fgColor="#3D2B2B"
-        level="M"
-        includeMargin
-      />
-
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-        <Button type="button" variant="primary" onClick={shareQr}>
-          Share QR
-        </Button>
-        <Button type="button" variant="outline" onClick={downloadQr}>
-          Download QR
-        </Button>
+      <div className="rounded-xl border border-navy/10 bg-white p-3 shadow-sm">
+        <QRCodeCanvas
+          ref={canvasRef}
+          value={value}
+          size={size}
+          bgColor="#FFFFFF"
+          fgColor="#11294d"
+          level="M"
+          includeMargin
+        />
       </div>
 
-      {status && (
-        <p className="mt-3 font-body text-xs text-sage" aria-live="polite">
+      {isAdmin && (
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+          <Button type="button" variant="primary" onClick={shareQr}>
+            Share QR
+          </Button>
+          <Button type="button" variant="outline" onClick={downloadQr}>
+            Download QR
+          </Button>
+        </div>
+      )}
+
+      {isAdmin && status && (
+        <p className="mt-3 font-heading text-xs font-medium text-navy/70" aria-live="polite">
           {status}
         </p>
       )}

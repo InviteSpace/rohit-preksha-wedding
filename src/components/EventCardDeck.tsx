@@ -7,14 +7,14 @@ import QrShareDownload from "@/components/QrShareDownload";
 import { WEDDING_CONFIG, type WeddingEvent } from "@/config/wedding";
 import { filterEvents } from "@/lib/inviteConfig";
 import { getMapEmbedUrl } from "@/lib/qr";
-import { fadeUp, gentleSpring, snappySpring } from "@/lib/motion";
+import { fadeUp, gentleSpring } from "@/lib/motion";
 
 const CARD_ACCENTS: Record<string, string> = {
-  mehndi: "from-[#eef4ef] via-ivory to-[#dce8dd]",
-  haldi: "from-[#faf3e8] via-ivory to-[#f0e2c8]",
-  cocktail: "from-[#faf0ed] via-ivory to-[#f2ddd8]",
-  wedding: "from-[#f5ecec] via-ivory to-[#ecd5cc]",
-  reception: "from-blush via-ivory to-[#f5e6c8]",
+  mehndi: "from-[#f4f7f4] via-white to-[#e8efe9]",
+  haldi: "from-[#fbf7ef] via-white to-[#f3ead8]",
+  cocktail: "from-[#faf4f2] via-white to-[#f0e4e0]",
+  wedding: "from-[#f3f0f6] via-white to-[#e8e4ef]",
+  reception: "from-[#f7f3ea] via-white to-[#efe6d4]",
 };
 
 function formatDate(dateStr: string) {
@@ -86,21 +86,20 @@ function PlayingCardFace({
       }}
       whileHover={!isSelected ? { y: transform.y - 12, scale: transform.scale + 0.04 } : { y: -38 }}
       whileTap={{ scale: transform.scale * 0.97 }}
-      transition={snappySpring}
-      className={`absolute left-1/2 top-1/2 h-[220px] w-[155px] -translate-x-1/2 -translate-y-1/2 cursor-pointer md:h-[260px] md:w-[185px] ${
-        isSelected ? "shadow-2xl shadow-gold/25" : "shadow-lg shadow-maroon/10"
+      transition={gentleSpring}
+      className={`absolute left-1/2 top-1/2 h-[220px] w-[155px] -translate-x-1/2 -translate-y-1/2 cursor-pointer overflow-hidden rounded-2xl border border-navy/10 md:h-[260px] md:w-[185px] ${
+        isSelected ? "shadow-2xl shadow-navy/20" : "shadow-lg shadow-navy/10"
       }`}
       style={{ transformOrigin: "center bottom" }}
       aria-pressed={isSelected}
       aria-label={`${event.title} — ${formatShortDate(event.date)}`}
     >
       <div
-        className={`paper-texture relative flex h-full w-full flex-col overflow-hidden rounded-xl border-2 border-gold bg-linear-to-br ${
-          CARD_ACCENTS[event.id] ?? "from-blush to-ivory"
-        } p-4 text-left shadow-[inset_0_0_0_1px_rgba(255,251,247,0.8)]`}
+        className={`relative flex h-full w-full flex-col bg-linear-to-br ${
+          CARD_ACCENTS[event.id] ?? "from-white to-[#f5f2ec]"
+        } p-4 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]`}
       >
-        <div className="pointer-events-none absolute inset-2 rounded-lg border border-gold/40" />
-        <div className="pointer-events-none absolute inset-4 rounded-md border border-gold/30" />
+        <div className="pointer-events-none absolute inset-3 rounded-xl border border-royal-gold/25" />
 
         <div className="relative z-10 flex items-start justify-between">
           <span className="text-xl md:text-2xl">{event.icon}</span>
@@ -108,20 +107,24 @@ function PlayingCardFace({
         </div>
 
         <div className="relative z-10 mt-auto flex flex-col items-center text-center">
-          <p className="font-heading text-[10px] tracking-[0.35em] text-sage uppercase md:text-xs">
+          <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase md:text-xs">
             Celebration
           </p>
-          <h3 className="mt-2 font-heading text-base leading-tight text-maroon-dark md:text-lg">
+          <h3 className="mt-2 font-heading text-base !font-medium leading-tight text-navy-deep md:text-lg">
             {event.title}
           </h3>
-          <p className="mt-2 font-body text-sm text-gold">{formatShortDate(event.date)}</p>
-          <p className="font-body text-xs text-maroon/85">{event.time}</p>
+          <p className="mt-2 font-heading text-sm font-semibold text-royal-gold">
+            {formatShortDate(event.date)}
+          </p>
+          <p className="font-heading text-xs font-medium text-navy/70">{event.time}</p>
         </div>
 
         <div className="relative z-10 mt-3 flex justify-center">
           <span
-            className={`rounded-full px-3 py-1 font-heading text-[9px] tracking-wider uppercase ${
-              isSelected ? "bg-sage text-white" : "bg-ivory text-sage ring-1 ring-gold/40"
+            className={`rounded-full px-3 py-1 font-heading text-[9px] font-semibold tracking-wider uppercase ${
+              isSelected
+                ? "bg-navy text-white"
+                : "bg-white/80 text-navy/70 ring-1 ring-navy/10"
             }`}
           >
             {isSelected ? "Selected" : "Pick card"}
@@ -141,25 +144,33 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 24, scale: 0.98 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="invite-border mt-10 overflow-hidden bg-ivory p-6 md:p-8"
+      className="mt-10 overflow-hidden rounded-[1.75rem] border border-navy/10 bg-white/85 p-6 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl md:p-8"
     >
       <div className="flex flex-wrap items-start gap-4">
         <motion.span
           initial={{ rotate: -8, scale: 0.8 }}
           animate={{ rotate: 0, scale: 1 }}
           transition={gentleSpring}
-          className="text-4xl"
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-navy text-2xl text-white"
         >
           {event.icon}
         </motion.span>
         <div className="min-w-[200px] flex-1">
-          <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">Event Details</p>
-          <h3 className="mt-1 font-heading text-2xl text-maroon-dark md:text-3xl">{event.title}</h3>
-          <p className="mt-2 font-body text-sm text-gold">{formatDate(event.date)}</p>
-          <p className="font-body text-sm text-maroon/85">{event.time}</p>
-          <p className="mt-4 font-body text-base leading-relaxed text-maroon/85">{event.description}</p>
+          <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase">
+            Event Details
+          </p>
+          <h3 className="mt-1 font-heading text-2xl !font-medium text-navy-deep md:text-3xl">
+            {event.title}
+          </h3>
+          <p className="mt-2 font-heading text-sm font-semibold text-royal-gold">
+            {formatDate(event.date)}
+          </p>
+          <p className="font-heading text-sm font-medium text-navy/70">{event.time}</p>
+          <p className="mt-4 font-heading text-base font-medium leading-relaxed text-navy/80">
+            {event.description}
+          </p>
           {event.dressCode && (
-            <p className="mt-3 font-body text-sm italic text-maroon/90">
+            <p className="mt-3 font-heading text-sm font-medium italic text-navy/70">
               Dress Code: {event.dressCode}
             </p>
           )}
@@ -170,11 +181,13 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.5 }}
-        className="mt-6 rounded-lg border border-gold/40 bg-blush p-5 md:p-6"
+        className="mt-6 rounded-2xl border border-navy/8 bg-navy/[0.03] p-5 md:p-6"
       >
-        <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">Venue & Location</p>
-        <p className="mt-2 font-heading text-xl text-maroon">{event.venue}</p>
-        <p className="mt-1 font-body text-sm text-maroon/90">{event.address}</p>
+        <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase">
+          Venue & Location
+        </p>
+        <p className="mt-2 font-heading text-xl !font-medium text-navy-deep">{event.venue}</p>
+        <p className="mt-1 font-heading text-sm font-medium text-navy/75">{event.address}</p>
         <div className="mt-4">
           <a href={event.mapUrl} target="_blank" rel="noopener noreferrer">
             <Button variant="primary">Get Directions</Button>
@@ -188,7 +201,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         transition={{ delay: 0.25, duration: 0.5 }}
         className="mt-6 grid items-stretch gap-6 md:grid-cols-2"
       >
-        <div className="overflow-hidden rounded-sm border border-gold/30 shadow-sm min-h-[280px] h-full">
+        <div className="h-full min-h-[280px] overflow-hidden rounded-2xl border border-navy/10 shadow-sm">
           <iframe
             src={getMapEmbedUrl(event.mapUrl, `${event.venue}, ${event.address}`)}
             className="h-full min-h-[280px] w-full"
@@ -240,7 +253,7 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
 
     const interval = setInterval(() => {
       setSelectedIndex((prev) => (prev + 1) % events.length);
-    }, 3200);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [userPicked, events.length]);
@@ -266,7 +279,7 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
 
   if (events.length === 0 || !selectedEvent) {
     return (
-      <p className="mt-12 text-center font-body text-maroon/90">
+      <p className="mt-12 text-center font-heading font-medium text-navy/75">
         No events are included in this invitation.
       </p>
     );
@@ -279,16 +292,16 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="text-center font-body text-sm text-maroon/90 md:text-base"
+        className="text-center font-heading text-sm font-medium text-navy/75 md:text-base"
       >
         Tap a card to reveal venue, map &amp; directions
       </motion.p>
 
-      <div className="relative mx-auto mt-8 max-w-6xl overflow-visible px-2">
+      <div className="relative mx-auto mt-8 max-w-6xl overflow-visible px-2 pb-8">
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="card-deck-perspective relative mx-auto h-[320px] w-full overflow-visible md:h-[400px]"
+          className="card-deck-perspective relative mx-auto h-[360px] w-full overflow-visible pt-4 pb-10 md:h-[440px] md:pb-12"
         >
           {events.map((event, index) => (
             <PlayingCardFace
@@ -306,7 +319,7 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
           <button
             type="button"
             onClick={goPrev}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 bg-white/80 font-heading text-lg text-sage transition-colors hover:border-sage hover:bg-sage hover:text-white cursor-pointer"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-navy/15 bg-white/90 font-heading text-lg text-navy transition-colors hover:border-navy hover:bg-navy hover:text-white"
             aria-label="Previous event"
           >
             ‹
@@ -318,8 +331,10 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
                 key={event.id}
                 type="button"
                 onClick={() => selectCard(index)}
-                className={`h-2.5 rounded-full transition-all cursor-pointer ${
-                  index === selectedIndex ? "w-8 bg-sage" : "w-2.5 bg-gold/40 hover:bg-gold/70"
+                className={`h-2.5 cursor-pointer rounded-full transition-all ${
+                  index === selectedIndex
+                    ? "w-8 bg-navy"
+                    : "w-2.5 bg-royal-gold/40 hover:bg-royal-gold/70"
                 }`}
                 aria-label={`Select ${event.title}`}
               />
@@ -329,7 +344,7 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
           <button
             type="button"
             onClick={goNext}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 bg-white/80 font-heading text-lg text-sage transition-colors hover:border-sage hover:bg-sage hover:text-white cursor-pointer"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-navy/15 bg-white/90 font-heading text-lg text-navy transition-colors hover:border-navy hover:bg-navy hover:text-white"
             aria-label="Next event"
           >
             ›

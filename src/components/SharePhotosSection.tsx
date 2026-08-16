@@ -36,7 +36,7 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-heading text-xs tracking-[0.4em] text-sage uppercase"
+          className="font-heading text-xs font-semibold tracking-[0.4em] text-royal-gold uppercase"
         >
           Capture the Moment
         </motion.p>
@@ -45,17 +45,17 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mt-2 font-heading text-3xl text-maroon-dark md:text-4xl"
+          className="mt-2 font-heading text-3xl !font-medium text-navy-deep md:text-4xl"
         >
           Share Your Photos
         </motion.h2>
-        <div className="section-divider mx-auto my-6 w-32" />
+        <div className="mx-auto my-6 h-px w-32 bg-linear-to-r from-transparent via-royal-gold to-transparent" />
         <motion.p
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-body text-lg text-maroon/85"
+          className="mx-auto max-w-2xl font-heading text-lg font-medium text-navy/80"
         >
           {sharedAlbum.description}
         </motion.p>
@@ -66,42 +66,50 @@ export default function SharePhotosSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-40px" }}
-        className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]"
+        className="mt-10 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:gap-6"
       >
         <motion.div
           variants={staggerItem}
-          className="invite-border overflow-hidden bg-ivory p-6 md:p-8"
+          className="overflow-hidden rounded-[1.75rem] border border-navy/10 bg-white/80 p-6 shadow-[0_20px_50px_rgba(17,41,77,0.08)] backdrop-blur-xl md:p-8"
         >
           <div className="flex items-start gap-4">
-            <span className="text-4xl" aria-hidden>
+            <span
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-navy text-lg text-white"
+              aria-hidden
+            >
               📸
             </span>
             <div>
-              <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">
+              <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold uppercase">
                 Google Photos Album
               </p>
-              <h3 className="mt-1 font-heading text-2xl text-maroon-dark">{sharedAlbum.title}</h3>
-              <p className="mt-3 font-body text-base leading-relaxed text-maroon/90">
+              <h3 className="mt-1 font-heading text-2xl !font-medium text-navy-deep">
+                {sharedAlbum.title}
+              </h3>
+              <p className="mt-3 font-heading text-base font-medium leading-relaxed text-navy/80">
                 Everyone is welcome to upload photos from our wedding celebrations. Please add
                 your memories — and kindly do not remove photos shared by others.
               </p>
             </div>
           </div>
 
-          <motion.ol
-            variants={staggerContainer}
-            className="mt-8 space-y-4"
-          >
+          <motion.ol variants={staggerContainer} className="mt-8 space-y-3">
             {STEPS.map((step) => (
               <motion.li
                 key={step.number}
                 variants={staggerItem}
-                className="flex gap-4 rounded-lg border border-gold/30 bg-blush p-4"
+                className="flex gap-4 rounded-2xl border border-navy/8 bg-navy/[0.03] p-4"
               >
-                <span className="font-heading text-sm text-gold">{step.number}</span>
+                <span className="font-heading text-sm font-semibold text-royal-gold">
+                  {step.number}
+                </span>
                 <div>
-                  <p className="font-heading text-base text-maroon-dark">{step.title}</p>
-                  <p className="mt-1 font-body text-sm text-maroon/85">{step.detail}</p>
+                  <p className="font-heading text-base !font-medium text-navy-deep">
+                    {step.title}
+                  </p>
+                  <p className="mt-1 font-heading text-sm font-medium text-navy/70">
+                    {step.detail}
+                  </p>
                 </div>
               </motion.li>
             ))}
@@ -116,36 +124,36 @@ export default function SharePhotosSection() {
             </a>
           </div>
 
-          <p className="mt-5 font-body text-sm italic text-maroon/90">
+          <p className="mt-5 font-heading text-sm font-medium italic text-navy/70">
             Use {hashtag} when posting on social media so we can find your posts too.
           </p>
         </motion.div>
 
         <motion.div
           variants={staggerItem}
-          className="invite-border flex flex-col items-center justify-center bg-blush p-6 md:p-8"
+          className="flex flex-col items-center justify-center rounded-[1.75rem] border border-white/10 bg-navy p-6 text-center shadow-[0_20px_50px_rgba(17,41,77,0.2)] md:p-8"
         >
-          <p className="font-heading text-xs tracking-[0.35em] text-sage uppercase">
+          <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold-bright uppercase">
             Scan to Upload
           </p>
-          <p className="mt-2 text-center font-body text-sm text-maroon/85">
+          <p className="mt-2 max-w-xs font-heading text-sm font-medium text-white/80">
             Opens our shared Google Photos album on your phone
           </p>
 
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="mt-6 rounded-sm border border-gold/40 bg-ivory p-5 shadow-sm"
+            className="mt-6 rounded-2xl border border-white/15 bg-white p-4 shadow-lg"
           >
             <QRCodeSVG
               value={sharedAlbum.url}
               size={180}
-              bgColor="#FFFBF7"
-              fgColor="#3D2B2B"
+              bgColor="#FFFFFF"
+              fgColor="#11294d"
               level="M"
             />
           </motion.div>
 
-          <p className="mt-5 text-center font-body text-xs text-maroon/90">
+          <p className="mt-5 max-w-xs font-heading text-xs font-medium text-white/65">
             Uploads go directly to Google Photos — add only, please keep everyone&apos;s
             memories safe.
           </p>

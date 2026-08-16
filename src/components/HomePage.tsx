@@ -10,7 +10,6 @@ import WelcomeSection from "@/components/WelcomeSection";
 import CoupleIntro from "@/components/CoupleIntro";
 import Countdown from "@/components/Countdown";
 import EventTimeline from "@/components/EventTimeline";
-import Gallery from "@/components/Gallery";
 import SharePhotosSection from "@/components/SharePhotosSection";
 import ClosingSection from "@/components/ClosingSection";
 import MusicPlayer from "@/components/MusicPlayer";
@@ -120,7 +119,6 @@ function HomeContent() {
         <CoupleIntro />
         <Countdown />
         <EventTimeline eventIds={invite.eventIds} />
-        <Gallery />
         <SharePhotosSection />
         <ClosingSection />
       </motion.main>

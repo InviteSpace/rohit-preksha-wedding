@@ -56,7 +56,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 500;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -170,6 +170,7 @@ body {
 .card-deck-perspective {
   perspective: 1400px;
   transform-style: preserve-3d;
+  overflow: visible;
 }
 
 @keyframes spin-slow {

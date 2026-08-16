@@ -230,6 +230,22 @@ export default function AdminPage() {
           </button>
         </div>
 
+        <div className="mt-6 rounded-xl border border-[#d6ad63]/50 bg-[#f7f5f1] p-4">
+          <p className="font-heading text-xs tracking-wider text-[#11294d]/70 uppercase">
+            Admin site view
+          </p>
+          <p className="mt-1 font-body text-sm text-[#11294d]/70">
+            Open the invitation while logged in to use Share QR / Download QR under each event.
+            Guests still see the QR code and Get Directions.
+          </p>
+          <a
+            href={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/"}
+            className="mt-3 inline-flex cursor-pointer bg-[#11294d] px-4 py-2.5 font-heading text-[10px] tracking-[0.2em] text-white uppercase"
+          >
+            Open invitation (admin view)
+          </a>
+        </div>
+
         <form onSubmit={handleGenerate} className="mt-8 space-y-6" autoComplete="off">
           <fieldset>
             <legend className="font-heading text-xs tracking-wider text-[#11294d]/70 uppercase">

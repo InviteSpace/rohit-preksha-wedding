@@ -20,7 +20,7 @@ export default function SectionWrapper({
   return (
     <section
       id={id}
-      className={`relative py-20 px-4 md:px-8 floral-bg ${
+      className={`relative overflow-visible py-20 px-4 md:px-8 floral-bg ${
         blush ? "bg-blush text-foreground" : "bg-ivory text-foreground"
       } ${className}`}
     >
@@ -29,7 +29,7 @@ export default function SectionWrapper({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="relative z-10 mx-auto max-w-5xl"
+        className="relative z-10 mx-auto max-w-5xl overflow-visible"
       >
         {children}
       </motion.div>
