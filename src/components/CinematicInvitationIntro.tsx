@@ -391,7 +391,7 @@ export default function CinematicInvitationIntro({
             className="absolute top-8 z-50 px-6 text-center font-heading text-[9px] tracking-[0.32em] text-[#11294d]/70 uppercase sm:top-11 sm:text-xs"
           >
             {stage === "closed"
-              ? "Tap to open invitation"
+              ? "Tap, swipe, or wait"
               : focused
                 ? stage === "card-front"
                   ? "Tap the invitation to turn it over"
