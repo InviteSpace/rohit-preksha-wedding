@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDEFEA"/>
+      <stop offset="45%" stop-color="#F5E6E0"/>
+      <stop offset="100%" stop-color="#E8DDD5"/>
+    </linearGradient>
+    <linearGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE8CC" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FFE8CC" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="30%" cy="40%" r="30%">
+      <stop offset="0%" stop-color="#FFD4C4" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#FFD4C4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="70%" cy="35%" r="25%">
+      <stop offset="0%" stop-color="#E0B5AB" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#E0B5AB" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1440" height="900" fill="url(#sky)"/>
+  <ellipse cx="720" cy="180" rx="280" ry="120" fill="url(#sun)"/>
+  <ellipse cx="400" cy="300" rx="200" ry="150" fill="url(#glow1)"/>
+  <ellipse cx="1000" cy="250" rx="180" ry="130" fill="url(#glow2)"/>
+
+  <!-- Distant hills -->
+  <path d="M0 520 Q360 420 720 480 T1440 500 L1440 900 L0 900 Z" fill="#D4C4BC" opacity="0.4"/>
+  <path d="M0 580 Q400 500 720 560 T1440 540 L1440 900 L0 900 Z" fill="#C4B4AC" opacity="0.35"/>
+
+  <!-- Garden ground -->
+  <path d="M0 620 Q720 580 1440 640 L1440 900 L0 900 Z" fill="#A8C4AB" opacity="0.25"/>
+  <path d="M0 680 Q720 650 1440 700 L1440 900 L0 900 Z" fill="#7A9E7E" opacity="0.2"/>
+
+  <!-- Wedding mandap / arch (center background) -->
+  <g opacity="0.35" transform="translate(520, 280)">
+    <path d="M0 320 L200 0 L400 320 Z" fill="none" stroke="#B8956B" stroke-width="3"/>
+    <path d="M40 320 L200 60 L360 320 Z" fill="#F5E6E0" opacity="0.5"/>
+    <line x1="200" y1="60" x2="200" y2="320" stroke="#B8956B" stroke-width="2"/>
+    <!-- Arch flowers -->
+    <circle cx="80" cy="200" r="12" fill="#C9958A" opacity="0.6"/>
+    <circle cx="120" cy="140" r="10" fill="#E0B5AB" opacity="0.7"/>
+    <circle cx="160" cy="100" r="11" fill="#C9958A" opacity="0.6"/>
+    <circle cx="200" cy="80" r="12" fill="#E0B5AB" opacity="0.8"/>
+    <circle cx="240" cy="100" r="11" fill="#C9958A" opacity="0.6"/>
+    <circle cx="280" cy="140" r="10" fill="#E0B5AB" opacity="0.7"/>
+    <circle cx="320" cy="200" r="12" fill="#C9958A" opacity="0.6"/>
+  </g>
+
+  <!-- Side floral trees -->
+  <g opacity="0.4">
+    <ellipse cx="120" cy="650" rx="80" ry="120" fill="#7A9E7E"/>
+    <ellipse cx="180" cy="600" rx="60" ry="90" fill="#A8C4AB"/>
+    <circle cx="100" cy="580" r="15" fill="#C9958A" opacity="0.7"/>
+    <circle cx="150" cy="560" r="12" fill="#E0B5AB" opacity="0.8"/>
+    <circle cx="200" cy="570" r="14" fill="#C9958A" opacity="0.6"/>
+
+    <ellipse cx="1320" cy="650" rx="80" ry="120" fill="#7A9E7E"/>
+    <ellipse cx="1260" cy="600" rx="60" ry="90" fill="#A8C4AB"/>
+    <circle cx="1340" cy="580" r="15" fill="#C9958A" opacity="0.7"/>
+    <circle cx="1290" cy="560" r="12" fill="#E0B5AB" opacity="0.8"/>
+    <circle cx="1240" cy="570" r="14" fill="#C9958A" opacity="0.6"/>
+  </g>
+
+  <!-- Floating petals -->
+  <ellipse cx="200" cy="200" rx="8" ry="5" fill="#E0B5AB" opacity="0.5" transform="rotate(30 200 200)"/>
+  <ellipse cx="500" cy="150" rx="6" ry="4" fill="#C9958A" opacity="0.4" transform="rotate(-20 500 150)"/>
+  <ellipse cx="900" cy="180" rx="7" ry="4" fill="#E0B5AB" opacity="0.45" transform="rotate(45 900 180)"/>
+  <ellipse cx="1200" cy="220" rx="8" ry="5" fill="#C9958A" opacity="0.4" transform="rotate(-35 1200 220)"/>
+  <ellipse cx="350" cy="350" rx="6" ry="4" fill="#E0B5AB" opacity="0.35" transform="rotate(15 350 350)"/>
+  <ellipse cx="1100" cy="320" rx="7" ry="4" fill="#C9958A" opacity="0.35" transform="rotate(-25 1100 320)"/>
+
+  <!-- Bokeh lights -->
+  <circle cx="300" cy="250" r="4" fill="#FFD4C4" opacity="0.6"/>
+  <circle cx="600" cy="200" r="3" fill="#FFE8CC" opacity="0.5"/>
+  <circle cx="850" cy="280" r="5" fill="#FFD4C4" opacity="0.45"/>
+  <circle cx="1100" cy="230" r="3" fill="#FFE8CC" opacity="0.55"/>
+  <circle cx="450" cy="400" r="4" fill="#E0B5AB" opacity="0.4"/>
+  <circle cx="950" cy="380" r="3" fill="#FFD4C4" opacity="0.5"/>
+
+  <!-- Path -->
+  <path d="M620 900 Q720 750 820 900" fill="none" stroke="#D4B896" stroke-width="2" opacity="0.3"/>
+</svg>
