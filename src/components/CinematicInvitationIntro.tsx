@@ -378,6 +378,10 @@ export default function CinematicInvitationIntro({
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasOpened = useRef(false);
 
+  useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage]);
+
   const changeLanguage = (next: InvitationLanguage) => {
     setLanguage(next);
     onLanguageChange?.(next);
@@ -443,11 +447,11 @@ export default function CinematicInvitationIntro({
                 : "Unwrapping your invitation"}
           </motion.p>
 
-          <div className="absolute top-14 z-60 flex items-center rounded-full border border-[#d6ad63]/70 bg-white/90 p-1 shadow-sm sm:top-18">
+          <div className="lang-switch absolute top-14 z-60 flex h-9 items-center rounded-full border border-[#d6ad63]/70 bg-white/90 p-0.5 shadow-sm sm:top-18">
             <button
               type="button"
               onClick={() => changeLanguage("en")}
-              className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[9px] tracking-wider transition-colors sm:text-[10px] ${
+              className={`flex h-8 cursor-pointer items-center justify-center rounded-full px-3.5 font-heading text-[10px] leading-none tracking-wider transition-colors sm:text-[11px] ${
                 language === "en" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
               }`}
               aria-pressed={language === "en"}
@@ -457,7 +461,7 @@ export default function CinematicInvitationIntro({
             <button
               type="button"
               onClick={() => changeLanguage("hi")}
-              className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[10px] transition-colors sm:text-xs ${
+              className={`flex h-8 cursor-pointer items-center justify-center rounded-full px-3.5 font-heading text-[12px] leading-none transition-colors sm:text-[13px] ${
                 language === "hi" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
               }`}
               aria-pressed={language === "hi"}

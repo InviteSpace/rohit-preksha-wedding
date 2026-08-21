@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import { assetPath } from "@/lib/asset";
 import type { InvitationLanguage } from "@/lib/invitationSide";
+import { getUiCopy } from "@/lib/uiCopy";
 
 export const WEDDING_MUSIC_START_EVENT = "wedding-music-start";
 
@@ -37,6 +38,7 @@ export default function MusicPlayer({
   const [playing, setPlaying] = useState(false);
   const [showPrompt, setShowPrompt] = useState(autoPrompt && !hidden);
   const [trackSrc, setTrackSrc] = useState(() => assetPath(trackFor(language).src));
+  const t = getUiCopy(language);
 
   const clearFade = useCallback(() => {
     if (fadeRef.current !== null) {
@@ -245,7 +247,7 @@ export default function MusicPlayer({
           onClick={toggle}
           className="fixed right-4 bottom-24 z-50 max-w-[calc(100vw-5.5rem)] animate-pulse rounded-full bg-sage px-3 py-2 font-heading text-[11px] tracking-wide text-white shadow-lg sm:px-4 sm:text-xs sm:tracking-wider md:bottom-8 cursor-pointer"
         >
-          Tap for music ♪
+          {t.tapForMusic}
         </button>
       )}
 

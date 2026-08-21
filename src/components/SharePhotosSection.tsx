@@ -5,28 +5,20 @@ import { QRCodeSVG } from "qrcode.react";
 import Button from "@/components/ui/Button";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import { useLanguage } from "@/lib/LanguageContext";
+import { eyebrowClass, getUiCopy } from "@/lib/uiCopy";
 import { fadeUp, staggerContainer, staggerItem } from "@/lib/motion";
 
-const STEPS = [
-  {
-    number: "01",
-    title: "Open the album",
-    detail: "Tap the button below or scan the QR code on your phone.",
-  },
-  {
-    number: "02",
-    title: "Add your photos",
-    detail: "Choose photos from your gallery and upload them to Shared Memories.",
-  },
-  {
-    number: "03",
-    title: "Spread the joy",
-    detail: "Your moments become part of our wedding story for everyone to enjoy.",
-  },
-];
-
 export default function SharePhotosSection() {
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
   const { sharedAlbum, hashtag } = WEDDING_CONFIG;
+
+  const steps = [
+    { number: "01", title: t.step1Title, detail: t.step1Detail },
+    { number: "02", title: t.step2Title, detail: t.step2Detail },
+    { number: "03", title: t.step3Title, detail: t.step3Detail },
+  ];
 
   return (
     <SectionWrapper id="share-photos">
@@ -36,9 +28,9 @@ export default function SharePhotosSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="px-2 font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:text-xs sm:tracking-[0.4em]"
+          className={`px-2 font-heading font-semibold text-royal-gold ${eyebrowClass(language)}`}
         >
-          Capture the Moment
+          {t.captureMoment}
         </motion.p>
         <motion.h2
           variants={fadeUp}
@@ -47,7 +39,7 @@ export default function SharePhotosSection() {
           viewport={{ once: true }}
           className="mt-2 font-heading text-3xl !font-medium text-navy-deep md:text-4xl"
         >
-          Share Your Photos
+          {t.sharePhotos}
         </motion.h2>
         <div className="mx-auto my-6 h-px w-32 bg-linear-to-r from-transparent via-royal-gold to-transparent" />
         <motion.p
@@ -57,7 +49,7 @@ export default function SharePhotosSection() {
           viewport={{ once: true }}
           className="mx-auto max-w-2xl px-1 font-heading text-base font-medium text-navy/80 sm:text-lg"
         >
-          {sharedAlbum.description}
+          {t.albumDescription}
         </motion.p>
       </div>
 
@@ -80,21 +72,22 @@ export default function SharePhotosSection() {
               📸
             </span>
             <div className="min-w-0">
-              <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:tracking-[0.35em]">
-                Google Photos Album
+              <p
+                className={`font-heading font-semibold text-royal-gold ${eyebrowClass(language, "sm")}`}
+              >
+                {t.albumEyebrow}
               </p>
               <h3 className="mt-1 font-heading text-xl !font-medium text-navy-deep sm:text-2xl">
-                {sharedAlbum.title}
+                {t.albumTitle}
               </h3>
               <p className="mt-3 font-heading text-sm font-medium leading-relaxed text-navy/80 sm:text-base">
-                Everyone is welcome to upload photos from our wedding celebrations. Please add
-                your memories — and kindly do not remove photos shared by others.
+                {t.albumBody}
               </p>
             </div>
           </div>
 
           <motion.ol variants={staggerContainer} className="mt-8 space-y-3">
-            {STEPS.map((step) => (
+            {steps.map((step) => (
               <motion.li
                 key={step.number}
                 variants={staggerItem}
@@ -117,15 +110,15 @@ export default function SharePhotosSection() {
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-              <Button variant="primary">Add Photos to Album</Button>
+              <Button variant="primary">{t.addPhotos}</Button>
             </a>
             <a href={sharedAlbum.url} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-              <Button variant="outline">View Shared Album</Button>
+              <Button variant="outline">{t.viewAlbum}</Button>
             </a>
           </div>
 
           <p className="mt-5 font-heading text-sm font-medium italic text-navy/70">
-            Use {hashtag} when posting on social media so we can find your posts too.
+            {t.hashtagHint.replace("{hashtag}", hashtag)}
           </p>
         </motion.div>
 
@@ -133,11 +126,13 @@ export default function SharePhotosSection() {
           variants={staggerItem}
           className="flex flex-col items-center justify-center rounded-[1.75rem] border border-white/10 bg-navy p-6 text-center shadow-[0_20px_50px_rgba(17,41,77,0.2)] md:p-8"
         >
-          <p className="font-heading text-[10px] font-semibold tracking-[0.35em] text-royal-gold-bright uppercase">
-            Scan to Upload
+          <p
+            className={`font-heading font-semibold text-royal-gold-bright ${eyebrowClass(language)}`}
+          >
+            {t.scanUpload}
           </p>
           <p className="mt-2 max-w-xs font-heading text-sm font-medium text-white/80">
-            Opens our shared Google Photos album on your phone
+            {t.scanUploadHint}
           </p>
 
           <motion.div
@@ -155,8 +150,7 @@ export default function SharePhotosSection() {
           </motion.div>
 
           <p className="mt-5 max-w-xs font-heading text-xs font-medium text-white/65">
-            Uploads go directly to Google Photos — add only, please keep everyone&apos;s
-            memories safe.
+            {t.albumUploadNote}
           </p>
         </motion.div>
       </motion.div>

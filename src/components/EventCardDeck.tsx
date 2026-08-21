@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import EventIcon from "@/components/EventIcon";
 import QrShareDownload from "@/components/QrShareDownload";
 import { WEDDING_CONFIG, type WeddingEvent } from "@/config/wedding";
 import { filterEvents } from "@/lib/inviteConfig";
+import { useLanguage } from "@/lib/LanguageContext";
+import {
+  formatEventDate,
+  formatEventShortDate,
+  getUiCopy,
+  localizeEvent,
+  type UiCopy,
+} from "@/lib/uiCopy";
 import { getMapEmbedUrl } from "@/lib/qr";
 import { fadeUp, gentleSpring } from "@/lib/motion";
 
@@ -19,22 +27,6 @@ const CARD_ACCENTS: Record<string, string> = {
 };
 
 const SHUFFLE_MS = 10000;
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-function formatShortDate(dateStr: string) {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
-    month: "short",
-    day: "numeric",
-  });
-}
 
 type DeckSpread = {
   xGap: number;
@@ -99,19 +91,27 @@ function EventTabs({
   events,
   selectedIndex,
   onSelect,
+  eventsLabel,
 }: {
   events: WeddingEvent[];
   selectedIndex: number;
   onSelect: (index: number) => void;
+  eventsLabel: string;
 }) {
+  const { language } = useLanguage();
+  const isHindi = language === "hi";
+
   return (
     <div
       role="tablist"
-      aria-label="Wedding events"
+      aria-label={eventsLabel}
       className="-mx-1 flex max-w-3xl items-center gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-auto sm:flex-wrap sm:justify-center sm:overflow-visible"
     >
       {events.map((event, index) => {
         const active = index === selectedIndex;
+        const shortTitle = event.title
+          .replace(" Ceremony", "")
+          .replace(" समारोह", "");
         return (
           <button
             key={event.id}
@@ -119,7 +119,7 @@ function EventTabs({
             role="tab"
             aria-selected={active}
             onClick={() => onSelect(index)}
-            className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-2 font-heading text-[11px] font-semibold tracking-wide transition-colors sm:gap-2 sm:px-3.5 sm:text-xs md:text-sm ${
+            className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border px-3 py-2 transition-colors sm:gap-2 sm:px-3.5 ${
               active
                 ? "border-navy bg-navy text-white shadow-sm"
                 : "border-navy/12 bg-white/80 text-navy/75 hover:border-navy/30 hover:text-navy"
@@ -127,9 +127,17 @@ function EventTabs({
           >
             <EventIcon
               eventId={event.id}
-              className={`size-3.5 md:size-4 ${active ? "text-royal-gold" : "text-royal-gold/80"}`}
+              className={`size-3.5 shrink-0 md:size-4 ${active ? "text-royal-gold" : "text-royal-gold/80"}`}
             />
-            <span>{event.title.replace(" Ceremony", "")}</span>
+            <span
+              className={`font-heading text-[11px] font-semibold sm:text-xs md:text-sm ${
+                isHindi
+                  ? "relative bottom-[-4px] tracking-normal normal-case leading-none"
+                  : "tracking-wide leading-none"
+              }`}
+            >
+              {shortTitle}
+            </span>
           </button>
         );
       })}
@@ -143,12 +151,18 @@ function PlayingCardFace({
   selectedIndex,
   spread,
   onSelect,
+  t,
+  shortDate,
+  isHindi,
 }: {
   event: WeddingEvent;
   index: number;
   selectedIndex: number;
   spread: DeckSpread;
   onSelect: (index: number) => void;
+  t: UiCopy;
+  shortDate: string;
+  isHindi: boolean;
 }) {
   const transform = getCardTransform(index, selectedIndex, spread);
   const isSelected = index === selectedIndex;
@@ -173,7 +187,7 @@ function PlayingCardFace({
       }`}
       style={{ transformOrigin: "center center" }}
       aria-pressed={isSelected}
-      aria-label={`${event.title} — ${formatShortDate(event.date)}`}
+      aria-label={`${event.title} — ${shortDate}`}
     >
       <div
         className={`relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-navy/10 bg-linear-to-br ${
@@ -192,27 +206,35 @@ function PlayingCardFace({
           </div>
 
           <div className="mt-3 flex flex-1 flex-col items-center justify-center px-1 text-center sm:mt-4">
-            <p className="font-heading text-[9px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:text-[10px] sm:tracking-[0.35em] md:text-xs">
-              Celebration
+            <p
+              className={`font-heading font-semibold text-royal-gold ${
+                isHindi
+                  ? "hi-eyebrow tracking-normal normal-case text-[15px] leading-snug sm:text-base md:text-lg"
+                  : "text-[9px] leading-none tracking-[0.28em] uppercase sm:text-[10px] sm:tracking-[0.35em] md:text-xs"
+              }`}
+            >
+              {t.celebration}
             </p>
             <h3 className="mt-2 font-heading text-sm !font-medium leading-snug text-navy-deep sm:text-base md:text-lg">
               {event.title}
             </h3>
             <p className="mt-2 font-heading text-sm font-semibold text-royal-gold">
-              {formatShortDate(event.date)}
+              {shortDate}
             </p>
             <p className="mt-1 font-heading text-xs font-medium text-navy/70">{event.time}</p>
           </div>
 
           <div className="mt-3 flex justify-center sm:mt-4">
             <span
-              className={`rounded-full px-3 py-1.5 font-heading text-[9px] font-semibold tracking-wider uppercase ${
+              className={`rounded-full px-3 py-1.5 font-heading text-[9px] font-semibold ${
+                isHindi ? "tracking-normal normal-case" : "tracking-wider uppercase"
+              } ${
                 isSelected
                   ? "bg-navy text-white"
                   : "bg-white/80 text-navy/70 ring-1 ring-navy/10"
               }`}
             >
-              {isSelected ? "Selected" : "Pick card"}
+              {isSelected ? t.selected : t.pickCard}
             </span>
           </div>
         </div>
@@ -221,7 +243,17 @@ function PlayingCardFace({
   );
 }
 
-function EventDetailReveal({ event }: { event: WeddingEvent }) {
+function EventDetailReveal({
+  event,
+  t,
+  fullDate,
+  isHindi,
+}: {
+  event: WeddingEvent;
+  t: UiCopy;
+  fullDate: string;
+  isHindi: boolean;
+}) {
   return (
     <motion.div
       id={`location-${event.id}`}
@@ -244,8 +276,14 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
           </motion.span>
 
           <div className="min-w-0 flex-1 pt-0.5">
-            <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:tracking-[0.35em]">
-              Event Details
+            <p
+              className={`font-heading font-semibold text-royal-gold ${
+                isHindi
+                  ? "hi-eyebrow tracking-normal normal-case text-base leading-snug sm:text-lg"
+                  : "text-[10px] leading-none tracking-[0.28em] uppercase sm:tracking-[0.35em]"
+              }`}
+            >
+              {t.eventDetails}
             </p>
             <h3 className="mt-1 font-heading text-xl !font-medium leading-snug text-navy-deep sm:text-2xl md:text-3xl">
               {event.title}
@@ -254,7 +292,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         </div>
 
         <p className="mt-4 w-full font-heading text-sm font-semibold text-royal-gold">
-          {formatDate(event.date)}
+          {fullDate}
         </p>
         <p className="w-full font-heading text-sm font-medium text-navy/70">{event.time}</p>
 
@@ -263,7 +301,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         </p>
         {event.dressCode && (
           <p className="mt-3 w-full font-heading text-sm font-medium italic text-navy/70">
-            Dress Code: {event.dressCode}
+            {t.dressCode}: {event.dressCode}
           </p>
         )}
       </div>
@@ -274,8 +312,14 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         transition={{ delay: 0.15, duration: 0.5 }}
         className="w-full border-t border-navy/8 bg-navy/[0.03] px-5 py-5 sm:px-6 sm:py-6 md:px-8"
       >
-        <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-royal-gold uppercase sm:tracking-[0.35em]">
-          Venue & Location
+        <p
+          className={`font-heading font-semibold text-royal-gold ${
+            isHindi
+              ? "hi-eyebrow tracking-normal normal-case text-base leading-snug sm:text-lg"
+              : "text-[10px] leading-none tracking-[0.28em] uppercase sm:tracking-[0.35em]"
+          }`}
+        >
+          {t.venueLocation}
         </p>
         <p className="mt-2 font-heading text-xl !font-medium text-navy-deep">{event.venue}</p>
         <p className="mt-1 w-full font-heading text-sm font-medium leading-relaxed break-words text-navy/75">
@@ -283,7 +327,7 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
         </p>
         <div className="mt-4">
           <a href={event.mapUrl} target="_blank" rel="noopener noreferrer">
-            <Button variant="primary">Get Directions</Button>
+            <Button variant="primary">{t.getDirections}</Button>
           </a>
         </div>
       </motion.div>
@@ -317,7 +361,15 @@ function EventDetailReveal({ event }: { event: WeddingEvent }) {
 }
 
 export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
-  const events = filterEvents(WEDDING_CONFIG.events, eventIds);
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
+  const events = useMemo(
+    () =>
+      filterEvents(WEDDING_CONFIG.events, eventIds).map((event) =>
+        localizeEvent(event, language),
+      ),
+    [eventIds, language],
+  );
   const weddingIndex = Math.max(
     0,
     events.findIndex((e) => e.id === "wedding"),
@@ -416,19 +468,20 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
   if (events.length === 0 || !selectedEvent || !detailEvent) {
     return (
       <p className="mt-12 text-center font-heading font-medium text-navy/75">
-        No events are included in this invitation.
+        {t.noEvents}
       </p>
     );
   }
 
   return (
     <div className="mt-12">
-      <div className="sticky top-16 z-40 mb-8 md:top-[4.5rem]">
-        <div className="rounded-2xl border border-navy/10 bg-ivory/90 px-3 py-3 shadow-[0_10px_30px_rgba(17,41,77,0.08)] backdrop-blur-md md:px-4">
+      <div className="sticky top-14 z-40 mb-6 sm:mb-8 md:top-[4.25rem]">
+        <div className="rounded-2xl border border-navy/10 bg-ivory/90 px-2.5 py-2.5 shadow-[0_10px_30px_rgba(17,41,77,0.08)] backdrop-blur-md sm:px-3 sm:py-3 md:px-4">
           <EventTabs
             events={events}
             selectedIndex={selectedIndex}
             onSelect={selectCard}
+            eventsLabel={t.weddingEvents}
           />
         </div>
       </div>
@@ -440,7 +493,7 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
         viewport={{ once: true }}
         className="text-center font-heading text-sm font-medium text-navy/75 md:text-base"
       >
-        Tap a card to reveal venue, map &amp; directions
+        {t.tapCardHint}
       </motion.p>
 
       <div
@@ -460,6 +513,9 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
               selectedIndex={selectedIndex}
               spread={spread}
               onSelect={selectCard}
+              t={t}
+              shortDate={formatEventShortDate(event.date, language)}
+              isHindi={language === "hi"}
             />
           ))}
         </motion.div>
@@ -520,7 +576,13 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
       <div ref={detailRef} className="min-h-[12rem]">
         <AnimatePresence mode="wait">
           {detailsVisible ? (
-            <EventDetailReveal key={detailEvent.id} event={detailEvent} />
+            <EventDetailReveal
+              key={detailEvent.id}
+              event={detailEvent}
+              t={t}
+              fullDate={formatEventDate(detailEvent.date, language)}
+              isHindi={language === "hi"}
+            />
           ) : null}
         </AnimatePresence>
       </div>

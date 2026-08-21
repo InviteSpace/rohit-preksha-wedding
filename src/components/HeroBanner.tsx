@@ -5,21 +5,19 @@ import { useRef } from "react";
 import PublicImage from "@/components/PublicImage";
 import AnimatedHeroBackground from "@/components/AnimatedHeroBackground";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import { useLanguage } from "@/lib/LanguageContext";
+import { eyebrowClass, formatWeddingDate, getUiCopy } from "@/lib/uiCopy";
 import { fadeUp } from "@/lib/motion";
 
 export default function HeroBanner() {
   const ref = useRef<HTMLElement>(null);
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 50]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
-  const { groom, bride } = WEDDING_CONFIG.couple;
-  const weddingDate = WEDDING_CONFIG.weddingDate.toLocaleDateString("en-IN", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const weddingDate = formatWeddingDate(WEDDING_CONFIG.weddingDate, language);
 
   return (
     <section
@@ -33,9 +31,9 @@ export default function HeroBanner() {
         initial="hidden"
         animate="visible"
         style={{ opacity: contentOpacity }}
-        className="relative z-10 rounded-full bg-ivory/35 px-4 py-2 font-heading text-[10px] font-bold tracking-[0.28em] text-navy uppercase shadow-[0_4px_24px_rgba(17,41,77,0.06)] backdrop-blur-md sm:px-5 sm:text-xs sm:tracking-[0.5em] md:text-sm"
+        className={`relative z-10 rounded-full bg-ivory/35 px-4 py-2 font-heading font-bold text-navy shadow-[0_4px_24px_rgba(17,41,77,0.06)] backdrop-blur-md sm:px-5 ${eyebrowClass(language, "lg")}`}
       >
-        Save the Date
+        {t.saveTheDate}
       </motion.p>
 
       <motion.div
@@ -55,7 +53,7 @@ export default function HeroBanner() {
           >
             <PublicImage
               src={WEDDING_CONFIG.hero.couple}
-              alt={`${groom.name} and ${bride.name}`}
+              alt={`${t.groomName} and ${t.brideName}`}
               width={853}
               height={1024}
               priority
@@ -86,7 +84,7 @@ export default function HeroBanner() {
                 transition={{ duration: 0.9, delay: 1, ease: [0.22, 1, 0.36, 1] }}
                 className="font-heading text-2xl !font-medium leading-tight text-navy-deep md:text-4xl lg:text-5xl"
               >
-                {groom.name}
+                {t.groomName}
               </motion.h1>
 
               <motion.span
@@ -105,7 +103,7 @@ export default function HeroBanner() {
                 transition={{ duration: 0.9, delay: 1.05, ease: [0.22, 1, 0.36, 1] }}
                 className="font-heading text-2xl !font-medium leading-tight text-navy-deep md:text-4xl lg:text-5xl"
               >
-                {bride.name}
+                {t.brideName}
               </motion.h1>
             </div>
 
@@ -115,7 +113,7 @@ export default function HeroBanner() {
               transition={{ delay: 1.4 }}
               className="mt-1 font-heading text-sm font-semibold italic text-navy md:text-base"
             >
-              are getting married
+              {t.gettingMarried}
             </motion.p>
 
             <motion.p
@@ -134,7 +132,7 @@ export default function HeroBanner() {
               className="mt-2.5 flex flex-col items-center gap-0.5"
             >
               <span className="font-heading text-[10px] font-semibold text-navy/80 md:text-xs">
-                Scroll to explore
+                {t.scrollToExplore}
               </span>
               <motion.span
                 animate={{ y: [0, 4, 0] }}

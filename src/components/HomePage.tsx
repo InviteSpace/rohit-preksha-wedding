@@ -22,12 +22,15 @@ import {
 } from "@/lib/inviteConfig";
 import { verifyInviteToken } from "@/lib/inviteToken";
 import { parseInvitationSide, type InvitationLanguage } from "@/lib/invitationSide";
+import { LanguageProvider, useLanguage } from "@/lib/LanguageContext";
+import { getUiCopy } from "@/lib/uiCopy";
 
 function HomeContent() {
   const searchParams = useSearchParams();
+  const { language, setLanguage } = useLanguage();
+  const t = getUiCopy(language);
   const [invite, setInvite] = useState<ResolvedInvite | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
-  const [language, setLanguage] = useState<InvitationLanguage>("en");
 
   useEffect(() => {
     let cancelled = false;
@@ -44,10 +47,14 @@ function HomeContent() {
         return;
       }
 
+      const langParam = searchParams.get("lang");
+      const lang: InvitationLanguage =
+        langParam === "hi" || langParam === "en" ? langParam : "en";
+
       if (!cancelled) {
         const resolved = {
           side: parseInvitationSide(searchParams.get("side")),
-          lang: "en" as const,
+          lang,
           eventIds: [...KNOWN_EVENT_IDS],
           guest: sanitizeGuestName(searchParams.get("guest")),
         };
@@ -60,7 +67,7 @@ function HomeContent() {
     return () => {
       cancelled = true;
     };
-  }, [searchParams]);
+  }, [searchParams, setLanguage]);
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
@@ -92,7 +99,7 @@ function HomeContent() {
   if (!invite) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-blush text-sage">
-        Loading...
+        {t.loading}
       </div>
     );
   }
@@ -110,7 +117,7 @@ function HomeContent() {
         <CinematicInvitationIntro
           onComplete={finishIntro}
           side={invite.side}
-          initialLanguage={invite.lang}
+          initialLanguage={language}
           onLanguageChange={setLanguage}
         />
       ) : (
@@ -147,7 +154,9 @@ export default function HomePage() {
         </div>
       }
     >
-      <HomeContent />
+      <LanguageProvider>
+        <HomeContent />
+      </LanguageProvider>
     </Suspense>
   );
 }
