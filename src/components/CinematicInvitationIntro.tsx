@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import InvitationFlorals from "@/components/InvitationFlorals";
+import { WEDDING_MUSIC_START_EVENT } from "@/components/MusicPlayer";
 import {
   getInvitationContent,
   type InvitationLanguage,
@@ -22,6 +23,7 @@ interface CinematicInvitationIntroProps {
   onComplete: () => void;
   side?: InvitationSide;
   initialLanguage?: InvitationLanguage;
+  onLanguageChange?: (language: InvitationLanguage) => void;
 }
 
 function WaxSeal({ compact = false }: { compact?: boolean }) {
@@ -159,9 +161,11 @@ function EnvelopePocketOverlay() {
 function InvitationFrontFace({
   language,
   side,
+  contentVisible,
 }: {
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   const content = getInvitationContent(side, language);
 
@@ -171,7 +175,13 @@ function InvitationFrontFace({
       <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[28%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[30%] sm:opacity-80" />
       <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
 
-      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 text-center [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-10 md:px-20">
+      <motion.div
+        initial={false}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
+        transition={{ duration: contentVisible ? 0.55 : 0.2, ease, delay: contentVisible ? 0.12 : 0 }}
+        className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 text-center [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-10 md:px-20"
+        aria-hidden={!contentVisible}
+      >
         <div className="flex w-full flex-col items-center">
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0 sm:gap-x-4 md:gap-x-5">
             <h2
@@ -259,7 +269,7 @@ function InvitationFrontFace({
             Tap to turn over
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -268,9 +278,11 @@ function InvitationFrontFace({
 function WarmInviteBackFace({
   language,
   side,
+  contentVisible,
 }: {
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   const content = getInvitationContent(side, language);
 
@@ -279,7 +291,13 @@ function WarmInviteBackFace({
       <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[24%] opacity-70 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[26%] sm:opacity-80" />
       <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[26%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[28%] sm:opacity-80" />
       <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
-      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-8">
+      <motion.div
+        initial={false}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
+        transition={{ duration: contentVisible ? 0.55 : 0.2, ease, delay: contentVisible ? 0.12 : 0 }}
+        className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-8"
+        aria-hidden={!contentVisible}
+      >
         <p className="shrink-0 font-invite text-[clamp(22px,7vw,44px)] font-semibold italic leading-tight text-[#e3bd72]">
           {content.warmTitle}
         </p>
@@ -293,7 +311,7 @@ function WarmInviteBackFace({
         <p className="mt-4 shrink-0 font-invite text-sm font-semibold italic text-[#e3bd72] sm:mt-7 sm:text-base">
           {content.signature}
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -303,28 +321,47 @@ function DoubleSidedCard({
   onFlip,
   language,
   side,
+  contentVisible,
 }: {
   flipped: boolean;
   onFlip: () => void;
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   return (
     <motion.button
       type="button"
-      onClick={onFlip}
-      className="relative h-full w-full cursor-pointer perspective-[1400px]"
-      whileHover={{ scale: 1.015 }}
-      whileTap={{ scale: 0.985 }}
-      aria-label={flipped ? "Show invitation front" : "Show warm invitation message"}
+      onClick={contentVisible ? onFlip : undefined}
+      disabled={!contentVisible}
+      className={`relative h-full w-full perspective-[1400px] ${
+        contentVisible ? "cursor-pointer" : "cursor-default"
+      }`}
+      whileHover={contentVisible ? { scale: 1.015 } : undefined}
+      whileTap={contentVisible ? { scale: 0.985 } : undefined}
+      aria-label={
+        contentVisible
+          ? flipped
+            ? "Show invitation front"
+            : "Show warm invitation message"
+          : "Invitation opening"
+      }
     >
       <motion.div
         className="relative h-full w-full transform-3d will-change-transform"
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.85, ease }}
       >
-        <InvitationFrontFace language={language} side={side} />
-        <WarmInviteBackFace language={language} side={side} />
+        <InvitationFrontFace
+          language={language}
+          side={side}
+          contentVisible={contentVisible}
+        />
+        <WarmInviteBackFace
+          language={language}
+          side={side}
+          contentVisible={contentVisible}
+        />
       </motion.div>
     </motion.button>
   );
@@ -334,11 +371,17 @@ export default function CinematicInvitationIntro({
   onComplete,
   side = "groom",
   initialLanguage = "en",
+  onLanguageChange,
 }: CinematicInvitationIntroProps) {
   const [stage, setStage] = useState<Stage>("closed");
   const [language, setLanguage] = useState<InvitationLanguage>(initialLanguage);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasOpened = useRef(false);
+
+  const changeLanguage = (next: InvitationLanguage) => {
+    setLanguage(next);
+    onLanguageChange?.(next);
+  };
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout);
@@ -367,6 +410,7 @@ export default function CinematicInvitationIntro({
 
   const enterWebsite = () => {
     clearTimers();
+    window.dispatchEvent(new Event(WEDDING_MUSIC_START_EVENT));
     setStage("done");
     timers.current.push(setTimeout(onComplete, 500));
   };
@@ -402,7 +446,7 @@ export default function CinematicInvitationIntro({
           <div className="absolute top-14 z-60 flex items-center rounded-full border border-[#d6ad63]/70 bg-white/90 p-1 shadow-sm sm:top-18">
             <button
               type="button"
-              onClick={() => setLanguage("en")}
+              onClick={() => changeLanguage("en")}
               className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[9px] tracking-wider transition-colors sm:text-[10px] ${
                 language === "en" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
               }`}
@@ -412,7 +456,7 @@ export default function CinematicInvitationIntro({
             </button>
             <button
               type="button"
-              onClick={() => setLanguage("hi")}
+              onClick={() => changeLanguage("hi")}
               className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[10px] transition-colors sm:text-xs ${
                 language === "hi" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
               }`}
@@ -508,6 +552,7 @@ export default function CinematicInvitationIntro({
                     onFlip={flipCard}
                     language={language}
                     side={side}
+                    contentVisible={focused}
                   />
                 </motion.div>
               )}

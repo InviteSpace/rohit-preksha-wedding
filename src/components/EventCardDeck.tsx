@@ -326,6 +326,10 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
     weddingIndex >= 0 ? weddingIndex : 0,
   );
   const [deckInView, setDeckInView] = useState(true);
+  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [detailIndex, setDetailIndex] = useState(
+    weddingIndex >= 0 ? weddingIndex : 0,
+  );
   const [spread, setSpread] = useState<DeckSpread>(() =>
     getDeckSpread(typeof window !== "undefined" ? window.innerWidth : 1024, 4),
   );
@@ -382,6 +386,16 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
     return () => clearInterval(interval);
   }, [deckInView, events.length]);
 
+  // Wait for the front-card pull animation to settle before showing details
+  useEffect(() => {
+    setDetailsVisible(false);
+    const timer = window.setTimeout(() => {
+      setDetailIndex(selectedIndex);
+      setDetailsVisible(true);
+    }, 520);
+    return () => window.clearTimeout(timer);
+  }, [selectedIndex]);
+
   const selectCard = (index: number) => {
     setSelectedIndex(index);
   };
@@ -397,8 +411,9 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
   };
 
   const selectedEvent = events[selectedIndex];
+  const detailEvent = events[detailIndex] ?? selectedEvent;
 
-  if (events.length === 0 || !selectedEvent) {
+  if (events.length === 0 || !selectedEvent || !detailEvent) {
     return (
       <p className="mt-12 text-center font-heading font-medium text-navy/75">
         No events are included in this invitation.
@@ -502,9 +517,11 @@ export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
         </div>
       </div>
 
-      <div ref={detailRef}>
+      <div ref={detailRef} className="min-h-[12rem]">
         <AnimatePresence mode="wait">
-          <EventDetailReveal key={selectedEvent.id} event={selectedEvent} />
+          {detailsVisible ? (
+            <EventDetailReveal key={detailEvent.id} event={detailEvent} />
+          ) : null}
         </AnimatePresence>
       </div>
     </div>
