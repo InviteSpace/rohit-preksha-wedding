@@ -32,15 +32,19 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
+          GITHUB_PAGES_OWNER: ${{ github.repository_owner }}
           NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
+          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/rohit-preksha-wedding
           NEXT_PUBLIC_ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH }}
           NEXT_PUBLIC_INVITE_SECRET: ${{ secrets.INVITE_SECRET }}
 
       - name: Verify build output
         run: |
           test -f out/index.html
+          test -f out/og-cover.jpg
           test -f out/images/couple-animated.png
           test -f out/images/Generated_image.png
+          grep -q 'og:image' out/index.html
           echo "Build OK — $(ls out/images | wc -l) images in out/images/"
 
       - name: Deploy to gh-pages branch

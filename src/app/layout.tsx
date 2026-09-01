@@ -35,7 +35,13 @@ const notoDevanagari = Noto_Serif_Devanagari({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://invitespace.github.io/rohit-preksha-wedding";
+const ogImagePath = "/og-cover.jpg";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Rohit & Preksha | Wedding Invitation",
   description:
     "You are cordially invited to celebrate the wedding of Rohit and Preksha. Join us for Mehndi, Haldi, Cocktail, Wedding & Reception.",
@@ -43,6 +49,23 @@ export const metadata: Metadata = {
     title: "Rohit & Preksha | Wedding Invitation",
     description: "Join us in celebrating our special day!",
     type: "website",
+    url: siteUrl,
+    siteName: "Rohit & Preksha Wedding",
+    locale: "en_IN",
+    images: [
+      {
+        url: ogImagePath,
+        width: 1024,
+        height: 938,
+        alt: "Rohit & Preksha — Save the Date, Saturday 21 November 2026",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rohit & Preksha | Wedding Invitation",
+    description: "Join us in celebrating our special day!",
+    images: [ogImagePath],
   },
 };
 
