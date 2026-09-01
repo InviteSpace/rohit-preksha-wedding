@@ -32,9 +32,9 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
-          GITHUB_PAGES_OWNER: ${{ github.repository_owner }}
+          GITHUB_PAGES_OWNER: invitespace
           NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
-          NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/rohit-preksha-wedding
+          NEXT_PUBLIC_SITE_URL: https://invitespace.github.io/rohit-preksha-wedding
           NEXT_PUBLIC_FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
           NEXT_PUBLIC_ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH }}
           NEXT_PUBLIC_INVITE_SECRET: ${{ secrets.INVITE_SECRET }}
@@ -44,8 +44,8 @@ jobs:
           test -f out/index.html
           test -f out/og-whatsapp.jpg
           file out/og-whatsapp.jpg | grep -q 'JPEG image data'
-          test "$(wc -c < out/og-whatsapp.jpg)" -lt 300000
-          grep -q 'og-whatsapp.jpg' out/index.html
+          test "$(wc -c < out/og-whatsapp.jpg)" -lt 200000
+          test "$(grep -c 'property=\"og:image\"' out/index.html)" -eq 1
           test -f out/images/couple-animated.png
           test -f out/images/Generated_image.png
           grep -q 'og:image' out/index.html
