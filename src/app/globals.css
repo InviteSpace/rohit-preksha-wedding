@@ -94,42 +94,60 @@ html.lang-hi .font-invite {
   font-family: var(--font-devanagari), "Noto Serif Devanagari", serif;
 }
 
-/* Optical vertical nudge — Devanagari sits high next to icons/Latin metrics */
-html[lang="hi"] .font-heading,
-html[lang="hi"] .font-body,
-html[lang="hi"] .font-invite,
-html[lang="hi"] p,
-html[lang="hi"] h1,
-html[lang="hi"] h2,
-html[lang="hi"] h3,
-html[lang="hi"] h4,
-html[lang="hi"] li,
-html[lang="hi"] label,
-html[lang="hi"] legend,
-html.lang-hi .font-heading,
-html.lang-hi .font-body,
-html.lang-hi .font-invite,
-html.lang-hi p,
-html.lang-hi h1,
-html.lang-hi h2,
-html.lang-hi h3,
-html.lang-hi h4,
-html.lang-hi li,
-html.lang-hi label,
-html.lang-hi legend {
-  position: relative;
-  bottom: -4px;
+/* Optical vertical nudge — Devanagari sits high next to icons/Latin metrics.
+   Only on marked eyebrows — never global (breaks absolute/Framer Motion layouts). */
+html[lang="hi"] .hi-eyebrow,
+html.lang-hi .hi-eyebrow {
+  line-height: 1.45 !important;
+  margin-bottom: 0.35rem;
+  transform: translateY(4px);
 }
 
-/* Keep language pill buttons centered — ignore the Hindi optical nudge */
+/* Language switch: fixed metrics so EN/HI never jump when lang changes */
+.lang-switch {
+  isolation: isolate;
+}
+
+/* Only reset button/label metrics — never the positioned container */
 html[lang="hi"] .lang-switch button,
-html[lang="hi"] .lang-switch .font-heading,
+html[lang="hi"] .lang-switch .lang-switch-label,
 html.lang-hi .lang-switch button,
-html.lang-hi .lang-switch .font-heading {
-  position: relative !important;
-  bottom: 0 !important;
-  top: 0 !important;
+html.lang-hi .lang-switch .lang-switch-label {
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  margin-bottom: 0 !important;
+  bottom: auto !important;
+  top: auto !important;
+  translate: none !important;
+}
+
+html[lang="hi"] .lang-switch button,
+html.lang-hi .lang-switch button {
   transform: none !important;
+}
+
+/* Keep Latin labels on the Latin face even in Hindi mode */
+html[lang="hi"] .lang-switch .lang-switch-label[data-script="en"],
+html.lang-hi .lang-switch .lang-switch-label[data-script="en"] {
+  font-family: var(--font-playfair), Georgia, serif !important;
+}
+
+html[lang="hi"] .lang-switch .lang-switch-label[data-script="hi"],
+html.lang-hi .lang-switch .lang-switch-label[data-script="hi"] {
+  font-family: var(--font-devanagari), "Noto Serif Devanagari", serif !important;
+}
+
+.lang-switch-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1em;
+  line-height: 1 !important;
+}
+
+/* Tiny optical nudge for Devanagari only — does not affect English */
+.lang-switch-label[data-script="hi"] {
+  padding-top: 1px;
 }
 
 html[lang="hi"] *:not(svg):not(path),
@@ -153,12 +171,7 @@ html.lang-hi .font-heading {
   line-height: 1.35;
 }
 
-/* Gold/small eyebrows need extra room for Devanagari matras */
-html[lang="hi"] .hi-eyebrow,
-html.lang-hi .hi-eyebrow {
-  line-height: 1.45 !important;
-  margin-bottom: 0.35rem;
-}
+/* Gold/small eyebrows need extra room for Devanagari matras — handled above */
 
 html[lang="hi"] section[id],
 html.lang-hi section[id] {

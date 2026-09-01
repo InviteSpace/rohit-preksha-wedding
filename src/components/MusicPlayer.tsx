@@ -16,6 +16,7 @@ interface MusicPlayerProps {
 }
 
 const FADE_MS = 500;
+const TARGET_VOLUME = 0.5;
 
 /** Survives React Strict Mode remounts so we never kick off playback twice. */
 let musicBootstrapped = false;
@@ -52,12 +53,12 @@ export default function MusicPlayer({
       clearFade();
       audio.volume = 0;
       const steps = 12;
-      const step = 1 / steps;
+      const step = TARGET_VOLUME / steps;
       const interval = FADE_MS / steps;
       let n = 0;
       fadeRef.current = window.setInterval(() => {
         n += 1;
-        audio.volume = Math.min(1, n * step);
+        audio.volume = Math.min(TARGET_VOLUME, n * step);
         if (n >= steps) clearFade();
       }, interval);
     },

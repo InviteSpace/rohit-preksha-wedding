@@ -132,7 +132,7 @@ function EventTabs({
             <span
               className={`font-heading text-[11px] font-semibold sm:text-xs md:text-sm ${
                 isHindi
-                  ? "relative bottom-[-4px] tracking-normal normal-case leading-none"
+                  ? "tracking-normal normal-case leading-none"
                   : "tracking-wide leading-none"
               }`}
             >

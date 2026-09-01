@@ -89,29 +89,44 @@ export default function FloatingNav() {
               ))}
             </div>
 
-            <div className="lang-switch flex h-8 shrink-0 items-center rounded-full border border-[#d6ad63]/70 bg-white/90 p-0.5 shadow-sm">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={`flex h-7 min-w-[2rem] cursor-pointer items-center justify-center rounded-full px-2.5 font-heading text-[10px] leading-none tracking-wider transition-colors ${
-                  language === "en" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
-                }`}
-                aria-pressed={language === "en"}
-                aria-label="English"
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("hi")}
-                className={`flex h-7 min-w-[2rem] cursor-pointer items-center justify-center rounded-full px-2.5 font-heading text-[11px] leading-none transition-colors ${
-                  language === "hi" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
-                }`}
-                aria-pressed={language === "hi"}
-                aria-label="हिन्दी"
-              >
-                हिं
-              </button>
+            <div
+              className="lang-switch flex h-8 w-[5.75rem] shrink-0 items-center rounded-full border border-[#d6ad63]/70 bg-white/95 p-0.5 shadow-sm sm:w-[6.25rem]"
+              role="group"
+              aria-label="Language"
+            >
+              <div className="relative grid h-full w-full grid-cols-2">
+                <span
+                  className="absolute inset-y-0 w-1/2 rounded-full bg-[#11294d] shadow-sm transition-[left] duration-200 ease-out"
+                  style={{ left: language === "en" ? "0%" : "50%" }}
+                  aria-hidden
+                />
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  className={`relative z-10 flex h-full cursor-pointer items-center justify-center rounded-full ${
+                    language === "en" ? "text-white" : "text-[#11294d]/65"
+                  }`}
+                  aria-pressed={language === "en"}
+                  aria-label="English"
+                >
+                  <span className="lang-switch-label font-heading text-[10px] tracking-wider" data-script="en">
+                    EN
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("hi")}
+                  className={`relative z-10 flex h-full cursor-pointer items-center justify-center rounded-full ${
+                    language === "hi" ? "text-white" : "text-[#11294d]/65"
+                  }`}
+                  aria-pressed={language === "hi"}
+                  aria-label="हिन्दी"
+                >
+                  <span className={`lang-switch-label font-heading ${language === "hi" ? "mt-1" : ""} text-[10px]`} data-script="hi">
+                    हिं
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </motion.nav>
