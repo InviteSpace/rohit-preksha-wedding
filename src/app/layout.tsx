@@ -39,6 +39,9 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   "https://invitespace.github.io/rohit-preksha-wedding";
 const ogImagePath = "/og-cover.jpg";
+const ogImageWidth = 1200;
+const ogImageHeight = 1171;
+const facebookAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -55,8 +58,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: ogImagePath,
-        width: 1024,
-        height: 938,
+        width: ogImageWidth,
+        height: ogImageHeight,
+        type: "image/jpeg",
         alt: "Rohit & Preksha — Save the Date, Saturday 21 November 2026",
       },
     ],
@@ -82,6 +86,9 @@ export default function RootLayout({
       className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} ${notoDevanagari.variable} scroll-smooth`}
     >
       <head>
+        {facebookAppId ? (
+          <meta property="fb:app_id" content={facebookAppId} />
+        ) : null}
         {basePath ? (
           <script
             dangerouslySetInnerHTML={{

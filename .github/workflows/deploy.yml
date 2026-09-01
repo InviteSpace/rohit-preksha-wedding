@@ -35,6 +35,7 @@ jobs:
           GITHUB_PAGES_OWNER: ${{ github.repository_owner }}
           NEXT_PUBLIC_BASE_PATH: /rohit-preksha-wedding
           NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/rohit-preksha-wedding
+          NEXT_PUBLIC_FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
           NEXT_PUBLIC_ADMIN_PASSWORD_HASH: ${{ secrets.ADMIN_PASSWORD_HASH }}
           NEXT_PUBLIC_INVITE_SECRET: ${{ secrets.INVITE_SECRET }}
 
@@ -42,6 +43,8 @@ jobs:
         run: |
           test -f out/index.html
           test -f out/og-cover.jpg
+          file out/og-cover.jpg | grep -q 'JPEG image data'
+          test "$(wc -c < out/og-cover.jpg)" -lt 400000
           test -f out/images/couple-animated.png
           test -f out/images/Generated_image.png
           grep -q 'og:image' out/index.html
