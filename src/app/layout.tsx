@@ -12,6 +12,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 const cormorant = Cormorant_Garamond({
@@ -19,6 +20,7 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 const greatVibes = Great_Vibes({
@@ -26,6 +28,7 @@ const greatVibes = Great_Vibes({
   subsets: ["latin"],
   weight: "400",
   display: "swap",
+  preload: false,
 });
 
 const notoDevanagari = Noto_Serif_Devanagari({
@@ -33,24 +36,28 @@ const notoDevanagari = Noto_Serif_Devanagari({
   subsets: ["devanagari"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   "https://invitespace.github.io/rohit-preksha-wedding";
-const ogImagePath = "/og-cover.jpg";
+const ogTitle = "Rohit & Preksha | Wedding Invitation";
+const ogDescription = "Join us in celebrating our special day!";
+const ogImagePath = "/og-whatsapp.jpg";
 const ogImageWidth = 1200;
-const ogImageHeight = 1171;
+const ogImageHeight = 630;
+const ogImageUrl = `${siteUrl.replace(/\/$/, "")}${ogImagePath}`;
 const facebookAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID?.trim();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Rohit & Preksha | Wedding Invitation",
+  title: ogTitle,
   description:
     "You are cordially invited to celebrate the wedding of Rohit and Preksha. Join us for Mehndi, Haldi, Cocktail, Wedding & Reception.",
   openGraph: {
-    title: "Rohit & Preksha | Wedding Invitation",
-    description: "Join us in celebrating our special day!",
+    title: ogTitle,
+    description: ogDescription,
     type: "website",
     url: siteUrl,
     siteName: "Rohit & Preksha Wedding",
@@ -67,8 +74,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rohit & Preksha | Wedding Invitation",
-    description: "Join us in celebrating our special day!",
+    title: ogTitle,
+    description: ogDescription,
     images: [ogImagePath],
   },
 };
@@ -86,6 +93,20 @@ export default function RootLayout({
       className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} ${notoDevanagari.variable} scroll-smooth`}
     >
       <head>
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:url" content={siteUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content={String(ogImageWidth)} />
+        <meta property="og:image:height" content={String(ogImageHeight)} />
+        <meta
+          name="twitter:card"
+          content="summary_large_image"
+        />
+        <meta name="twitter:image" content={ogImageUrl} />
         {facebookAppId ? (
           <meta property="fb:app_id" content={facebookAppId} />
         ) : null}
