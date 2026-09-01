@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import Button from "@/components/ui/Button";
 import { isAdminSession } from "@/lib/adminAuth";
+import { useLanguage } from "@/lib/LanguageContext";
+import { eyebrowClass, getUiCopy } from "@/lib/uiCopy";
 
 interface QrShareDownloadProps {
   value: string;
@@ -18,6 +20,8 @@ export default function QrShareDownload({
   filename = "wedding-qr",
   size = 150,
 }: QrShareDownloadProps) {
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -43,9 +47,9 @@ export default function QrShareDownload({
     link.href = canvas.toDataURL("image/png");
     link.download = `${filename}.png`;
     link.click();
-    setStatus("Downloaded");
+    setStatus(t.qrDownloaded);
     window.setTimeout(() => setStatus(null), 1800);
-  }, [filename]);
+  }, [filename, t.qrDownloaded]);
 
   const shareQr = useCallback(async () => {
     const blob = await canvasToBlob();
@@ -60,35 +64,37 @@ export default function QrShareDownload({
           title,
           text: `${title}\n${value}`,
         });
-        setStatus("Shared");
+        setStatus(t.qrShared);
       } else if (navigator.share) {
         await navigator.share({
           title,
           text: title,
           url: value,
         });
-        setStatus("Shared");
+        setStatus(t.qrShared);
       } else {
         await navigator.clipboard.writeText(value);
-        setStatus("Link copied");
+        setStatus(t.qrLinkCopied);
       }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
       try {
         await navigator.clipboard.writeText(value);
-        setStatus("Link copied");
+        setStatus(t.qrLinkCopied);
       } catch {
-        setStatus("Share unavailable");
+        setStatus(t.qrUnavailable);
       }
     }
 
     window.setTimeout(() => setStatus(null), 1800);
-  }, [canvasToBlob, filename, title, value]);
+  }, [canvasToBlob, filename, t.qrLinkCopied, t.qrShared, t.qrUnavailable, title, value]);
 
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-navy/10 bg-navy/[0.03] p-6">
-      <p className="mb-4 font-heading text-[10px] font-semibold tracking-wider text-royal-gold uppercase">
-        Scan for Directions
+      <p
+        className={`mb-4 font-heading font-semibold text-royal-gold ${eyebrowClass(language, "sm")}`}
+      >
+        {t.scanDirections}
       </p>
 
       <div className="rounded-xl border border-navy/10 bg-white p-3 shadow-sm">
@@ -106,10 +112,10 @@ export default function QrShareDownload({
       {isAdmin && (
         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <Button type="button" variant="primary" onClick={shareQr}>
-            Share QR
+            {t.shareQr}
           </Button>
           <Button type="button" variant="outline" onClick={downloadQr}>
-            Download QR
+            {t.downloadQr}
           </Button>
         </div>
       )}

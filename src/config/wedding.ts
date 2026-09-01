@@ -166,8 +166,16 @@ export const WEDDING_CONFIG = {
   },
 
   music: {
-    src: "/music/wedding-music.mp3",
-    title: "Wedding Melody",
+    en: {
+      src: "/music/ordinary.mp3",
+      title: "Ordinary — Alex Warren",
+      startOffsetSec: 0,
+    },
+    hi: {
+      src: "/music/leja-instrumental.mp3",
+      title: "Leja (Instrumental) — Lost Stories",
+      startOffsetSec: 50,
+    },
   },
 
   photos: [

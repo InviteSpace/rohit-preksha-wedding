@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import { useLanguage } from "@/lib/LanguageContext";
+import { eyebrowClass, getUiCopy } from "@/lib/uiCopy";
 import { fadeUp } from "@/lib/motion";
 
 interface TimeLeft {
@@ -24,7 +26,15 @@ function calculateTimeLeft(target: Date): TimeLeft {
   };
 }
 
-function TimeUnit({ value, label }: { value: number; label: string }) {
+function TimeUnit({
+  value,
+  label,
+  isHindi,
+}: {
+  value: number;
+  label: string;
+  isHindi: boolean;
+}) {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center">
       <div className="relative flex aspect-square w-full max-w-[4.5rem] items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md sm:rounded-2xl md:max-w-[5.5rem]">
@@ -41,7 +51,13 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
           </motion.span>
         </AnimatePresence>
       </div>
-      <span className="mt-2 font-heading text-[8px] font-semibold tracking-[0.14em] text-royal-gold-bright uppercase sm:mt-2.5 sm:text-[9px] sm:tracking-[0.22em] md:text-[10px]">
+      <span
+        className={`mt-2 font-heading font-semibold text-royal-gold-bright sm:mt-2.5 ${
+          isHindi
+            ? "hi-eyebrow tracking-normal normal-case text-[14px] leading-snug sm:text-[15px] md:text-base"
+            : "text-[8px] leading-none tracking-[0.14em] uppercase sm:text-[9px] sm:tracking-[0.22em] md:text-[10px]"
+        }`}
+      >
         {label}
       </span>
     </div>
@@ -60,6 +76,8 @@ function Colon() {
 }
 
 export default function Countdown() {
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
     calculateTimeLeft(WEDDING_CONFIG.weddingDate),
   );
@@ -72,7 +90,7 @@ export default function Countdown() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-navy px-4 py-10 sm:py-14">
+    <section className="relative overflow-hidden bg-navy px-4 py-10 sm:px-6 sm:py-14">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(166,124,45,0.18),transparent_55%)]"
@@ -92,9 +110,9 @@ export default function Countdown() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="px-2 font-heading text-[10px] font-semibold tracking-[0.2em] text-royal-gold-bright uppercase sm:text-xs sm:tracking-[0.4em]"
+          className={`px-2 font-heading font-semibold text-royal-gold-bright ${eyebrowClass(language)}`}
         >
-          Counting Down To Our Big Day
+          {t.countdownTitle}
         </motion.p>
 
         <motion.div
@@ -104,13 +122,13 @@ export default function Countdown() {
           transition={{ duration: 0.55, delay: 0.1 }}
           className="mx-auto mt-6 flex w-full max-w-xl items-end justify-center gap-1 rounded-2xl border border-white/10 bg-white/5 px-3 py-4 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:mt-8 sm:gap-2 sm:rounded-3xl sm:px-4 sm:py-5 md:gap-3 md:px-6 md:py-6"
         >
-          <TimeUnit value={timeLeft.days} label="Days" />
+          <TimeUnit value={timeLeft.days} label={t.days} isHindi={language === "hi"} />
           <Colon />
-          <TimeUnit value={timeLeft.hours} label="Hours" />
+          <TimeUnit value={timeLeft.hours} label={t.hours} isHindi={language === "hi"} />
           <Colon />
-          <TimeUnit value={timeLeft.minutes} label="Minutes" />
+          <TimeUnit value={timeLeft.minutes} label={t.minutes} isHindi={language === "hi"} />
           <Colon />
-          <TimeUnit value={timeLeft.seconds} label="Seconds" />
+          <TimeUnit value={timeLeft.seconds} label={t.seconds} isHindi={language === "hi"} />
         </motion.div>
       </div>
     </section>

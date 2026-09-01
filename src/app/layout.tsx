@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Cormorant_Garamond, Great_Vibes } from "next/font/google";
+import {
+  Playfair_Display,
+  Cormorant_Garamond,
+  Great_Vibes,
+  Noto_Serif_Devanagari,
+} from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -23,6 +28,13 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const notoDevanagari = Noto_Serif_Devanagari({
+  variable: "--font-devanagari",
+  subsets: ["devanagari"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Rohit & Preksha | Wedding Invitation",
   description:
@@ -42,7 +54,10 @@ export default function RootLayout({
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   return (
-    <html lang="en" className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} scroll-smooth`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} ${notoDevanagari.variable} scroll-smooth`}
+    >
       <head>
         {basePath ? (
           <script

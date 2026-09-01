@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import InvitationFlorals from "@/components/InvitationFlorals";
+import { WEDDING_MUSIC_START_EVENT } from "@/components/MusicPlayer";
 import {
   getInvitationContent,
   type InvitationLanguage,
@@ -22,6 +23,7 @@ interface CinematicInvitationIntroProps {
   onComplete: () => void;
   side?: InvitationSide;
   initialLanguage?: InvitationLanguage;
+  onLanguageChange?: (language: InvitationLanguage) => void;
 }
 
 function WaxSeal({ compact = false }: { compact?: boolean }) {
@@ -159,107 +161,225 @@ function EnvelopePocketOverlay() {
 function InvitationFrontFace({
   language,
   side,
+  contentVisible,
 }: {
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   const content = getInvitationContent(side, language);
+  const isHi = language === "hi";
 
   return (
     <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] backface-hidden">
-      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[26%] opacity-70 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[28%] sm:opacity-80" />
-      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[28%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[30%] sm:opacity-80" />
-      <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
+      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[24%] opacity-70 [transform:translateZ(0)] md:-left-7 md:-top-9 md:w-[26%] md:opacity-80 lg:-left-8 lg:-top-10 lg:w-[28%]" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[26%] opacity-70 [transform:translateZ(0)_rotate(180deg)] md:-bottom-9 md:-right-7 md:w-[28%] md:opacity-80 lg:-bottom-10 lg:-right-8 lg:w-[30%]" />
+      <div className="pointer-events-none absolute inset-2.5 z-0 border border-[#d6ad63]/45 md:inset-3.5 lg:inset-4" />
 
-      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 text-center [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-10 md:px-20">
+      <motion.div
+        initial={false}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
+        transition={{ duration: contentVisible ? 0.55 : 0.2, ease, delay: contentVisible ? 0.12 : 0 }}
+        className={`relative z-20 flex h-full flex-col items-center justify-center overflow-y-auto text-center [transform:translateZ(1px)] md:overflow-hidden ${
+          isHi
+            ? "gap-1 px-3.5 py-3.5 md:gap-1 md:px-8 md:py-5 lg:gap-1.5 lg:px-14 lg:py-8"
+            : "gap-2 px-5 py-5 md:gap-1 md:px-12 md:py-8 lg:gap-0 lg:px-16 lg:py-10"
+        }`}
+        aria-hidden={!contentVisible}
+      >
         <div className="flex w-full flex-col items-center">
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0 sm:gap-x-4 md:gap-x-5">
+          <div
+            className={
+              isHi
+                ? "flex w-full flex-col items-center gap-0.5 md:gap-1"
+                : "flex flex-wrap items-center justify-center gap-x-2 gap-y-0 md:gap-x-3 lg:gap-x-5"
+            }
+          >
             <h2
               className={
-                language === "en"
-                  ? "font-script text-[clamp(26px,8vw,58px)] leading-none tracking-normal text-white normal-case"
-                  : "font-invite text-[clamp(18px,5.5vw,42px)] italic leading-none tracking-normal text-white"
+                isHi
+                  ? "font-invite text-[15px] italic leading-tight tracking-normal text-white md:text-[22px] lg:text-[32px]"
+                  : "font-script text-[clamp(22px,7vw,36px)] leading-none tracking-normal text-white normal-case md:text-[clamp(28px,5vw,44px)] lg:text-[clamp(36px,4.5vw,58px)]"
               }
             >
               {content.primaryName}
             </h2>
             <p
               className={
-                language === "en"
-                  ? "font-script text-[clamp(18px,5vw,30px)] leading-none tracking-normal text-[#e3bd72] normal-case"
-                  : "font-invite text-[clamp(14px,3.5vw,24px)] italic leading-none tracking-normal text-[#e3bd72]"
+                isHi
+                  ? "font-invite max-w-[96%] text-[11px] italic leading-tight tracking-normal text-[#e3bd72] md:text-[14px] lg:text-[18px]"
+                  : "font-script text-[clamp(14px,4.5vw,22px)] leading-none tracking-normal text-[#e3bd72] normal-case md:text-[clamp(18px,3.5vw,26px)] lg:text-[clamp(22px,3vw,30px)]"
               }
             >
               {content.unionLine}
             </p>
             <h2
               className={
-                language === "en"
-                  ? "font-script text-[clamp(26px,8vw,58px)] leading-none tracking-normal text-white normal-case"
-                  : "font-invite text-[clamp(18px,5.5vw,42px)] italic leading-none tracking-normal text-white"
+                isHi
+                  ? "font-invite text-[15px] italic leading-tight tracking-normal text-white md:text-[22px] lg:text-[32px]"
+                  : "font-script text-[clamp(22px,7vw,36px)] leading-none tracking-normal text-white normal-case md:text-[clamp(28px,5vw,44px)] lg:text-[clamp(36px,4.5vw,58px)]"
               }
             >
               {content.secondaryName}
             </h2>
             {content.partnerConnector && (
-              <p className="basis-full font-invite text-[10px] font-semibold text-white/90 sm:basis-auto sm:text-sm">
+              <p
+                className={
+                  isHi
+                    ? "font-invite text-[9px] font-semibold leading-tight text-white/90 md:text-[11px] lg:text-sm"
+                    : "basis-full font-invite text-[9px] font-semibold text-white/90 md:basis-auto md:text-xs lg:text-sm"
+                }
+              >
                 {content.partnerConnector}
               </p>
             )}
           </div>
 
-          <div className="my-3 h-px w-12 bg-[#d6ad63]/65 sm:my-3.5 sm:w-14" />
-          <div className="grid w-full max-w-[94%] grid-cols-1 gap-3.5 sm:max-w-[88%] sm:grid-cols-2 sm:gap-x-8 sm:gap-y-1">
-            <div className="text-center">
-              <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+          <div
+            className={`bg-[#d6ad63]/65 ${
+              isHi
+                ? "my-1.5 h-px w-9 md:my-2 md:w-11 lg:my-3 lg:w-14"
+                : "my-2.5 h-px w-10 md:my-3 md:w-12 lg:my-3.5 lg:w-14"
+            }`}
+          />
+
+          <div
+            className={
+              isHi
+                ? "grid w-full max-w-[98%] grid-cols-2 gap-x-2 md:max-w-[94%] md:gap-x-5 lg:max-w-[88%] lg:gap-x-8"
+                : "grid w-full max-w-[96%] grid-cols-2 gap-x-3 md:max-w-[90%] md:gap-x-6 lg:max-w-[88%] lg:gap-x-8"
+            }
+          >
+            <div className="min-w-0 text-center">
+              <p
+                className={`font-invite font-medium leading-tight text-[#e3bd72] ${
+                  isHi
+                    ? "text-[8px] md:text-[10px] lg:text-xs"
+                    : "text-[9px] md:text-[11px] lg:text-sm"
+                }`}
+              >
                 {content.familyIntroduction}
               </p>
-              <p className="mt-1 font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              <p
+                className={`font-invite font-semibold text-white ${
+                  isHi
+                    ? "mt-0.5 text-[9px] leading-snug md:text-[11px] lg:text-[13px]"
+                    : "mt-0.5 text-[10px] leading-snug md:text-xs lg:text-sm"
+                }`}
+              >
                 {content.parents[0]}
               </p>
-              <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">
-                &
+              <p
+                className={`font-invite font-semibold leading-none text-[#e3bd72] ${
+                  isHi ? "text-[8px] md:text-[10px]" : "text-[9px] md:text-[11px] lg:text-sm"
+                }`}
+              >
+                {isHi ? "एवं" : "&"}
               </p>
-              <p className="font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              <p
+                className={`font-invite font-semibold text-white ${
+                  isHi
+                    ? "text-[9px] leading-snug md:text-[11px] lg:text-[13px]"
+                    : "text-[10px] leading-snug md:text-xs lg:text-sm"
+                }`}
+              >
                 {content.parents[1]}
               </p>
             </div>
-            <div className="text-center">
-              <p className="font-invite text-[10px] font-medium text-[#e3bd72] sm:text-xs lg:text-sm">
+            <div className="min-w-0 text-center">
+              <p
+                className={`font-invite font-medium leading-tight text-[#e3bd72] ${
+                  isHi
+                    ? "text-[8px] md:text-[10px] lg:text-xs"
+                    : "text-[9px] md:text-[11px] lg:text-sm"
+                }`}
+              >
                 {content.grandparentsIntroduction}
               </p>
-              <p className="mt-1 font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              <p
+                className={`font-invite font-semibold text-white ${
+                  isHi
+                    ? "mt-0.5 text-[9px] leading-snug md:text-[11px] lg:text-[13px]"
+                    : "mt-0.5 text-[10px] leading-snug md:text-xs lg:text-sm"
+                }`}
+              >
                 {content.grandparents[0]}
               </p>
-              <p className="font-invite text-[10px] font-semibold text-[#e3bd72] sm:text-xs lg:text-sm">
-                &
+              <p
+                className={`font-invite font-semibold leading-none text-[#e3bd72] ${
+                  isHi ? "text-[8px] md:text-[10px]" : "text-[9px] md:text-[11px] lg:text-sm"
+                }`}
+              >
+                {isHi ? "एवं" : "&"}
               </p>
-              <p className="font-invite text-[11px] font-semibold leading-snug text-white sm:text-xs lg:text-sm">
+              <p
+                className={`font-invite font-semibold text-white ${
+                  isHi
+                    ? "text-[9px] leading-snug md:text-[11px] lg:text-[13px]"
+                    : "text-[10px] leading-snug md:text-xs lg:text-sm"
+                }`}
+              >
                 {content.grandparents[1]}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-1 flex w-full flex-col items-center sm:mt-0">
-          <div className="mb-3 h-px w-12 bg-[#d6ad63]/65 sm:my-3.5 sm:mb-0 sm:w-14" />
-          <p className="font-invite text-[10px] font-semibold tracking-[0.16em] text-white uppercase sm:text-sm lg:text-base">
+        <div className="flex w-full flex-col items-center">
+          <div
+            className={`bg-[#d6ad63]/65 ${
+              isHi
+                ? "mb-1.5 h-px w-9 md:my-2 md:w-11 lg:my-3 lg:w-14"
+                : "mb-2.5 h-px w-10 md:my-3 md:w-12 lg:mb-0 lg:w-14"
+            }`}
+          />
+          <p
+            className={`font-invite font-semibold text-white ${
+              isHi
+                ? "text-[9px] leading-tight tracking-normal md:text-[11px] lg:text-sm"
+                : "text-[9px] tracking-[0.14em] uppercase md:text-xs lg:text-base"
+            }`}
+          >
             {content.weekday}
           </p>
-          <p className="font-invite text-sm font-semibold text-[#e3bd72] sm:text-base lg:text-lg">
+          <p
+            className={`font-invite font-semibold text-[#e3bd72] ${
+              isHi
+                ? "text-[11px] leading-tight md:text-sm lg:text-lg"
+                : "text-xs md:text-sm lg:text-lg"
+            }`}
+          >
             {content.date}
           </p>
-          <p className="mt-1 font-invite text-xs font-semibold text-white sm:text-sm lg:text-base">
+          <p
+            className={`font-invite font-semibold text-white ${
+              isHi
+                ? "text-[10px] leading-tight md:text-xs lg:text-base"
+                : "mt-0.5 text-[11px] md:text-sm lg:text-base"
+            }`}
+          >
             {content.venue}
           </p>
-          <p className="mt-3 max-w-[90%] font-invite text-[10px] font-medium leading-relaxed text-white/90 sm:mt-2.5 sm:max-w-[72%] sm:text-xs lg:text-sm">
+          <p
+            className={`font-invite font-medium text-white/90 ${
+              isHi
+                ? "mt-1 max-w-[95%] text-[8px] leading-snug md:mt-1.5 md:max-w-[85%] md:text-[10px] lg:mt-2.5 lg:max-w-[75%] lg:text-sm"
+                : "mt-2 max-w-[92%] text-[9px] leading-snug md:mt-2.5 md:max-w-[80%] md:text-xs lg:max-w-[72%] lg:text-sm"
+            }`}
+          >
             {content.closing}
           </p>
-          <p className="mt-3 font-invite text-[8px] font-medium tracking-[0.22em] text-white/70 uppercase sm:mt-3 sm:text-[9px]">
-            Tap to turn over
+          <p
+            className={`font-invite font-medium text-white/70 ${
+              isHi
+                ? "mt-1 text-[7px] leading-tight tracking-normal md:mt-1.5 md:text-[8px] lg:text-[10px]"
+                : "mt-2 text-[7px] tracking-[0.18em] uppercase md:mt-2.5 md:text-[8px] lg:text-[9px]"
+            }`}
+          >
+            {isHi ? "पलटने के लिए टैप करें" : "Tap to turn over"}
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -268,32 +388,73 @@ function InvitationFrontFace({
 function WarmInviteBackFace({
   language,
   side,
+  contentVisible,
 }: {
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   const content = getInvitationContent(side, language);
+  const isHi = language === "hi";
 
   return (
     <div className="absolute inset-0 isolate overflow-hidden border border-[#d6ad63]/80 bg-[#11294d] text-center text-white shadow-[0_22px_55px_rgba(17,41,77,0.4)] transform-[rotateY(180deg)] backface-hidden">
-      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[24%] opacity-70 [transform:translateZ(0)] sm:-left-8 sm:-top-10 sm:w-[26%] sm:opacity-80" />
-      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[26%] opacity-70 [transform:translateZ(0)_rotate(180deg)] sm:-bottom-10 sm:-right-8 sm:w-[28%] sm:opacity-80" />
-      <div className="pointer-events-none absolute inset-3.5 z-0 border border-[#d6ad63]/45 sm:inset-4" />
-      <div className="relative z-20 flex h-full flex-col items-center justify-center gap-3 overflow-y-auto px-6 py-7 [transform:translateZ(1px)] sm:gap-0 sm:overflow-hidden sm:px-16 sm:py-8">
-        <p className="shrink-0 font-invite text-[clamp(22px,7vw,44px)] font-semibold italic leading-tight text-[#e3bd72]">
+      <InvitationFlorals className="pointer-events-none absolute -left-5 -top-6 z-0 w-[22%] opacity-70 [transform:translateZ(0)] md:w-[24%] lg:-left-8 lg:-top-10 lg:w-[26%]" />
+      <InvitationFlorals className="pointer-events-none absolute -bottom-6 -right-5 z-0 w-[24%] opacity-70 [transform:translateZ(0)_rotate(180deg)] md:w-[26%] lg:-bottom-10 lg:-right-8 lg:w-[28%]" />
+      <div className="pointer-events-none absolute inset-2.5 z-0 border border-[#d6ad63]/45 md:inset-3.5 lg:inset-4" />
+      <motion.div
+        initial={false}
+        animate={{ opacity: contentVisible ? 1 : 0 }}
+        transition={{ duration: contentVisible ? 0.55 : 0.2, ease, delay: contentVisible ? 0.12 : 0 }}
+        className={`relative z-20 flex h-full flex-col items-center justify-center overflow-y-auto [transform:translateZ(1px)] md:overflow-hidden ${
+          isHi
+            ? "gap-1.5 px-4 py-4 md:gap-2 md:px-10 md:py-6 lg:gap-3 lg:px-16 lg:py-8"
+            : "gap-2 px-5 py-5 md:gap-2 md:px-12 md:py-7 lg:gap-0 lg:px-16 lg:py-8"
+        }`}
+        aria-hidden={!contentVisible}
+      >
+        <p
+          className={`shrink-0 font-invite font-semibold italic leading-tight text-[#e3bd72] ${
+            isHi
+              ? "text-[18px] md:text-[28px] lg:text-[40px]"
+              : "text-[20px] md:text-[32px] lg:text-[44px]"
+          }`}
+        >
           {content.warmTitle}
         </p>
-        <div className="my-2 h-px w-12 shrink-0 bg-[#d6ad63]/65 sm:my-5 sm:w-14" />
-        <p className="max-w-[90%] font-invite text-[11px] font-medium leading-relaxed text-white sm:max-w-[78%] sm:text-sm md:text-base lg:text-lg">
+        <div
+          className={`shrink-0 bg-[#d6ad63]/65 ${
+            isHi ? "my-1 h-px w-9 md:my-2.5 md:w-12 lg:my-4 lg:w-14" : "my-1.5 h-px w-10 md:my-3 md:w-12 lg:my-5 lg:w-14"
+          }`}
+        />
+        <p
+          className={`font-invite font-medium text-white ${
+            isHi
+              ? "max-w-[94%] text-[10px] leading-snug md:max-w-[84%] md:text-sm lg:max-w-[78%] lg:text-base"
+              : "max-w-[92%] text-[11px] leading-relaxed md:max-w-[82%] md:text-sm lg:max-w-[78%] lg:text-lg"
+          }`}
+        >
           {content.warmMessage}
         </p>
-        <p className="mt-3 max-w-[90%] font-invite text-[10px] font-medium leading-relaxed text-white/90 sm:mt-5 sm:max-w-[78%] sm:text-sm md:text-base">
+        <p
+          className={`font-invite font-medium text-white/90 ${
+            isHi
+              ? "mt-1.5 max-w-[94%] text-[9px] leading-snug md:mt-3 md:max-w-[84%] md:text-xs lg:mt-4 lg:max-w-[78%] lg:text-base"
+              : "mt-2 max-w-[92%] text-[10px] leading-relaxed md:mt-4 md:max-w-[82%] md:text-sm lg:mt-5 lg:max-w-[78%] lg:text-base"
+          }`}
+        >
           {content.warmReceptionLine}
         </p>
-        <p className="mt-4 shrink-0 font-invite text-sm font-semibold italic text-[#e3bd72] sm:mt-7 sm:text-base">
+        <p
+          className={`shrink-0 font-invite font-semibold italic text-[#e3bd72] ${
+            isHi
+              ? "mt-2 text-[11px] md:mt-4 md:text-sm lg:mt-6 lg:text-base"
+              : "mt-3 text-xs md:mt-5 md:text-sm lg:mt-7 lg:text-base"
+          }`}
+        >
           {content.signature}
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -303,28 +464,47 @@ function DoubleSidedCard({
   onFlip,
   language,
   side,
+  contentVisible,
 }: {
   flipped: boolean;
   onFlip: () => void;
   language: InvitationLanguage;
   side: InvitationSide;
+  contentVisible: boolean;
 }) {
   return (
     <motion.button
       type="button"
-      onClick={onFlip}
-      className="relative h-full w-full cursor-pointer perspective-[1400px]"
-      whileHover={{ scale: 1.015 }}
-      whileTap={{ scale: 0.985 }}
-      aria-label={flipped ? "Show invitation front" : "Show warm invitation message"}
+      onClick={contentVisible ? onFlip : undefined}
+      disabled={!contentVisible}
+      className={`relative h-full w-full perspective-[1400px] ${
+        contentVisible ? "cursor-pointer" : "cursor-default"
+      }`}
+      whileHover={contentVisible ? { scale: 1.015 } : undefined}
+      whileTap={contentVisible ? { scale: 0.985 } : undefined}
+      aria-label={
+        contentVisible
+          ? flipped
+            ? "Show invitation front"
+            : "Show warm invitation message"
+          : "Invitation opening"
+      }
     >
       <motion.div
         className="relative h-full w-full transform-3d will-change-transform"
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.85, ease }}
       >
-        <InvitationFrontFace language={language} side={side} />
-        <WarmInviteBackFace language={language} side={side} />
+        <InvitationFrontFace
+          language={language}
+          side={side}
+          contentVisible={contentVisible}
+        />
+        <WarmInviteBackFace
+          language={language}
+          side={side}
+          contentVisible={contentVisible}
+        />
       </motion.div>
     </motion.button>
   );
@@ -334,11 +514,21 @@ export default function CinematicInvitationIntro({
   onComplete,
   side = "groom",
   initialLanguage = "en",
+  onLanguageChange,
 }: CinematicInvitationIntroProps) {
   const [stage, setStage] = useState<Stage>("closed");
   const [language, setLanguage] = useState<InvitationLanguage>(initialLanguage);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const hasOpened = useRef(false);
+
+  useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage]);
+
+  const changeLanguage = (next: InvitationLanguage) => {
+    setLanguage(next);
+    onLanguageChange?.(next);
+  };
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout);
@@ -367,6 +557,7 @@ export default function CinematicInvitationIntro({
 
   const enterWebsite = () => {
     clearTimers();
+    window.dispatchEvent(new Event(WEDDING_MUSIC_START_EVENT));
     setStage("done");
     timers.current.push(setTimeout(onComplete, 500));
   };
@@ -381,52 +572,85 @@ export default function CinematicInvitationIntro({
         <motion.div
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-100 flex items-center justify-center overflow-hidden bg-[#efede9] px-5 py-6 sm:p-8"
+          className="fixed inset-0 z-100 flex flex-col items-center justify-center overflow-hidden bg-[#efede9] px-5 py-6 sm:p-8"
         >
           <div className="absolute inset-5 rounded-4xl bg-white/70 shadow-inner sm:inset-8" />
 
           <motion.p
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute top-8 z-50 px-6 text-center font-heading text-[9px] tracking-[0.32em] text-[#11294d]/70 uppercase sm:top-11 sm:text-xs"
+            className={`absolute top-7 z-50 px-4 text-center font-heading text-[9px] text-[#11294d]/70 md:top-10 md:px-6 md:text-[11px] lg:top-11 lg:text-xs ${
+              language === "hi"
+                ? "tracking-normal normal-case leading-snug"
+                : "tracking-[0.32em] uppercase"
+            }`}
           >
             {stage === "closed"
-              ? "Tap, swipe, or wait"
+              ? language === "hi"
+                ? "टैप करें, स्वाइप करें, या प्रतीक्षा करें"
+                : "Tap, swipe, or wait"
               : focused
                 ? stage === "card-front"
-                  ? "Tap the invitation to turn it over"
-                  : "A warm note for our celebration"
-                : "Unwrapping your invitation"}
+                  ? language === "hi"
+                    ? "निमंत्रण पलटने के लिए टैप करें"
+                    : "Tap the invitation to turn it over"
+                  : language === "hi"
+                    ? "हमारे उत्सव के लिए एक स्नेह भरा संदेश"
+                    : "A warm note for our celebration"
+                : language === "hi"
+                  ? "आपका निमंत्रण खुल रहा है"
+                  : "Unwrapping your invitation"}
           </motion.p>
 
-          <div className="absolute top-14 z-60 flex items-center rounded-full border border-[#d6ad63]/70 bg-white/90 p-1 shadow-sm sm:top-18">
-            <button
-              type="button"
-              onClick={() => setLanguage("en")}
-              className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[9px] tracking-wider transition-colors sm:text-[10px] ${
-                language === "en" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
-              }`}
-              aria-pressed={language === "en"}
-            >
-              English
-            </button>
-            <button
-              type="button"
-              onClick={() => setLanguage("hi")}
-              className={`cursor-pointer rounded-full px-3 py-1 font-heading text-[10px] transition-colors sm:text-xs ${
-                language === "hi" ? "bg-[#11294d] text-white" : "text-[#11294d]/65"
-              }`}
-              aria-pressed={language === "hi"}
-            >
-              हिन्दी
-            </button>
+          <div
+            className="lang-switch absolute top-12 right-1/2 z-60 flex h-9 w-[11.5rem] translate-x-1/2 items-center rounded-full border border-[#d6ad63]/70 bg-white/95 p-1 shadow-sm md:top-16 md:h-10 md:w-[13rem] lg:top-18"
+            role="group"
+            aria-label="Language"
+          >
+            <div className="relative grid h-full w-full grid-cols-2">
+              <motion.span
+                aria-hidden
+                animate={{ left: language === "en" ? "0%" : "50%" }}
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute inset-y-0 w-1/2 rounded-full bg-[#11294d] shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={() => changeLanguage("en")}
+                className={`relative z-10 flex h-full cursor-pointer items-center justify-center rounded-full px-2 transition-colors ${
+                  language === "en" ? "text-white" : "text-[#11294d]/65"
+                }`}
+                aria-pressed={language === "en"}
+              >
+                <span
+                  className="lang-switch-label font-heading text-[10px] tracking-[0.08em] md:text-[11px]"
+                  data-script="en"
+                >
+                  English
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => changeLanguage("hi")}
+                className={`relative z-10 flex h-full cursor-pointer items-center justify-center rounded-full px-2 transition-colors ${
+                  language === "hi" ? "text-white" : "text-[#11294d]/65"
+                }`}
+                aria-pressed={language === "hi"}
+              >
+                <span
+                  className={`lang-switch-label font-heading ${language === "hi" ? "mt-1" : ""} text-[10px] md:text-[11px]`}                  data-script="hi"
+                >
+                  हिन्दी
+                </span>
+              </button>
+            </div>
           </div>
 
           <div
             className={`relative ${
               focused
-                ? "mt-2 h-[calc(100dvh-14rem)] w-[min(84vw,380px)] max-h-[520px] sm:mt-0 sm:aspect-[1.3/1] sm:h-auto sm:max-h-none sm:w-[min(94vw,1040px,calc(78vh*1.3))]"
-                : "aspect-[1.08/1] w-[min(92vw,620px)] sm:aspect-[1.3/1] sm:w-[min(94vw,1040px,calc(78vh*1.3))]"
+                ? "mt-2 h-[calc(100dvh-12.5rem)] w-[min(88vw,360px)] max-h-[560px] md:mt-0 md:h-auto md:max-h-none md:aspect-[1.35/1] md:w-[min(90vw,720px)] lg:aspect-[1.3/1] lg:w-[min(94vw,1040px,calc(78vh*1.3))]"
+                : "aspect-[1.08/1] w-[min(92vw,420px)] md:aspect-[1.25/1] md:w-[min(90vw,680px)] lg:aspect-[1.3/1] lg:w-[min(94vw,1040px,calc(78vh*1.3))]"
             }`}
           >
             <AnimatePresence>
@@ -462,8 +686,8 @@ export default function CinematicInvitationIntro({
                 <motion.div
                   className={`absolute z-10 will-change-transform ${
                     focused
-                      ? "inset-0 aspect-auto h-full w-full sm:left-[10%] sm:top-[23%] sm:right-auto sm:bottom-auto sm:aspect-[1.55/1] sm:h-auto sm:w-[80%]"
-                      : "left-[19%] top-[8%] aspect-4/5 w-[62%] [--card-rise-y:-52%] [--card-tuck-x:0%] [--card-tuck-y:0%] sm:left-[10%] sm:top-[23%] sm:aspect-[1.55/1] sm:w-[80%] sm:[--card-rise-y:-48%]"
+                      ? "inset-0 aspect-auto h-full w-full md:left-[8%] md:top-[18%] md:right-auto md:bottom-auto md:aspect-[1.55/1] md:h-auto md:w-[84%] lg:left-[10%] lg:top-[23%] lg:w-[80%]"
+                      : "left-[19%] top-[8%] aspect-4/5 w-[62%] [--card-rise-y:-52%] [--card-tuck-x:0%] [--card-tuck-y:0%] md:left-[12%] md:top-[20%] md:aspect-[1.55/1] md:w-[76%] md:[--card-rise-y:-48%] lg:left-[10%] lg:top-[23%] lg:w-[80%]"
                   }`}
                   initial={{
                     x: "var(--card-tuck-x, 0%)",
@@ -508,6 +732,7 @@ export default function CinematicInvitationIntro({
                     onFlip={flipCard}
                     language={language}
                     side={side}
+                    contentVisible={focused}
                   />
                 </motion.div>
               )}
@@ -546,16 +771,20 @@ export default function CinematicInvitationIntro({
                   y: { delay: 1.55, duration: 2.2, repeat: Infinity, ease: "easeInOut" },
                 }}
                 onClick={enterWebsite}
-                className="absolute bottom-7 z-50 cursor-pointer border border-[#d6ad63] bg-[#11294d] px-5 py-2.5 font-heading text-[10px] tracking-[0.24em] text-white uppercase shadow-[0_10px_28px_rgba(17,41,77,0.3)] hover:bg-[#1d3b68] sm:bottom-10 sm:px-6 sm:py-3 sm:text-xs"
+                className={`absolute bottom-6 z-50 cursor-pointer border border-[#d6ad63] bg-[#11294d] px-4 py-2 font-heading text-[10px] text-white shadow-[0_10px_28px_rgba(17,41,77,0.3)] hover:bg-[#1d3b68] md:bottom-8 md:px-5 md:py-2.5 md:text-[11px] lg:bottom-10 lg:px-6 lg:py-3 lg:text-xs ${
+                  language === "hi"
+                    ? "tracking-normal normal-case"
+                    : "tracking-[0.24em] uppercase"
+                }`}
               >
-                Enter the celebration
+                {language === "hi" ? "उत्सव में प्रवेश करें" : "Enter the celebration"}
               </motion.button>
             )}
           </AnimatePresence>
 
           {stage === "closed" && (
             <motion.div
-              className="absolute bottom-7 z-40 h-1 w-28 overflow-hidden rounded-full bg-[#11294d]/10 sm:bottom-10"
+              className="absolute bottom-6 z-40 h-1 w-28 overflow-hidden rounded-full bg-[#11294d]/10 md:bottom-8 lg:bottom-10"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >

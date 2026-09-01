@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import type { InvitationSide } from "@/lib/invitationSide";
+import { useLanguage } from "@/lib/LanguageContext";
+import { getUiCopy } from "@/lib/uiCopy";
 import { fadeUp, slideFromLeft, slideFromRight } from "@/lib/motion";
 
 interface WelcomeSectionProps {
@@ -11,22 +13,34 @@ interface WelcomeSectionProps {
   side?: InvitationSide;
 }
 
-function LabelPill({ children }: { children: string }) {
+function LabelPill({
+  children,
+  isHindi,
+}: {
+  children: string;
+  isHindi: boolean;
+}) {
   return (
-    <span className="inline-block rounded-full border border-royal-gold/35 bg-royal-gold/10 px-2.5 py-1 font-heading text-[9px] font-semibold tracking-[0.14em] text-royal-gold uppercase sm:px-3 sm:tracking-[0.22em] md:text-[10px]">
+    <span
+      className={`inline-flex items-center justify-center rounded-full border border-royal-gold/35 bg-royal-gold/10 px-2.5 py-1.5 font-heading font-semibold text-royal-gold sm:px-3 ${
+        isHindi
+          ? "hi-eyebrow tracking-normal normal-case text-[14px] leading-snug md:text-[15px]"
+          : "text-[9px] leading-none tracking-[0.14em] uppercase sm:tracking-[0.22em] md:text-[10px]"
+      }`}
+    >
       {children}
     </span>
   );
 }
 
-function NameBlock({ names }: { names: readonly string[] }) {
+function NameBlock({ names, ampersand }: { names: readonly string[]; ampersand: string }) {
   if (names.length >= 2) {
     return (
       <div className="mt-2 space-y-0.5">
         <p className="font-heading text-base !font-medium leading-snug text-navy-deep md:text-lg">
           {names[0]}
         </p>
-        <p className="font-heading text-sm text-royal-gold">&</p>
+        <p className="font-heading text-sm text-royal-gold">{ampersand}</p>
         <p className="font-heading text-base !font-medium leading-snug text-navy-deep md:text-lg">
           {names[1]}
         </p>
@@ -57,6 +71,8 @@ function FamilyPanel({
   elders,
   accent,
   variants,
+  ampersand,
+  isHindi,
 }: {
   fromLabel: string;
   surname: string;
@@ -66,6 +82,8 @@ function FamilyPanel({
   elders: readonly string[];
   accent: "groom" | "bride";
   variants: typeof slideFromLeft;
+  ampersand: string;
+  isHindi: boolean;
 }) {
   const shell =
     accent === "groom"
@@ -80,7 +98,13 @@ function FamilyPanel({
       viewport={{ once: true }}
       className={`rounded-3xl border px-4 py-5 text-center shadow-[0_12px_40px_rgba(17,41,77,0.06)] backdrop-blur-sm sm:px-5 sm:py-6 md:px-6 md:py-7 ${shell}`}
     >
-      <p className="font-heading text-[10px] font-semibold tracking-[0.28em] text-navy/55 uppercase">
+      <p
+        className={`font-heading font-semibold text-navy/55 ${
+          isHindi
+            ? "hi-eyebrow tracking-normal normal-case text-[15px] leading-snug"
+            : "text-[10px] leading-none tracking-[0.28em] uppercase"
+        }`}
+      >
         {fromLabel}
       </p>
       <h3 className="mt-2 font-heading text-2xl !font-medium text-navy-deep md:text-[1.7rem]">
@@ -89,14 +113,14 @@ function FamilyPanel({
       <div className="mx-auto mt-3 h-px w-12 bg-royal-gold/70" />
 
       <div className="mt-5">
-        <LabelPill>{parentsLabel}</LabelPill>
-        <NameBlock names={parents} />
+        <LabelPill isHindi={isHindi}>{parentsLabel}</LabelPill>
+        <NameBlock names={parents} ampersand={ampersand} />
       </div>
 
       <div className="mx-auto my-5 h-px w-full max-w-[9rem] bg-navy/10" />
 
       <div>
-        <LabelPill>{eldersLabel}</LabelPill>
+        <LabelPill isHindi={isHindi}>{eldersLabel}</LabelPill>
         <div className="mt-2 space-y-1">
           {elders.map((name) => (
             <p
@@ -116,46 +140,56 @@ export default function WelcomeSection({
   guestName,
   side = "groom",
 }: WelcomeSectionProps) {
-  const { blessing, families, invitation } = WEDDING_CONFIG;
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
+  const { blessing, invitation } = WEDDING_CONFIG;
+  const hi = invitation.hindi;
   const invitingIsGroom = side === "groom";
+  const ampersand = language === "hi" ? "एवं" : "&";
+
+  const groomParents = language === "hi" ? hi.groomParents : invitation.groomParents;
+  const groomElders = language === "hi" ? hi.groomElders : invitation.groomElders;
+  const brideParents = language === "hi" ? hi.brideParents : invitation.brideParents;
+  const brideElders =
+    language === "hi" ? hi.brideGrandparents : invitation.brideGrandparents;
 
   const left = invitingIsGroom
     ? {
-        surname: families.groom.surname,
-        parentsLabel: "Parents of the groom",
-        parents: invitation.groomParents,
-        eldersLabel: "Grandparents of the groom",
-        elders: invitation.groomElders,
-        fromLabel: "From the family of",
+        surname: t.mauryaFamily,
+        parentsLabel: t.parentsOfGroom,
+        parents: groomParents,
+        eldersLabel: t.grandparentsOfGroom,
+        elders: groomElders,
+        fromLabel: t.fromFamilyOf,
         accent: "groom" as const,
       }
     : {
-        surname: families.bride.surname,
-        parentsLabel: "Parents of the bride",
-        parents: invitation.brideParents,
-        eldersLabel: "Grandparents of the bride",
-        elders: invitation.brideGrandparents,
-        fromLabel: "From the family of",
+        surname: t.singhFamily,
+        parentsLabel: t.parentsOfBride,
+        parents: brideParents,
+        eldersLabel: t.grandparentsOfBride,
+        elders: brideElders,
+        fromLabel: t.fromFamilyOf,
         accent: "bride" as const,
       };
 
   const right = invitingIsGroom
     ? {
-        surname: families.bride.surname,
-        parentsLabel: "Parents of the bride",
-        parents: invitation.brideParents,
-        eldersLabel: "Grandparents of the bride",
-        elders: invitation.brideGrandparents,
-        fromLabel: "& the family of",
+        surname: t.singhFamily,
+        parentsLabel: t.parentsOfBride,
+        parents: brideParents,
+        eldersLabel: t.grandparentsOfBride,
+        elders: brideElders,
+        fromLabel: t.andFamilyOf,
         accent: "bride" as const,
       }
     : {
-        surname: families.groom.surname,
-        parentsLabel: "Parents of the groom",
-        parents: invitation.groomParents,
-        eldersLabel: "Grandparents of the groom",
-        elders: invitation.groomElders,
-        fromLabel: "& the family of",
+        surname: t.mauryaFamily,
+        parentsLabel: t.parentsOfGroom,
+        parents: groomParents,
+        eldersLabel: t.grandparentsOfGroom,
+        elders: groomElders,
+        fromLabel: t.andFamilyOf,
         accent: "groom" as const,
       };
 
@@ -178,9 +212,9 @@ export default function WelcomeSection({
               animate={{ opacity: 1, y: 0 }}
               className="mb-6 font-heading text-lg font-medium text-navy"
             >
-              Dear{" "}
-              <span className="font-semibold text-royal-gold">{guestName}</span>,
-              you are cordially invited
+              {t.dearGuest}{" "}
+              <span className="font-semibold text-royal-gold">{guestName}</span>,{" "}
+              {t.cordiallyInvited}
             </motion.p>
           )}
 
@@ -203,7 +237,7 @@ export default function WelcomeSection({
             viewport={{ once: true }}
             className="mx-auto max-w-2xl font-heading text-base font-medium leading-relaxed text-navy/80 md:text-lg"
           >
-            {blessing.english}
+            {t.blessingEnglish}
           </motion.p>
 
           <div className="mt-10 grid gap-5 md:grid-cols-2 md:gap-6">
@@ -216,6 +250,8 @@ export default function WelcomeSection({
               elders={left.elders}
               accent={left.accent}
               variants={slideFromLeft}
+              ampersand={ampersand}
+              isHindi={language === "hi"}
             />
             <FamilyPanel
               fromLabel={right.fromLabel}
@@ -226,6 +262,8 @@ export default function WelcomeSection({
               elders={right.elders}
               accent={right.accent}
               variants={slideFromRight}
+              ampersand={ampersand}
+              isHindi={language === "hi"}
             />
           </div>
 
@@ -236,7 +274,7 @@ export default function WelcomeSection({
             viewport={{ once: true }}
             className="mt-9 font-heading text-base font-medium tracking-wide text-navy/85 md:text-lg"
           >
-            request the honour of your presence at the wedding of their children
+            {t.honourPresence}
           </motion.p>
         </div>
       </div>

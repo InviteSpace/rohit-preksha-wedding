@@ -4,17 +4,21 @@ import { motion } from "framer-motion";
 import PublicImage from "@/components/PublicImage";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
+import { useLanguage } from "@/lib/LanguageContext";
+import { getUiCopy } from "@/lib/uiCopy";
 
 function PersonEntrance({
   role,
   name,
   tagline,
   fromLeft,
+  isHindi,
 }: {
   role: string;
   name: string;
   tagline: string;
   fromLeft: boolean;
+  isHindi: boolean;
 }) {
   return (
     <motion.div
@@ -31,7 +35,13 @@ function PersonEntrance({
         transition={{ duration: 0.7, delay: 0.3 }}
         className="mb-4 rounded-full border border-navy/15 bg-navy/5 px-4 py-1.5 sm:px-5"
       >
-        <span className="font-heading text-[10px] font-semibold tracking-[0.22em] text-navy uppercase sm:tracking-[0.35em] md:text-xs">
+        <span
+          className={`inline-flex items-center justify-center font-heading font-semibold leading-snug text-navy ${
+            isHindi
+              ? "hi-eyebrow text-[14px] tracking-normal normal-case md:text-[15px]"
+              : "text-[10px] tracking-[0.22em] uppercase sm:tracking-[0.35em] md:text-xs"
+          }`}
+        >
           {role}
         </span>
       </motion.div>
@@ -60,28 +70,39 @@ function PersonEntrance({
 }
 
 export default function CoupleIntro() {
-  const { groom, bride, illustration } = WEDDING_CONFIG.couple;
+  const { language } = useLanguage();
+  const t = getUiCopy(language);
+  const { illustration } = WEDDING_CONFIG.couple;
 
   return (
     <SectionWrapper id="couple">
       <div className="text-center">
         <motion.p
-          initial={{ opacity: 0, letterSpacing: "0.1em" }}
-          whileInView={{ opacity: 1, letterSpacing: "0.4em" }}
+          initial={{ opacity: 0, letterSpacing: language === "hi" ? "0em" : "0.1em" }}
+          whileInView={{
+            opacity: 1,
+            letterSpacing: language === "hi" ? "0em" : "0.4em",
+          }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="font-heading text-xs font-semibold text-royal-gold uppercase"
+          className={`font-heading font-semibold text-royal-gold ${
+            language === "hi"
+              ? "hi-eyebrow tracking-normal normal-case text-base leading-snug sm:text-lg"
+              : "text-xs leading-none uppercase"
+          }`}
         >
-          The Couple
+          {t.theCouple}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="mt-2 font-heading text-3xl !font-medium text-navy-deep md:text-4xl"
+          className={`mt-2 font-heading text-3xl !font-medium text-navy-deep md:text-4xl ${
+            language === "hi" ? "leading-snug" : ""
+          }`}
         >
-          Two Hearts, One Journey
+          {t.twoHearts}
         </motion.h2>
         <div className="section-divider mx-auto my-6 w-32" />
         <motion.p
@@ -91,7 +112,7 @@ export default function CoupleIntro() {
           transition={{ delay: 0.4 }}
           className="font-heading text-lg font-medium text-navy/80"
         >
-          Watch their story unfold
+          {t.watchStory}
         </motion.p>
       </div>
 
@@ -104,7 +125,7 @@ export default function CoupleIntro() {
       >
         <PublicImage
           src={illustration}
-          alt={`${groom.name} and ${bride.name}`}
+          alt={`${t.groomName} and ${t.brideName}`}
           width={853}
           height={1024}
           className="mx-auto h-auto w-full max-w-[240px] object-contain drop-shadow-md md:max-w-[280px]"
@@ -114,10 +135,11 @@ export default function CoupleIntro() {
 
       <div className="mt-12 flex flex-col items-center gap-10 md:flex-row md:justify-center md:gap-6 lg:gap-10">
         <PersonEntrance
-          role="The Groom"
-          name={groom.name}
-          tagline={groom.tagline}
+          role={t.theGroom}
+          name={t.groomName}
+          tagline={t.groomTagline}
           fromLeft
+          isHindi={language === "hi"}
         />
 
         <motion.div
@@ -132,7 +154,7 @@ export default function CoupleIntro() {
             transition={{ duration: 2, repeat: Infinity }}
             className="font-heading text-5xl !font-medium text-royal-gold md:text-6xl"
           >
-            &
+            {language === "hi" ? "एवं" : "&"}
           </motion.span>
           <motion.div
             initial={{ scaleX: 0 }}
@@ -148,15 +170,16 @@ export default function CoupleIntro() {
             transition={{ delay: 1 }}
             className="mt-3 font-heading text-sm font-medium italic text-navy/75"
           >
-            united in love
+            {t.unitedInLove}
           </motion.p>
         </motion.div>
 
         <PersonEntrance
-          role="The Bride"
-          name={bride.name}
-          tagline={bride.tagline}
+          role={t.theBride}
+          name={t.brideName}
+          tagline={t.brideTagline}
           fromLeft={false}
+          isHindi={language === "hi"}
         />
       </div>
 
@@ -168,8 +191,7 @@ export default function CoupleIntro() {
         className="mt-14 text-center"
       >
         <p className="mx-auto max-w-xl font-heading text-lg font-medium leading-relaxed text-navy/90 md:text-xl">
-          From a chance meeting to a lifetime of promises — their journey has been
-          filled with laughter, love, and countless beautiful moments.
+          {t.coupleJourney}
         </p>
       </motion.div>
     </SectionWrapper>

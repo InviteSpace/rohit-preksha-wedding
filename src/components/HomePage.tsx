@@ -21,10 +21,14 @@ import {
   type ResolvedInvite,
 } from "@/lib/inviteConfig";
 import { verifyInviteToken } from "@/lib/inviteToken";
-import { parseInvitationSide } from "@/lib/invitationSide";
+import { parseInvitationSide, type InvitationLanguage } from "@/lib/invitationSide";
+import { LanguageProvider, useLanguage } from "@/lib/LanguageContext";
+import { getUiCopy } from "@/lib/uiCopy";
 
 function HomeContent() {
   const searchParams = useSearchParams();
+  const { language, setLanguage } = useLanguage();
+  const t = getUiCopy(language);
   const [invite, setInvite] = useState<ResolvedInvite | null>(null);
   const [introComplete, setIntroComplete] = useState(false);
 
@@ -36,18 +40,26 @@ function HomeContent() {
       if (token) {
         const verified = await verifyInviteToken(token);
         if (!cancelled) {
-          setInvite(verified ?? { ...DEFAULT_INVITE });
+          const resolved = verified ?? { ...DEFAULT_INVITE };
+          setInvite(resolved);
+          setLanguage(resolved.lang);
         }
         return;
       }
 
+      const langParam = searchParams.get("lang");
+      const lang: InvitationLanguage =
+        langParam === "hi" || langParam === "en" ? langParam : "en";
+
       if (!cancelled) {
-        setInvite({
+        const resolved = {
           side: parseInvitationSide(searchParams.get("side")),
-          lang: "en",
+          lang,
           eventIds: [...KNOWN_EVENT_IDS],
           guest: sanitizeGuestName(searchParams.get("guest")),
-        });
+        };
+        setInvite(resolved);
+        setLanguage(resolved.lang);
       }
     }
 
@@ -55,7 +67,7 @@ function HomeContent() {
     return () => {
       cancelled = true;
     };
-  }, [searchParams]);
+  }, [searchParams, setLanguage]);
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
@@ -87,41 +99,48 @@ function HomeContent() {
   if (!invite) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-blush text-sage">
-        Loading...
+        {t.loading}
       </div>
-    );
-  }
-
-  if (!introComplete) {
-    return (
-      <CinematicInvitationIntro
-        onComplete={finishIntro}
-        side={invite.side}
-        initialLanguage={invite.lang}
-      />
     );
   }
 
   return (
     <>
-      <ParticleEffects />
-      <MusicPlayer autoPrompt />
-      <FloatingNav />
+      <MusicPlayer
+        language={language}
+        hidden={!introComplete}
+        autoStart={introComplete}
+        autoPrompt={introComplete}
+      />
 
-      <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-2"
-      >
-        <HeroBanner />
-        <WelcomeSection guestName={invite.guest} side={invite.side} />
-        <CoupleIntro />
-        <Countdown />
-        <EventTimeline eventIds={invite.eventIds} />
-        <SharePhotosSection />
-        <ClosingSection />
-      </motion.main>
+      {!introComplete ? (
+        <CinematicInvitationIntro
+          onComplete={finishIntro}
+          side={invite.side}
+          initialLanguage={language}
+          onLanguageChange={setLanguage}
+        />
+      ) : (
+        <>
+          <ParticleEffects />
+          <FloatingNav />
+
+          <motion.main
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-2"
+          >
+            <HeroBanner />
+            <WelcomeSection guestName={invite.guest} side={invite.side} />
+            <CoupleIntro />
+            <Countdown />
+            <EventTimeline eventIds={invite.eventIds} />
+            <SharePhotosSection />
+            <ClosingSection />
+          </motion.main>
+        </>
+      )}
     </>
   );
 }
@@ -135,7 +154,9 @@ export default function HomePage() {
         </div>
       }
     >
-      <HomeContent />
+      <LanguageProvider>
+        <HomeContent />
+      </LanguageProvider>
     </Suspense>
   );
 }
