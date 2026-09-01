@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_PUBLIC_SITE_URL: customDomain
       ? `https://${customDomain}`
-      : `https://warmwelcome.github.io/${repoName}`,
+      : `https://${process.env.GITHUB_PAGES_OWNER?.trim() || "invitespace"}.github.io/${repoName}`,
   },
   images: {
     unoptimized: true,

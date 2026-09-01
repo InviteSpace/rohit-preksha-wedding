@@ -9,7 +9,7 @@
  */
 export const SITE_CONFIG = {
   /** Link you share with guests */
-  publicUrl: "https://warmwelcome.github.io/rohit-preksha-wedding",
+  publicUrl: "https://invitespace.github.io/rohit-preksha-wedding",
 
   /**
    * Set when you own a custom domain and DNS points to GitHub Pages.
