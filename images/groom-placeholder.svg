@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A0E0E"/>
+      <stop offset="100%" style="stop-color:#8B0000"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#g)"/>
+  <circle cx="200" cy="150" r="60" fill="#C9A84C" opacity="0.3"/>
+  <ellipse cx="200" cy="300" rx="90" ry="70" fill="#C9A84C" opacity="0.2"/>
+  <text x="200" y="380" text-anchor="middle" fill="#C9A84C" font-family="serif" font-size="24" letter-spacing="4">ROHIT</text>
+</svg>
