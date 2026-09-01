@@ -39,45 +39,12 @@ const notoDevanagari = Noto_Serif_Devanagari({
   preload: false,
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://invitespace.github.io/rohit-preksha-wedding";
-const ogTitle = "Rohit & Preksha | Wedding Invitation";
-const ogDescription = "Join us in celebrating our special day!";
-const ogImagePath = "/og-whatsapp.jpg";
-const ogImageWidth = 1200;
-const ogImageHeight = 630;
-const ogImageUrl = `${siteUrl.replace(/\/$/, "")}${ogImagePath}`;
 const facebookAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID?.trim();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: ogTitle,
+  title: "Rohit & Preksha | Wedding Invitation",
   description:
     "You are cordially invited to celebrate the wedding of Rohit and Preksha. Join us for Mehndi, Haldi, Cocktail, Wedding & Reception.",
-  openGraph: {
-    title: ogTitle,
-    description: ogDescription,
-    type: "website",
-    url: siteUrl,
-    siteName: "Rohit & Preksha Wedding",
-    locale: "en_IN",
-    images: [
-      {
-        url: ogImagePath,
-        width: ogImageWidth,
-        height: ogImageHeight,
-        type: "image/jpeg",
-        alt: "Rohit & Preksha — Save the Date, Saturday 21 November 2026",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: ogTitle,
-    description: ogDescription,
-    images: [ogImagePath],
-  },
 };
 
 export default function RootLayout({
@@ -93,20 +60,6 @@ export default function RootLayout({
       className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} ${notoDevanagari.variable} scroll-smooth`}
     >
       <head>
-        <meta property="og:title" content={ogTitle} />
-        <meta property="og:description" content={ogDescription} />
-        <meta property="og:url" content={siteUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={ogImageUrl} />
-        <meta property="og:image:secure_url" content={ogImageUrl} />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content={String(ogImageWidth)} />
-        <meta property="og:image:height" content={String(ogImageHeight)} />
-        <meta
-          name="twitter:card"
-          content="summary_large_image"
-        />
-        <meta name="twitter:image" content={ogImageUrl} />
         {facebookAppId ? (
           <meta property="fb:app_id" content={facebookAppId} />
         ) : null}
