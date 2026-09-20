@@ -557,6 +557,8 @@ export default function CinematicInvitationIntro({
 
   const enterWebsite = () => {
     clearTimers();
+    // Dispatch synchronously inside the tap so Safari keeps the user-gesture
+    // privilege for audio.play() in MusicPlayer.
     window.dispatchEvent(new Event(WEDDING_MUSIC_START_EVENT));
     setStage("done");
     timers.current.push(setTimeout(onComplete, 500));

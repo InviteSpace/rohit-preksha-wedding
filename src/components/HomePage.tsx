@@ -41,7 +41,11 @@ function HomeContent() {
         const verified = await verifyInviteToken(token);
         if (!cancelled) {
           const resolved = verified ?? { ...DEFAULT_INVITE };
-          setInvite(resolved);
+          const guestFromQuery = sanitizeGuestName(searchParams.get("guest"));
+          setInvite({
+            ...resolved,
+            guest: resolved.guest ?? guestFromQuery,
+          });
           setLanguage(resolved.lang);
         }
         return;

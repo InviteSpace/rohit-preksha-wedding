@@ -28,7 +28,7 @@ export default function SectionWrapper({
         variants={fadeUp}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
+        viewport={{ once: true, amount: 0.12, margin: "0px 0px -5% 0px" }}
         className="relative z-10 mx-auto max-w-5xl overflow-visible"
       >
         {children}
