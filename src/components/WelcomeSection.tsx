@@ -195,6 +195,22 @@ export default function WelcomeSection({
 
   return (
     <SectionWrapper id="welcome">
+      {/* Guest greeting sits outside the clipped card so it never gets cut off on mobile */}
+      {guestName ? (
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-20 mb-5 px-1 text-center font-heading text-base font-medium leading-snug text-navy sm:mb-6 sm:text-lg md:text-xl"
+        >
+          {t.dearGuest}{" "}
+          <span className="font-semibold text-royal-gold">{guestName}</span>
+          {language === "hi" ? " — " : ", "}
+          {t.cordiallyInvited}
+        </motion.p>
+      ) : null}
+
       <div className="relative overflow-hidden rounded-[1.5rem] border border-navy/10 bg-white/75 px-4 py-7 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:px-8 sm:py-10 md:px-12 md:py-12">
         <div
           aria-hidden
@@ -206,18 +222,6 @@ export default function WelcomeSection({
         />
 
         <div className="relative z-10 text-center">
-          {guestName && (
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 font-heading text-lg font-medium text-navy"
-            >
-              {t.dearGuest}{" "}
-              <span className="font-semibold text-royal-gold">{guestName}</span>,{" "}
-              {t.cordiallyInvited}
-            </motion.p>
-          )}
-
           <motion.p
             variants={fadeUp}
             initial="hidden"

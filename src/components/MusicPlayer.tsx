@@ -25,6 +25,10 @@ function trackFor(language: InvitationLanguage) {
   return WEDDING_CONFIG.music[language] ?? WEDDING_CONFIG.music.en;
 }
 
+/**
+ * Safari/iOS discard the user-gesture privilege as soon as we `await` anything
+ * before `audio.play()`. Call play() first, then seek / fade.
+ */
 export default function MusicPlayer({
   language = "en",
   autoStart = false,
@@ -35,9 +39,10 @@ export default function MusicPlayer({
   const languageRef = useRef(language);
   const startedRef = useRef(false);
   const startingRef = useRef(false);
+  const unlockedRef = useRef(false);
   const fadeRef = useRef<number | null>(null);
   const [playing, setPlaying] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(autoPrompt && !hidden);
+  const [showPrompt, setShowPrompt] = useState(false);
   const [trackSrc, setTrackSrc] = useState(() => assetPath(trackFor(language).src));
   const t = getUiCopy(language);
 
@@ -51,55 +56,32 @@ export default function MusicPlayer({
   const fadeIn = useCallback(
     (audio: HTMLAudioElement) => {
       clearFade();
-      audio.volume = 0;
+      // iOS Safari ignores programmatic volume — still safe elsewhere.
+      try {
+        audio.volume = 0;
+      } catch {
+        /* ignore */
+      }
       const steps = 12;
       const step = TARGET_VOLUME / steps;
       const interval = FADE_MS / steps;
       let n = 0;
       fadeRef.current = window.setInterval(() => {
         n += 1;
-        audio.volume = Math.min(TARGET_VOLUME, n * step);
+        try {
+          audio.volume = Math.min(TARGET_VOLUME, n * step);
+        } catch {
+          clearFade();
+        }
         if (n >= steps) clearFade();
       }, interval);
     },
     [clearFade],
   );
 
-  const waitReady = useCallback((audio: HTMLAudioElement) => {
-    if (audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-      return Promise.resolve();
-    }
-    return new Promise<void>((resolve, reject) => {
-      const onReady = () => {
-        cleanup();
-        resolve();
-      };
-      const onError = () => {
-        cleanup();
-        reject(new Error("audio load failed"));
-      };
-      const cleanup = () => {
-        audio.removeEventListener("canplay", onReady);
-        audio.removeEventListener("loadeddata", onReady);
-        audio.removeEventListener("error", onError);
-      };
-      audio.addEventListener("canplay", onReady, { once: true });
-      audio.addEventListener("loadeddata", onReady, { once: true });
-      audio.addEventListener("error", onError, { once: true });
-      if (
-        audio.networkState === HTMLMediaElement.NETWORK_EMPTY ||
-        audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE
-      ) {
-        audio.load();
-      }
-    });
-  }, []);
-
   const seekQuietly = useCallback(async (audio: HTMLAudioElement, offset: number) => {
-    if (offset <= 0) {
-      if (audio.currentTime > 0.05) audio.currentTime = 0;
-      return;
-    }
+    if (offset <= 0) return;
+
     const target =
       Number.isFinite(audio.duration) && audio.duration > 0
         ? Math.min(offset, Math.max(0, audio.duration - 0.5))
@@ -122,7 +104,7 @@ export default function MusicPlayer({
       window.setTimeout(() => {
         audio.removeEventListener("seeked", onSeeked);
         resolve();
-      }, 400);
+      }, 500);
     });
   }, []);
 
@@ -135,14 +117,39 @@ export default function MusicPlayer({
     startingRef.current = true;
     musicBootstrapped = true;
     const offset = trackFor(languageRef.current).startOffsetSec ?? 0;
+
     try {
-      audio.volume = 0;
-      await waitReady(audio);
-      await seekQuietly(audio, offset);
+      audio.muted = false;
+      try {
+        audio.volume = Math.min(TARGET_VOLUME, 0.01);
+      } catch {
+        /* iOS: volume is read-only */
+      }
+
+      // Kick load if needed, but do NOT await before play() — Safari needs the
+      // play() call to stay in the user-gesture call stack.
+      if (audio.readyState < HTMLMediaElement.HAVE_METADATA) {
+        try {
+          audio.load();
+        } catch {
+          /* ignore */
+        }
+      }
+
       await audio.play();
+
+      unlockedRef.current = true;
       startedRef.current = true;
       setPlaying(true);
       setShowPrompt(false);
+
+      if (offset > 0) {
+        await seekQuietly(audio, offset);
+        if (audio.paused) {
+          await audio.play();
+        }
+      }
+
       fadeIn(audio);
       return true;
     } catch {
@@ -153,7 +160,56 @@ export default function MusicPlayer({
     } finally {
       startingRef.current = false;
     }
-  }, [fadeIn, seekQuietly, waitReady]);
+  }, [fadeIn, seekQuietly]);
+
+  // Unlock audio on the first tap/click so later play() works on iOS Safari.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.setAttribute("playsinline", "true");
+      audio.setAttribute("webkit-playsinline", "true");
+    }
+
+    const unlock = () => {
+      const el = audioRef.current;
+      if (!el || unlockedRef.current || startedRef.current || musicBootstrapped) {
+        return;
+      }
+
+      const attempt = el.play();
+      if (attempt === undefined) {
+        unlockedRef.current = true;
+        return;
+      }
+
+      void attempt
+        .then(() => {
+          unlockedRef.current = true;
+          // Only park the element if music hasn't been requested yet.
+          if (!startedRef.current && !musicBootstrapped) {
+            el.pause();
+            try {
+              el.currentTime = 0;
+            } catch {
+              /* ignore */
+            }
+          }
+        })
+        .catch(() => {
+          /* still locked — next gesture retries */
+        });
+    };
+
+    document.addEventListener("pointerdown", unlock, { capture: true });
+    document.addEventListener("touchstart", unlock, { capture: true });
+    document.addEventListener("click", unlock, { capture: true });
+
+    return () => {
+      document.removeEventListener("pointerdown", unlock, true);
+      document.removeEventListener("touchstart", unlock, true);
+      document.removeEventListener("click", unlock, true);
+    };
+  }, []);
 
   // Keep track in sync with invitation language
   useEffect(() => {
@@ -171,9 +227,14 @@ export default function MusicPlayer({
     clearFade();
     audio.pause();
     audio.src = nextSrc;
-    audio.load();
+    try {
+      audio.load();
+    } catch {
+      /* ignore */
+    }
     startedRef.current = false;
     musicBootstrapped = false;
+    unlockedRef.current = false;
 
     if (wasPlaying || autoStart) {
       void startMusic();
@@ -211,6 +272,13 @@ export default function MusicPlayer({
     void startMusic();
   }, [autoStart, startMusic]);
 
+  // Show tap prompt once the intro finishes if music still isn't playing
+  useEffect(() => {
+    if (autoPrompt && !hidden && !playing && !startedRef.current) {
+      setShowPrompt(true);
+    }
+  }, [autoPrompt, hidden, playing]);
+
   useEffect(() => () => clearFade(), [clearFade]);
 
   const toggle = useCallback(async () => {
@@ -241,10 +309,16 @@ export default function MusicPlayer({
 
   return (
     <>
-      <audio ref={audioRef} src={trackSrc} preload="auto" playsInline />
+      <audio
+        ref={audioRef}
+        src={trackSrc}
+        preload="auto"
+        playsInline
+      />
 
       {!hidden && showPrompt && (
         <button
+          type="button"
           onClick={toggle}
           className="fixed right-4 bottom-24 z-50 max-w-[calc(100vw-5.5rem)] animate-pulse rounded-full bg-sage px-3 py-2 font-heading text-[11px] tracking-wide text-white shadow-lg sm:px-4 sm:text-xs sm:tracking-wider md:bottom-8 cursor-pointer"
         >
@@ -254,6 +328,7 @@ export default function MusicPlayer({
 
       {!hidden && (
         <button
+          type="button"
           onClick={toggle}
           aria-label={playing ? "Pause music" : "Play music"}
           className="fixed right-4 bottom-4 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold bg-white/95 text-sage shadow-lg backdrop-blur-sm transition-transform hover:scale-110 cursor-pointer"
