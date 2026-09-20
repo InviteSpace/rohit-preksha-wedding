@@ -134,8 +134,8 @@ function HomeContent() {
             <HeroBanner />
             <WelcomeSection guestName={invite.guest} side={invite.side} />
             <CoupleIntro />
-            <Countdown />
-            <EventTimeline eventIds={invite.eventIds} />
+            <Countdown side={invite.side} />
+            <EventTimeline eventIds={invite.eventIds} side={invite.side} />
             <SharePhotosSection />
             <ClosingSection />
           </motion.main>

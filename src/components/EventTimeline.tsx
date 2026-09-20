@@ -3,11 +3,18 @@
 import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import EventCardDeck from "@/components/EventCardDeck";
+import type { InvitationSide } from "@/lib/invitationSide";
 import { useLanguage } from "@/lib/LanguageContext";
 import { eyebrowClass, getUiCopy } from "@/lib/uiCopy";
 import { fadeUp } from "@/lib/motion";
 
-export default function EventTimeline({ eventIds }: { eventIds?: string[] }) {
+export default function EventTimeline({
+  eventIds,
+  side = "groom",
+}: {
+  eventIds?: string[];
+  side?: InvitationSide;
+}) {
   const { language } = useLanguage();
   const t = getUiCopy(language);
 
@@ -44,7 +51,7 @@ export default function EventTimeline({ eventIds }: { eventIds?: string[] }) {
         </motion.p>
       </div>
 
-      <EventCardDeck eventIds={eventIds} />
+      <EventCardDeck eventIds={eventIds} side={side} />
     </SectionWrapper>
   );
 }

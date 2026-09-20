@@ -192,12 +192,28 @@ export function localizeEvent(
   return {
     ...event,
     title: hi.title,
-    time: hi.time ?? event.time,
-    venue: hi.venue ?? event.venue,
+    time: TIME_HI[event.time] ?? hi.time ?? event.time,
+    venue: VENUE_HI[event.venue] ?? hi.venue ?? event.venue,
     description: hi.description ?? event.description,
     dressCode: hi.dressCode ?? event.dressCode,
   };
 }
+
+const TIME_HI: Record<string, string> = {
+  "10:00 AM": "प्रातः 10:00 बजे",
+  "1:00 PM": "दोपहर 1:00 बजे",
+  "4:00 PM": "सायं 4:00 बजे",
+  "7:00 PM onwards": "सायं 7:00 बजे से",
+  "8:00 PM onwards": "सायं 8:00 बजे से",
+};
+
+const VENUE_HI: Record<string, string> = {
+  "Tikait Rai LDA Colony": "तिकैत राय एलडीए कॉलोनी",
+  "Sakhi Beauty Parlour": "सखी ब्यूटी पार्लर",
+  "Shivaji Puram": "शिवाजी पुरम",
+  "Raj Estate": "राज एस्टेट",
+  "Utkarsh Lawn": "उत्कर्ष लॉन",
+};
 
 const EVENT_HI: Record<
   string,
@@ -211,29 +227,21 @@ const EVENT_HI: Record<
 > = {
   mehndi: {
     title: "मेहंदी समारोह",
-    time: "समय शीघ्र घोषित होगा",
-    venue: "शिवाजी पुरम",
     description: "मेंहदी, संगीत, रंग और मिलन का आनंदमय उत्सव।",
     dressCode: "पारंपरिक / उत्सवी वस्त्र",
   },
   haldi: {
     title: "हल्दी समारोह",
-    time: "समय शीघ्र घोषित होगा",
-    venue: "शिवाजी पुरम",
     description: "हल्दी के आशीर्वाद, हँसी और शुभ रीतियों की प्रभात।",
     dressCode: "पीला / हल्के उत्सवी रंग",
   },
   wedding: {
     title: "विवाह समारोह",
-    time: "प्रातः 10:00 बजे से",
-    venue: "राज एस्टेट",
     description: "रोहित और प्रेक्षा का पावन मिलन — उनके संकल्प और आशीर्वाद के साक्षी बनें।",
     dressCode: "पारंपरिक / औपचारिक जातीय वस्त्र",
   },
   reception: {
     title: "प्रीतिभोज",
-    time: "रात्रि भोज : ________",
-    venue: "उत्कर्ष लॉन",
     description:
       "रोहित और प्रेक्षा की नई यात्रा के आरंभ पर हमारे साथ उत्सव मनाएँ।",
     dressCode: "औपचारिक / सायंकालीन वस्त्र",

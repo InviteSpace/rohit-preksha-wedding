@@ -10,6 +10,11 @@ export interface WeddingEvent {
   dressCode?: string;
 }
 
+/** Per-side overrides merged onto shared event fields (bride details are the defaults). */
+export type EventSideOverride = Partial<
+  Pick<WeddingEvent, "date" | "time" | "venue" | "address" | "mapUrl" | "description">
+>;
+
 export const WEDDING_CONFIG = {
   couple: {
     illustration: "/images/couple-animated.png",
@@ -27,7 +32,13 @@ export const WEDDING_CONFIG = {
     },
   },
 
-  weddingDate: new Date("2026-11-21T10:00:00"),
+  weddingDate: new Date("2026-11-21T20:00:00"),
+
+  /** Countdown target by inviting family side. */
+  weddingDateBySide: {
+    bride: new Date("2026-11-21T20:00:00"),
+    groom: new Date("2026-11-21T19:00:00"),
+  },
 
   families: {
     groom: {
@@ -93,7 +104,7 @@ export const WEDDING_CONFIG = {
     date: new Date("2026-11-23T19:00:00"),
     venuePrefix: "At",
     venue: "Utkarsh Lawn",
-    dinner: "Dinner : ________",
+    dinner: "Dinner : 7:00 PM onwards",
     closing:
       "Your gracious presence and blessings will be our greatest honour as we celebrate the beginning of their new journey together.",
     hindi: {
@@ -114,7 +125,7 @@ export const WEDDING_CONFIG = {
       date: "23 नवम्बर 2026",
       venuePrefix: "स्थान",
       venue: "उत्कर्ष लॉन",
-      dinner: "रात्रि भोज : ________",
+      dinner: "रात्रि भोज : सायं 7:00 बजे से",
       closing: "आपकी उपस्थिति हमारे लिए अत्यंत हर्ष एवं सौभाग्य का विषय होगी।",
     },
   },
@@ -199,11 +210,12 @@ export const WEDDING_CONFIG = {
       id: "mehndi",
       title: "Mehndi Ceremony",
       date: "2026-11-20",
-      time: "Time to be announced",
-      venue: "Shivaji Puram",
+      time: "4:00 PM",
+      venue: "Tikait Rai LDA Colony",
       address:
-        "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
-      mapUrl: "https://maps.app.goo.gl/j5a5qCPN25irAZwy5",
+        "HIG 50/1, Tikait Rai LDA Colony, Mohaan Road, Rajajipuram, Lucknow-226017, Near National Hospital",
+      mapUrl:
+        "https://www.google.com/maps/search/?api=1&query=26.85062,80.885487",
       description: "A joyous celebration of henna, music, colours, and togetherness.",
       dressCode: "Traditional / Festive wear",
     },
@@ -211,11 +223,12 @@ export const WEDDING_CONFIG = {
       id: "haldi",
       title: "Haldi Ceremony",
       date: "2026-11-20",
-      time: "Time to be announced",
-      venue: "Shivaji Puram",
+      time: "10:00 AM",
+      venue: "Tikait Rai LDA Colony",
       address:
-        "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
-      mapUrl: "https://maps.app.goo.gl/j5a5qCPN25irAZwy5",
+        "HIG 50/1, Tikait Rai LDA Colony, Mohaan Road, Rajajipuram, Lucknow-226017, Near National Hospital",
+      mapUrl:
+        "https://www.google.com/maps/search/?api=1&query=26.85062,80.885487",
       description: "A morning of turmeric blessings, laughter, and joyful rituals.",
       dressCode: "Yellow / Light festive colors",
     },
@@ -234,7 +247,7 @@ export const WEDDING_CONFIG = {
       id: "wedding",
       title: "Wedding Ceremony",
       date: "2026-11-21",
-      time: "10:00 AM onwards",
+      time: "8:00 PM onwards",
       venue: "Raj Estate",
       address:
         "Allambagh Para, Tedhi Pulia Ring Road, Devpur, Rajajipuram, Hardoi, Lucknow, Uttar Pradesh 226017",
@@ -247,7 +260,7 @@ export const WEDDING_CONFIG = {
       id: "reception",
       title: "Reception",
       date: "2026-11-23",
-      time: "Dinner : ________",
+      time: "7:00 PM onwards",
       venue: "Utkarsh Lawn",
       address:
         "425-Bhaptamau, Ring Rd, near Buddheshwar Temple, Alamnagar, Lucknow, Uttar Pradesh 226017",
@@ -258,6 +271,37 @@ export const WEDDING_CONFIG = {
       dressCode: "Formal / Evening wear",
     },
   ] satisfies WeddingEvent[],
+
+  /**
+   * Bride-side Haldi/Mehndi/Wedding times live on `events` above.
+   * Groom-side differences (times / venues) are merged when side=groom.
+   */
+  eventSideOverrides: {
+    groom: {
+      mehndi: {
+        time: "4:00 PM",
+        venue: "Shivaji Puram",
+        address:
+          "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
+        mapUrl:
+          "https://www.google.com/maps/search/?api=1&query=26.8522602,80.8741131",
+      },
+      haldi: {
+        time: "1:00 PM",
+        venue: "Shivaji Puram",
+        address:
+          "356/218/271, Shivaji Puram, Habibpur, Rajajipuram, Lucknow, Uttar Pradesh 226017, India",
+        mapUrl:
+          "https://www.google.com/maps/search/?api=1&query=26.8522602,80.8741131",
+      },
+      wedding: {
+        time: "7:00 PM onwards",
+      },
+      reception: {
+        time: "7:00 PM onwards",
+      },
+    },
+  } as const satisfies Record<string, Record<string, EventSideOverride>>,
 
   closing: {
     message:
