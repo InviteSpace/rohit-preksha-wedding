@@ -6,7 +6,8 @@ import Button from "@/components/ui/Button";
 import EventIcon from "@/components/EventIcon";
 import QrShareDownload from "@/components/QrShareDownload";
 import { WEDDING_CONFIG, type WeddingEvent } from "@/config/wedding";
-import { filterEvents } from "@/lib/inviteConfig";
+import { applySideOverrides, filterEvents } from "@/lib/inviteConfig";
+import type { InvitationSide } from "@/lib/invitationSide";
 import { useLanguage } from "@/lib/LanguageContext";
 import {
   formatEventDate,
@@ -360,15 +361,22 @@ function EventDetailReveal({
   );
 }
 
-export default function EventCardDeck({ eventIds }: { eventIds?: string[] }) {
+export default function EventCardDeck({
+  eventIds,
+  side = "groom",
+}: {
+  eventIds?: string[];
+  side?: InvitationSide;
+}) {
   const { language } = useLanguage();
   const t = getUiCopy(language);
   const events = useMemo(
     () =>
-      filterEvents(WEDDING_CONFIG.events, eventIds).map((event) =>
-        localizeEvent(event, language),
-      ),
-    [eventIds, language],
+      applySideOverrides(
+        filterEvents(WEDDING_CONFIG.events, eventIds),
+        side,
+      ).map((event) => localizeEvent(event, language)),
+    [eventIds, language, side],
   );
   const weddingIndex = Math.max(
     0,

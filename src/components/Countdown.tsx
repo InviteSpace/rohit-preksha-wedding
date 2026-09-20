@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { WEDDING_CONFIG } from "@/config/wedding";
+import { getWeddingDateForSide } from "@/lib/inviteConfig";
+import type { InvitationSide } from "@/lib/invitationSide";
 import { useLanguage } from "@/lib/LanguageContext";
 import { eyebrowClass, getUiCopy } from "@/lib/uiCopy";
 import { fadeUp } from "@/lib/motion";
@@ -75,19 +76,20 @@ function Colon() {
   );
 }
 
-export default function Countdown() {
+export default function Countdown({ side = "groom" }: { side?: InvitationSide }) {
   const { language } = useLanguage();
   const t = getUiCopy(language);
+  const targetDate = getWeddingDateForSide(side);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
-    calculateTimeLeft(WEDDING_CONFIG.weddingDate),
+    calculateTimeLeft(targetDate),
   );
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft(WEDDING_CONFIG.weddingDate));
+      setTimeLeft(calculateTimeLeft(targetDate));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [targetDate]);
 
   return (
     <section className="relative overflow-hidden bg-navy px-4 py-10 sm:px-6 sm:py-14">

@@ -69,6 +69,26 @@ export function filterEvents(
   return events.filter((e) => allow.has(e.id));
 }
 
+/** Merge side-specific time/venue overrides onto base events. */
+export function applySideOverrides(
+  events: readonly WeddingEvent[],
+  side: InvitationSide,
+): WeddingEvent[] {
+  const overrides =
+    side === "groom" ? WEDDING_CONFIG.eventSideOverrides.groom : undefined;
+  if (!overrides) return events.map((event) => ({ ...event }));
+
+  return events.map((event) => {
+    const patch = overrides[event.id as keyof typeof overrides];
+    if (!patch) return { ...event };
+    return { ...event, ...patch };
+  });
+}
+
+export function getWeddingDateForSide(side: InvitationSide): Date {
+  return WEDDING_CONFIG.weddingDateBySide[side] ?? WEDDING_CONFIG.weddingDate;
+}
+
 const GUEST_MAX = 40;
 const GUEST_ALLOWED = /^[\p{L}\p{M}\s'.-]+$/u;
 

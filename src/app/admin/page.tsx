@@ -12,6 +12,7 @@ import {
 import {
   EVENT_GROUP_LABELS,
   EVENT_GROUPS,
+  applySideOverrides,
   eventIdsFromGroups,
   filterEvents,
   sanitizeGuestName,
@@ -77,8 +78,8 @@ export default function AdminPage() {
 
   const previewEvents = useMemo(() => {
     const ids = eventIdsFromGroups(selectedGroups);
-    return filterEvents(WEDDING_CONFIG.events, ids);
-  }, [selectedGroups]);
+    return applySideOverrides(filterEvents(WEDDING_CONFIG.events, ids), side);
+  }, [selectedGroups, side]);
 
   const toggleEvent = (key: EventGroupKey) => {
     setEventChecks((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -355,7 +356,7 @@ export default function AdminPage() {
               <ul className="mt-2 list-inside list-disc font-body text-sm text-[#11294d]/80">
                 {previewEvents.map((ev) => (
                   <li key={ev.id}>
-                    {ev.title} — {ev.date}
+                    {ev.title} — {ev.date} · {ev.time}
                   </li>
                 ))}
               </ul>
