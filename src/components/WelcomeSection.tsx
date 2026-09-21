@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SectionWrapper from "@/components/ui/SectionWrapper";
 import { WEDDING_CONFIG } from "@/config/wedding";
 import type { InvitationSide } from "@/lib/invitationSide";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -194,94 +193,95 @@ export default function WelcomeSection({
       };
 
   return (
-    <SectionWrapper id="welcome">
-      {/* Guest greeting sits outside the clipped card so it never gets cut off on mobile */}
-      {guestName ? (
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-20 mb-5 px-1 text-center font-heading text-base font-medium leading-snug text-navy sm:mb-6 sm:text-lg md:text-xl"
+    <section
+      id="welcome"
+      className="relative overflow-visible bg-ivory px-4 py-12 text-foreground floral-bg scroll-mt-20 sm:px-6 sm:py-16 md:px-8 md:py-20"
+    >
+      <div className="relative z-10 mx-auto max-w-5xl overflow-visible">
+        {guestName ? (
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2, margin: "0px" }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-20 mb-5 px-1 text-center font-heading text-base font-medium leading-snug text-navy sm:mb-6 sm:text-lg md:text-xl"
+          >
+            {t.dearGuest}{" "}
+            <span className="font-semibold text-royal-gold">{guestName}</span>
+            {language === "hi" ? " — " : ", "}
+            {t.cordiallyInvited}
+          </motion.p>
+        ) : null}
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.12, margin: "0px 0px -5% 0px" }}
+          className="relative overflow-hidden rounded-[1.5rem] border border-navy/10 bg-white/75 px-4 py-7 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:px-8 sm:py-10 md:px-12 md:py-12"
         >
-          {t.dearGuest}{" "}
-          <span className="font-semibold text-royal-gold">{guestName}</span>
-          {language === "hi" ? " — " : ", "}
-          {t.cordiallyInvited}
-        </motion.p>
-      ) : null}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-royal-gold/10 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-navy/5 blur-3xl"
+          />
 
-      <div className="relative overflow-hidden rounded-[1.5rem] border border-navy/10 bg-white/75 px-4 py-7 shadow-[0_24px_60px_rgba(17,41,77,0.08)] backdrop-blur-xl sm:rounded-[2rem] sm:px-8 sm:py-10 md:px-12 md:py-12">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-royal-gold/10 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-navy/5 blur-3xl"
-        />
+          <div className="relative z-10 text-center">
+            <motion.p
+              variants={fadeUp}
+              className="font-heading text-3xl !font-medium text-royal-gold md:text-5xl"
+            >
+              {blessing.hindi}
+            </motion.p>
 
-        <div className="relative z-10 text-center">
-          <motion.p
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="font-heading text-3xl !font-medium text-royal-gold md:text-5xl"
-          >
-            {blessing.hindi}
-          </motion.p>
+            <div className="mx-auto my-5 h-px w-40 bg-linear-to-r from-transparent via-royal-gold to-transparent" />
 
-          <div className="mx-auto my-5 h-px w-40 bg-linear-to-r from-transparent via-royal-gold to-transparent" />
+            <motion.p
+              variants={fadeUp}
+              className="mx-auto max-w-2xl font-heading text-base font-medium leading-relaxed text-navy/80 md:text-lg"
+            >
+              {t.blessingEnglish}
+            </motion.p>
 
-          <motion.p
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mx-auto max-w-2xl font-heading text-base font-medium leading-relaxed text-navy/80 md:text-lg"
-          >
-            {t.blessingEnglish}
-          </motion.p>
+            <div className="mt-10 grid gap-5 md:grid-cols-2 md:gap-6">
+              <FamilyPanel
+                fromLabel={left.fromLabel}
+                surname={left.surname}
+                parentsLabel={left.parentsLabel}
+                parents={left.parents}
+                eldersLabel={left.eldersLabel}
+                elders={left.elders}
+                accent={left.accent}
+                variants={slideFromLeft}
+                ampersand={ampersand}
+                isHindi={language === "hi"}
+              />
+              <FamilyPanel
+                fromLabel={right.fromLabel}
+                surname={right.surname}
+                parentsLabel={right.parentsLabel}
+                parents={right.parents}
+                eldersLabel={right.eldersLabel}
+                elders={right.elders}
+                accent={right.accent}
+                variants={slideFromRight}
+                ampersand={ampersand}
+                isHindi={language === "hi"}
+              />
+            </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2 md:gap-6">
-            <FamilyPanel
-              fromLabel={left.fromLabel}
-              surname={left.surname}
-              parentsLabel={left.parentsLabel}
-              parents={left.parents}
-              eldersLabel={left.eldersLabel}
-              elders={left.elders}
-              accent={left.accent}
-              variants={slideFromLeft}
-              ampersand={ampersand}
-              isHindi={language === "hi"}
-            />
-            <FamilyPanel
-              fromLabel={right.fromLabel}
-              surname={right.surname}
-              parentsLabel={right.parentsLabel}
-              parents={right.parents}
-              eldersLabel={right.eldersLabel}
-              elders={right.elders}
-              accent={right.accent}
-              variants={slideFromRight}
-              ampersand={ampersand}
-              isHindi={language === "hi"}
-            />
+            <motion.p
+              variants={fadeUp}
+              className="mt-9 font-heading text-base font-medium tracking-wide text-navy/85 md:text-lg"
+            >
+              {t.honourPresence}
+            </motion.p>
           </div>
-
-          <motion.p
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mt-9 font-heading text-base font-medium tracking-wide text-navy/85 md:text-lg"
-          >
-            {t.honourPresence}
-          </motion.p>
-        </div>
+        </motion.div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 }
